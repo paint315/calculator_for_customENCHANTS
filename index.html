@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Калькулятор чар Minecraft — наковальня</title>
+<style>
+  :root{
+    --bg:#0e1621; --panel:#16213e; --panel-2:#0f3460;
+    --accent:#f0c040; --accent-2:#7cc4ff;
+    --text:#e0e0e0; --text-dim:#8a9bb0;
+    --ok:#4caf50; --danger:#e74c3c; --border:#1a4a7a;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:'Segoe UI',Tahoma,sans-serif;
+    background:var(--bg); color:var(--text);
+    min-height:100vh; padding:20px; line-height:1.5;
+  }
+  .container{max-width:960px;margin:0 auto}
+  header{text-align:center;margin-bottom:30px}
+  h1{color:var(--accent);font-size:2em;margin-bottom:6px}
+  header p{color:var(--text-dim)}
+  h2{color:var(--accent-2);font-size:1.1em;margin-bottom:15px;
+     text-transform:uppercase;letter-spacing:1px}
+  .panel{background:var(--panel);border-radius:10px;padding:20px;
+         margin-bottom:20px;border:1px solid var(--border)}
+
+  /* Строки ввода */
+  .enchant-row{
+    display:grid;
+    grid-template-columns:2fr 60px 90px 80px 90px 36px;
+    gap:8px;margin-bottom:8px;align-items:center;
+  }
+  .enchant-row input[type="text"],
+  .enchant-row input[type="number"]{
+    background:var(--panel-2);border:1px solid var(--border);
+    color:var(--text);padding:8px 10px;border-radius:6px;
+    font-size:14px;width:100%;transition:border-color .2s;
+  }
+  .enchant-row input:focus{outline:none;border-color:var(--accent)}
+  .enchant-row label{display:flex;align-items:center;gap:5px;
+    font-size:12px;color:var(--text-dim);cursor:pointer}
+  .header-row{color:var(--accent-2);font-size:11px;font-weight:600;
+    text-transform:uppercase;letter-spacing:.5px;padding:0 10px}
+
+  /* Кнопки */
+  button{background:var(--panel-2);color:var(--text);
+    border:1px solid var(--border);padding:10px 18px;
+    border-radius:6px;cursor:pointer;font-size:14px;
+    font-family:inherit;transition:all .2s}
+  button:hover{background:#1a4a7a}
+  button.primary{background:var(--accent);color:#1a1a2e;
+    font-weight:700;border-color:var(--accent);
+    font-size:16px;padding:14px 36px;width:100%}
+  button.primary:hover{background:#ffd060}
+  button.danger{background:#3a1a1a;border-color:#6a2a2a;
+    padding:8px;font-size:16px;color:#ff8080}
+  button.danger:hover{background:#5a2a2a}
+  .btn-row{display:flex;gap:10px;margin-top:15px;flex-wrap:wrap}
+
+  /* Пресеты */
+  .preset-btn{margin:4px;font-size:12px;padding:8px 12px;text-align:left}
+
+  /* Шаги */
+  .step{background:var(--panel-2);border-left:4px solid var(--accent);
+    padding:16px;margin-bottom:12px;border-radius:6px;font-size:14px}
+  .step h3{color:var(--accent);margin-bottom:10px;font-size:.95em}
+  .step .row{margin-bottom:4px;color:var(--text-dim)}
+  .step .row b{color:var(--text)}
+  .step .formula{
+    font-family:'Consolas',monospace;background:#0a0e17;
+    padding:12px;border-radius:6px;margin:10px 0;
+    font-size:13px;color:#7ce07c;word-break:break-word;
+    border:1px solid #1a2a3a;
+  }
+  .step .formula b{color:var(--accent);font-size:1.1em}
+  .step .result-row{margin-top:8px;padding-top:8px;
+    border-top:1px solid var(--border);color:var(--ok)}
+  .discarded{color:#ff8080;font-size:13px;margin-top:6px}
+
+  /* Итог */
+  .total{font-size:1.4em;text-align:center;padding:24px;
+    border-radius:10px;margin-top:20px;font-weight:700}
+  .total.ok{background:linear-gradient(135deg,#1a4a1a,#2a6a2a);
+    color:#a0ffa0;border:2px solid #40a040}
+  .total.too-expensive{background:linear-gradient(135deg,#4a1a1a,#6a2a2a);
+    color:#ffa0a0;border:2px solid #a04040}
+  .summary{margin-top:15px;padding:16px;background:#0a0e17;
+    border-radius:6px;font-size:13px;color:var(--text-dim);
+    line-height:1.8;border:1px solid var(--border)}
+  .summary b{color:var(--text)}
+
+  /* Правила */
+  .rules{font-size:13px;color:var(--text-dim);line-height:1.7}
+  .rules li{margin-left:18px;margin-bottom:4px}
+
+  @media(max-width:700px){
+    .enchant-row{grid-template-columns:1fr 1fr;
+      background:var(--panel-2);padding:12px;border-radius:8px;
+      margin-bottom:12px}
+    .enchant-row label{font-size:13px}
+    .header-row{display:none}
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>⚒️ Калькулятор чар Minecraft</h1>
+    <p>Расчёт стоимости зачарования на наковальне</p>
+  </header>
+
+  <section class="panel">
+    <h2>Зачарования</h2>
+    <div class="enchant-row header-row">
+      <div>Название</div><div>Ур.</div><div>Стоимость</div>
+      <div>Источник</div><div>Группа несовм.</div><div></div>
+    </div>
+    <div id="enchantList"></div>
+    <div class="btn-row">
+      <button id="addBtn">+ Добавить чар</button>
+      <button id="clearBtn">Очистить</button>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Примеры из задачи</h2>
+    <div id="presets"></div>
+  </section>
+
+  <section class="panel">
+    <h2>Правила расчёта</h2>
+    <ul class="rules">
+      <li>Штраф за прошлые использования: <b>2ⁿ − 1</b> (0, 1, 3, 7, 15, ...)</li>
+      <li>Стоимость операции = <b>чары жертвы + штраф цели + штраф жертвы</b></li>
+      <li>Зачарованные книги стоят <b>вдвое дешевле</b> (округление вниз)</li>
+      <li>Одинаковые уровни объединяются в уровень выше</li>
+      <li>Несовместимые чары на жертве отбрасываются и дают <b>+1</b></li>
+      <li>Если стоимость &gt; <b>39</b> — «Слишком дорого!» в режиме выживания</li>
+    </ul>
+  </section>
+
+  <section class="panel" style="text-align:center;padding:10px">
+    <button id="calcBtn" class="primary">Рассчитать стоимость</button>
+  </section>
+
+  <section class="panel" id="results" style="display:none">
+    <h2>Пошаговый расчёт</h2>
+    <div id="resultContent"></div>
+  </section>
+</div>
+
+<script>
+// ============================================================
+//  СОСТОЯНИЕ
+// ============================================================
+let enchantRows = [];
+
+// ============================================================
+//  УТИЛИТЫ
+// ============================================================
+function penalty(n){ return Math.pow(2, n) - 1; }
+
+function enchantCost(e){
+  return e.isBook ? Math.floor(e.cost / 2) : e.cost;
+}
+function itemSum(item){
+  return item.enchants.reduce((s, e) => s + e.cost, 0);
+}
+function itemPenalty(item){ return penalty(item.n); }
+function itemLabel(item){
+  if (!item.enchants.length) return 'Пустой предмет';
+  return item.enchants.map(e => `${e.name} ${e.level}`).join(' + ');
+}
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c => ({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  })[c]);
+}
+
+// ============================================================
+//  ЛОГИКА СЛИЯНИЯ
+// ============================================================
+function isIncompatible(e, targetEnchants){
+  if (!e.group) return false;
+  return targetEnchants.some(t => t.group === e.group && t.name !== e.name);
+}
+
+function mergeItems(target, sacrifice, isFinal){
+  const transferred = [];
+  const discarded = [];
+
+  for (const e of sacrifice.enchants){
+    if (isIncompatible(e, target.enchants)) discarded.push(e);
+    else transferred.push(e);
+  }
+
+  const transferSum  = transferred.reduce((s, e) => s + e.cost, 0);
+  const targetPen    = itemPenalty(target);
+  const sacPen       = itemPenalty(sacrifice);
+  const incompatCost = discarded.length;
+  const cost         = transferSum + targetPen + sacPen + incompatCost;
+
+  // Собираем результат
+  const newEnchants = target.enchants.map(e => ({ ...e }));
+  for (const e of transferred){
+    const existing = newEnchants.find(x => x.name === e.name);
+    if (existing){
+      if (existing.level === e.level){
+        const perLevel = existing.cost / existing.level;
+        existing.level += 1;
+        existing.cost = Math.round(existing.level * perLevel * 10) / 10;
+      } else if (e.level > existing.level){
+        existing.level = e.level;
+        existing.cost = e.cost;
+      }
+    } else {
+      newEnchants.push({ ...e });
+    }
+  }
+
+  const result = {
+    enchants: newEnchants,
+    n: Math.max(target.n, sacrifice.n) + 1,
+  };
+
+  return {
+    target, sacrifice, transferred, discarded,
+    targetPen, sacPen, transferSum, incompatCost, cost, result,
+    isFinal: !!isFinal,
+  };
+}
+
+// ============================================================
+//  ОПТИМАЛЬНЫЙ ПОРЯДОК СЛИЯНИЯ
+//  На каждом уровне: сортировка по убыванию,
+//  пары «самый большой + самый маленький».
+// ============================================================
+function calculateSteps(enchantList){
+  if (!enchantList.length) return [];
+
+  const items = enchantList.map(e => ({
+    enchants: [{ ...e, cost: enchantCost(e) }],
+    n: 0,
+  }));
+
+  const steps = [];
+  let current = items;
+
+  while (current.length > 1){
+    current.sort((a, b) => itemSum(b) - itemSum(a));
+    const next = [];
+    let left = 0, right = current.length - 1;
+
+    while (left < right){
+      const big   = current[left];
+      const small = current[right];
+      const step  = mergeItems(big, small, false);
+      steps.push(step);
+      next.push(step.result);
+      left++; right--;
+    }
+    if (left === right) next.push(current[left]); // нечётный — переносим
+    current = next;
+  }
+
+  // Финальное наложение на чистый предмет
+  const finalBook = current[0];
+  const cleanItem = { enchants: [], n: 0 };
+  const finalStep = mergeItems(cleanItem, finalBook, true);
+  steps.push(finalStep);
+
+  return steps;
+}
+
+// ============================================================
+//  ОТРИСОВКА ВВОДА
+// ============================================================
+function renderEnchants(){
+  const list = document.getElementById('enchantList');
+  list.innerHTML = '';
+
+  enchantRows.forEach((row, i) => {
+    const div = document.createElement('div');
+    div.className = 'enchant-row';
+    div.innerHTML = `
+      <input type="text" placeholder="Название"
+             value="${escapeHtml(row.name)}" data-idx="${i}" data-field="name">
+      <input type="number" placeholder="Ур." value="${row.level}" min="1"
+             data-idx="${i}" data-field="level">
+      <input type="number" placeholder="Стоим." value="${row.cost}" min="1"
+             data-idx="${i}" data-field="cost">
+      <label><input type="checkbox" ${row.isBook ? 'checked' : ''}
+             data-idx="${i}" data-field="isBook"> Книга</label>
+      <input type="text" placeholder="Группа"
+             value="${escapeHtml(row.group || '')}" data-idx="${i}" data-field="group">
+      <button class="danger" data-idx="${i}" data-action="remove">×</button>
+    `;
+    list.appendChild(div);
+  });
+
+  list.querySelectorAll('input').forEach(inp => {
+    inp.addEventListener('input', e => {
+      const idx = +e.target.dataset.idx;
+      const field = e.target.dataset.field;
+      if (field === 'isBook') enchantRows[idx][field] = e.target.checked;
+      else if (field === 'level' || field === 'cost')
+        enchantRows[idx][field] = +e.target.value || 0;
+      else enchantRows[idx][field] = e.target.value;
+    });
+  });
+
+  list.querySelectorAll('button[data-action="remove"]').forEach(btn => {
+    btn.addEventListener('click', e => {
+      enchantRows.splice(+e.target.dataset.idx, 1);
+      renderEnchants();
+    });
+  });
+}
+
+function addRow(name = '', level = 1, cost = 1, isBook = true, group = ''){
+  enchantRows.push({ name, level, cost, isBook, group });
+  renderEnchants();
+}
+
+// ============================================================
+//  ОТРИСОВКА РЕЗУЛЬТАТОВ
+// ============================================================
+function renderResults(steps){
+  const container = document.getElementById('resultContent');
+  container.innerHTML = '';
+
+  steps.forEach((step, i) => {
+    const div = document.createElement('div');
+    div.className = 'step';
+
+    const title = step.isFinal
+      ? `Шаг ${i + 1} — Наложение на предмет`
+      : `Шаг ${i + 1} — Слияние`;
+
+    let html = `<h3>${title}</h3>`;
+    html += `<div class="row">🎯 Цель: <b>${itemLabel(step.target)}</b> ` +
+            `<span style="color:#8a9bb0">(n=${step.target.n}, штраф=${step.targetPen})</span></div>`;
+    html += `<div class="row">📖 Жертва: <b>${itemLabel(step.sacrifice)}</b> ` +
+            `<span style="color:#8a9bb0">(n=${step.sacrifice.n}, штраф=${step.sacPen})</span></div>`;
+
+    html += `<div class="formula">`;
+    html += `Стоимость = <span style="color:#7cc4ff">${step.transferSum}</span> (чары жертвы)`;
+    html += ` + <span style="color:#ffa0a0">${step.targetPen}</span> (штраф цели)`;
+    html += ` + <span style="color:#ffa0a0">${step.sacPen}</span> (штраф жертвы)`;
+    if (step.incompatCost > 0)
+      html += ` + <span style="color:#ffd060">${step.incompatCost}</span> (несовместимость)`;
+    html += ` = <b>${step.cost}</b></div>`;
+
+    if (step.discarded.length){
+      html += `<div class="discarded">⚠️ Отброшено (несовместимо): ` +
+              `${step.discarded.map(e => escapeHtml(e.name)).join(', ')}</div>`;
+    }
+
+    html += `<div class="result-row">✅ Результат: <b>${itemLabel(step.result)}</b> ` +
+            `<span style="color:#8a9bb0">(n=${step.result.n})</span></div>`;
+
+    div.innerHTML = html;
+    container.appendChild(div);
+  });
+
+  // Итог
+  const finalCost     = steps[steps.length - 1].cost;
+  const totalCost     = steps.reduce((s, st) => s + st.cost, 0);
+  const anyTooExpensive = steps.some(st => st.cost > 39);
+  const tooExpensive    = finalCost > 39 || anyTooExpensive;
+
+  const totalDiv = document.createElement('div');
+  totalDiv.className = 'total ' + (tooExpensive ? 'too-expensive' : 'ok');
+  totalDiv.textContent = tooExpensive
+    ? `Финальная стоимость: ${finalCost} ур. — Слишком дорого!`
+    : `Финальная стоимость: ${finalCost} уровней`;
+  container.appendChild(totalDiv);
+
+  // Сводка
+  const summary = document.createElement('div');
+  summary.className = 'summary';
+  let text = `Общий расход опыта за все операции: <b>${totalCost}</b> уровней<br>`;
+  text += `Количество операций на наковальне: <b>${steps.length}</b><br>`;
+  text += anyTooExpensive
+    ? `<span style="color:#ff8080">⚠️ Некоторые шаги превышают 39 уровней — в режиме выживания это невозможно!</span>`
+    : `<span style="color:#80ff80">✓ Все шаги в пределах 39 уровней — зачарование возможно в режиме выживания.</span>`;
+  summary.innerHTML = text;
+  container.appendChild(summary);
+
+  document.getElementById('results').style.display = 'block';
+  document.getElementById('results').scrollIntoView({ behavior:'smooth' });
+}
+
+// ============================================================
+//  ПРЕСЕТЫ
+// ============================================================
+const PRESETS = [
+  {
+    name: 'Пример 1: лич 3, починка 2, прочность 3, Удача 6, эфф 5',
+    data: [ ['Лич',3,3], ['Починка',2,2], ['Прочность',3,3],
+            ['Удача',6,6], ['Эфф',5,5] ],
+  },
+  {
+    name: 'Пример 2: взрыв 6, починка 2, прочность 3, тройной выстрел 2, быстрая перезарядка 3, снайпер 2',
+    data: [ ['Взрыв',6,6], ['Починка',2,2], ['Прочность',3,3],
+            ['Тройной выстрел',2,2], ['Быстрая перезарядка',3,3],
+            ['Снайпер',2,2] ],
+  },
+  {
+    name: 'Пример 3: проч 3, починка 2, душа 12, скорость 4, поступь 3, ледоход 4, лавоход 2',
+    data: [ ['Проч',3,3], ['Починка',2,2], ['Душа',12,12],
+            ['Скорость',4,4], ['Поступь',3,3], ['Ледоход',4,4],
+            ['Лавоход',2,2] ],
+  },
+];
+
+function renderPresets(){
+  const container = document.getElementById('presets');
+  container.innerHTML = '';
+  PRESETS.forEach(p => {
+    const btn = document.createElement('button');
+    btn.className = 'preset-btn';
+    btn.textContent = p.name;
+    btn.addEventListener('click', () => {
+      enchantRows = p.data.map(([name, level, cost]) => ({
+        name, level, cost, isBook: true, group: ''
+      }));
+      renderEnchants();
+      document.getElementById('results').style.display = 'none';
+    });
+    container.appendChild(btn);
+  });
+}
+
+// ============================================================
+//  СОБЫТИЯ
+// ============================================================
+document.getElementById('addBtn').addEventListener('click', () => addRow());
+document.getElementById('clearBtn').addEventListener('click', () => {
+  enchantRows = [];
+  renderEnchants();
+  document.getElementById('results').style.display = 'none';
+});
+document.getElementById('calcBtn').addEventListener('click', () => {
+  const valid = enchantRows.filter(r => r.name.trim() && r.level > 0 && r.cost > 0);
+  if (!valid.length){ alert('Добавьте хотя бы одно зачарование'); return; }
+  renderResults(calculateSteps(valid));
+});
+
+// ============================================================
+//  ИНИЦИАЛИЗАЦИЯ
+// ============================================================
+renderPresets();
+addRow('Лич', 3, 3);
+addRow('Починка', 2, 2);
+</script>
+</body>
+</html>
