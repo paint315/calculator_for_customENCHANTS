@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Калькулятор чар Minecraft — наковальня</title>
+<title>Калькулятор чар Minecraft — наковальня (исправленный)</title>
 <style>
   :root{
     --bg:#0e1621; --panel:#16213e; --panel-2:#0f3460;
@@ -12,39 +12,32 @@
     --ok:#4caf50; --danger:#e74c3c; --border:#1a4a7a;
   }
   *{box-sizing:border-box;margin:0;padding:0}
-  body{
-    font-family:'Segoe UI',Tahoma,sans-serif;
-    background:var(--bg); color:var(--text);
-    min-height:100vh; padding:20px; line-height:1.5;
-  }
-  .container{max-width:960px;margin:0 auto}
+  body{font-family:'Segoe UI',Tahoma,sans-serif;background:var(--bg);
+       color:var(--text);min-height:100vh;padding:20px;line-height:1.5}
+  .container{max-width:1100px;margin:0 auto}
   header{text-align:center;margin-bottom:30px}
   h1{color:var(--accent);font-size:2em;margin-bottom:6px}
-  header p{color:var(--text-dim)}
   h2{color:var(--accent-2);font-size:1.1em;margin-bottom:15px;
      text-transform:uppercase;letter-spacing:1px}
   .panel{background:var(--panel);border-radius:10px;padding:20px;
          margin-bottom:20px;border:1px solid var(--border)}
 
-  /* Строки ввода */
   .enchant-row{
     display:grid;
-    grid-template-columns:2fr 60px 90px 80px 90px 36px;
+    grid-template-columns:2fr 60px 80px 90px 70px 90px 36px;
     gap:8px;margin-bottom:8px;align-items:center;
   }
   .enchant-row input[type="text"],
   .enchant-row input[type="number"]{
     background:var(--panel-2);border:1px solid var(--border);
     color:var(--text);padding:8px 10px;border-radius:6px;
-    font-size:14px;width:100%;transition:border-color .2s;
+    font-size:14px;width:100%;
   }
-  .enchant-row input:focus{outline:none;border-color:var(--accent)}
   .enchant-row label{display:flex;align-items:center;gap:5px;
     font-size:12px;color:var(--text-dim);cursor:pointer}
   .header-row{color:var(--accent-2);font-size:11px;font-weight:600;
     text-transform:uppercase;letter-spacing:.5px;padding:0 10px}
 
-  /* Кнопки */
   button{background:var(--panel-2);color:var(--text);
     border:1px solid var(--border);padding:10px 18px;
     border-radius:6px;cursor:pointer;font-size:14px;
@@ -59,10 +52,8 @@
   button.danger:hover{background:#5a2a2a}
   .btn-row{display:flex;gap:10px;margin-top:15px;flex-wrap:wrap}
 
-  /* Пресеты */
   .preset-btn{margin:4px;font-size:12px;padding:8px 12px;text-align:left}
 
-  /* Шаги */
   .step{background:var(--panel-2);border-left:4px solid var(--accent);
     padding:16px;margin-bottom:12px;border-radius:6px;font-size:14px}
   .step h3{color:var(--accent);margin-bottom:10px;font-size:.95em}
@@ -79,7 +70,6 @@
     border-top:1px solid var(--border);color:var(--ok)}
   .discarded{color:#ff8080;font-size:13px;margin-top:6px}
 
-  /* Итог */
   .total{font-size:1.4em;text-align:center;padding:24px;
     border-radius:10px;margin-top:20px;font-weight:700}
   .total.ok{background:linear-gradient(135deg,#1a4a1a,#2a6a2a);
@@ -90,16 +80,20 @@
     border-radius:6px;font-size:13px;color:var(--text-dim);
     line-height:1.8;border:1px solid var(--border)}
   .summary b{color:var(--text)}
+  .summary .penalty-line{
+    margin-top:10px;padding-top:10px;
+    border-top:1px dashed var(--border);
+    color:var(--accent);font-size:14px;
+  }
+  .summary .penalty-line b{color:var(--accent);font-size:1.1em}
 
-  /* Правила */
   .rules{font-size:13px;color:var(--text-dim);line-height:1.7}
   .rules li{margin-left:18px;margin-bottom:4px}
 
-  @media(max-width:700px){
+  @media(max-width:800px){
     .enchant-row{grid-template-columns:1fr 1fr;
       background:var(--panel-2);padding:12px;border-radius:8px;
       margin-bottom:12px}
-    .enchant-row label{font-size:13px}
     .header-row{display:none}
   }
 </style>
@@ -108,14 +102,15 @@
 <div class="container">
   <header>
     <h1>⚒️ Калькулятор чар Minecraft</h1>
-    <p>Расчёт стоимости зачарования на наковальне</p>
+    <p>Исправленная версия: стоимость = итоговый уровень × множитель</p>
   </header>
 
   <section class="panel">
     <h2>Зачарования</h2>
     <div class="enchant-row header-row">
-      <div>Название</div><div>Ур.</div><div>Стоимость</div>
-      <div>Источник</div><div>Группа несовм.</div><div></div>
+      <div>Название</div><div>Ур.</div><div>Множитель</div>
+      <div>Источник</div><div>Макс. ур.</div>
+      <div>Группа несовм.</div><div></div>
     </div>
     <div id="enchantList"></div>
     <div class="btn-row">
@@ -125,19 +120,21 @@
   </section>
 
   <section class="panel">
-    <h2>Примеры из задачи</h2>
+    <h2>Примеры</h2>
     <div id="presets"></div>
   </section>
 
   <section class="panel">
-    <h2>Правила расчёта</h2>
+    <h2>Правила расчёта (Java Edition)</h2>
     <ul class="rules">
-      <li>Штраф за прошлые использования: <b>2ⁿ − 1</b> (0, 1, 3, 7, 15, ...)</li>
-      <li>Стоимость операции = <b>чары жертвы + штраф цели + штраф жертвы</b></li>
-      <li>Зачарованные книги стоят <b>вдвое дешевле</b> (округление вниз)</li>
-      <li>Одинаковые уровни объединяются в уровень выше</li>
-      <li>Несовместимые чары на жертве отбрасываются и дают <b>+1</b></li>
-      <li>Если стоимость &gt; <b>39</b> — «Слишком дорого!» в режиме выживания</li>
+      <li>Штраф за прошлые использования: <b>2ⁿ − 1</b> (0, 1, 3, 7, 15, …)</li>
+      <li>Стоимость операции = <b>сумма стоимостей переносимых чар + штраф цели + штраф жертвы</b></li>
+      <li>Стоимость чара = <b>итоговый уровень × множитель</b></li>
+      <li>Множитель книги = <b>половина</b> множителя предмета (округление вниз)</li>
+      <li>Если цель уже имеет чар, стоимость добавляется <b>даже если уровень не меняется</b></li>
+      <li>Одинаковые уровни повышаются на 1 (до максимума)</li>
+      <li>Несовместимые чары отбрасываются и дают <b>+1</b></li>
+      <li>Если итог &gt; <b>39</b> — «Слишком дорого!»</li>
     </ul>
   </section>
 
@@ -153,6 +150,56 @@
 
 <script>
 // ============================================================
+//  ТАБЛИЦА МНОЖИТЕЛЕЙ ДЛЯ СТАНДАРТНЫХ ЗАЧАРОВАНИЙ (Java Edition)
+//  Значения: множитель предмета и множитель книги
+// ============================================================
+const ENCHANT_DATA = {
+  'Protection':        { multItem: 1, multBook: 1, maxLevel: 4 },
+  'Fire Protection':   { multItem: 2, multBook: 1, maxLevel: 4 },
+  'Feather Falling':   { multItem: 2, multBook: 1, maxLevel: 4 },
+  'Blast Protection':  { multItem: 4, multBook: 2, maxLevel: 4 },
+  'Projectile Protection': { multItem: 2, multBook: 1, maxLevel: 4 },
+  'Thorns':            { multItem: 8, multBook: 4, maxLevel: 3 },
+  'Respiration':       { multItem: 4, multBook: 2, maxLevel: 3 },
+  'Depth Strider':     { multItem: 4, multBook: 2, maxLevel: 3 },
+  'Aqua Affinity':     { multItem: 4, multBook: 2, maxLevel: 1 },
+  'Sharpness':         { multItem: 1, multBook: 1, maxLevel: 5 },
+  'Smite':             { multItem: 2, multBook: 1, maxLevel: 5 },
+  'Bane of Arthropods':{ multItem: 2, multBook: 1, maxLevel: 5 },
+  'Knockback':         { multItem: 2, multBook: 1, maxLevel: 2 },
+  'Fire Aspect':       { multItem: 4, multBook: 2, maxLevel: 2 },
+  'Looting':           { multItem: 4, multBook: 2, maxLevel: 3 },
+  'Efficiency':        { multItem: 1, multBook: 1, maxLevel: 5 },
+  'Silk Touch':        { multItem: 8, multBook: 4, maxLevel: 1 },
+  'Unbreaking':        { multItem: 2, multBook: 1, maxLevel: 3 },
+  'Fortune':           { multItem: 4, multBook: 2, maxLevel: 3 },
+  'Power':             { multItem: 1, multBook: 1, maxLevel: 5 },
+  'Punch':             { multItem: 4, multBook: 2, maxLevel: 2 },
+  'Flame':             { multItem: 4, multBook: 2, maxLevel: 1 },
+  'Infinity':          { multItem: 8, multBook: 4, maxLevel: 1 },
+  'Luck of the Sea':   { multItem: 4, multBook: 2, maxLevel: 3 },
+  'Lure':              { multItem: 4, multBook: 2, maxLevel: 3 },
+  'Frost Walker':      { multItem: 4, multBook: 2, maxLevel: 2 },
+  'Mending':           { multItem: 4, multBook: 2, maxLevel: 1 },
+  'Curse of Binding':  { multItem: 8, multBook: 4, maxLevel: 1 },
+  'Curse of Vanishing':{ multItem: 8, multBook: 4, maxLevel: 1 },
+  'Impaling':          { multItem: 4, multBook: 2, maxLevel: 5 },
+  'Riptide':           { multItem: 4, multBook: 2, maxLevel: 3 },
+  'Loyalty':           { multItem: 1, multBook: 1, maxLevel: 3 },
+  'Channeling':        { multItem: 8, multBook: 4, maxLevel: 1 },
+  'Multishot':         { multItem: 4, multBook: 2, maxLevel: 1 },
+  'Piercing':          { multItem: 1, multBook: 1, maxLevel: 4 },
+  'Quick Charge':      { multItem: 2, multBook: 1, maxLevel: 3 },
+  'Soul Speed':        { multItem: 8, multBook: 4, maxLevel: 3 },
+  'Swift Sneak':       { multItem: 8, multBook: 4, maxLevel: 3 },
+  'Wind Burst':        { multItem: 4, multBook: 2, maxLevel: 3 },
+  'Density':           { multItem: 2, multBook: 1, maxLevel: 5 },
+  'Breach':            { multItem: 4, multBook: 2, maxLevel: 4 },
+  'Lunge':             { multItem: 2, multBook: 1, maxLevel: 3 },
+  'Sweeping Edge':     { multItem: 4, multBook: 2, maxLevel: 3 },
+};
+
+// ============================================================
 //  СОСТОЯНИЕ
 // ============================================================
 let enchantRows = [];
@@ -162,17 +209,32 @@ let enchantRows = [];
 // ============================================================
 function penalty(n){ return Math.pow(2, n) - 1; }
 
-function enchantCost(e){
-  return e.isBook ? Math.floor(e.cost / 2) : e.cost;
+function getMultiplier(name, isBook){
+  const data = ENCHANT_DATA[name];
+  if (data) return isBook ? data.multBook : data.multItem;
+  return isBook ? 1 : 2;
 }
+
+function getMaxLevel(name){
+  const data = ENCHANT_DATA[name];
+  return data ? data.maxLevel : 99;
+}
+
+function enchantCost(e, isBook){
+  return e.level * getMultiplier(e.name, isBook);
+}
+
 function itemSum(item){
-  return item.enchants.reduce((s, e) => s + e.cost, 0);
+  return item.enchants.reduce((s, e) => s + enchantCost(e, item.isBook), 0);
 }
+
 function itemPenalty(item){ return penalty(item.n); }
+
 function itemLabel(item){
   if (!item.enchants.length) return 'Пустой предмет';
   return item.enchants.map(e => `${e.name} ${e.level}`).join(' + ');
 }
+
 function escapeHtml(s){
   return String(s).replace(/[&<>"']/g, c => ({
     '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
@@ -180,7 +242,7 @@ function escapeHtml(s){
 }
 
 // ============================================================
-//  ЛОГИКА СЛИЯНИЯ
+//  ЛОГИКА СЛИЯНИЯ (Java Edition)
 // ============================================================
 function isIncompatible(e, targetEnchants){
   if (!e.group) return false;
@@ -196,24 +258,46 @@ function mergeItems(target, sacrifice, isFinal){
     else transferred.push(e);
   }
 
-  const transferSum  = transferred.reduce((s, e) => s + e.cost, 0);
+  let transferSum = 0;
+  const transferDetails = [];
+
+  for (const e of transferred){
+    const existing = target.enchants.find(x => x.name === e.name);
+    const maxLvl = getMaxLevel(e.name);
+    let finalLevel;
+
+    if (existing){
+      if (e.level > existing.level){
+        finalLevel = e.level;
+      } else if (e.level === existing.level && existing.level < maxLvl){
+        finalLevel = existing.level + 1;
+      } else {
+        finalLevel = existing.level;
+      }
+    } else {
+      finalLevel = e.level;
+    }
+
+    const mult = getMultiplier(e.name, sacrifice.isBook);
+    const cost = finalLevel * mult;
+    transferSum += cost;
+    transferDetails.push({ name: e.name, level: finalLevel, cost });
+  }
+
   const targetPen    = itemPenalty(target);
   const sacPen       = itemPenalty(sacrifice);
   const incompatCost = discarded.length;
   const cost         = transferSum + targetPen + sacPen + incompatCost;
 
-  // Собираем результат
   const newEnchants = target.enchants.map(e => ({ ...e }));
   for (const e of transferred){
     const existing = newEnchants.find(x => x.name === e.name);
+    const maxLvl = getMaxLevel(e.name);
     if (existing){
-      if (existing.level === e.level){
-        const perLevel = existing.cost / existing.level;
+      if (existing.level === e.level && existing.level < maxLvl){
         existing.level += 1;
-        existing.cost = Math.round(existing.level * perLevel * 10) / 10;
       } else if (e.level > existing.level){
         existing.level = e.level;
-        existing.cost = e.cost;
       }
     } else {
       newEnchants.push({ ...e });
@@ -223,51 +307,52 @@ function mergeItems(target, sacrifice, isFinal){
   const result = {
     enchants: newEnchants,
     n: Math.max(target.n, sacrifice.n) + 1,
+    isBook: target.isBook,
   };
 
   return {
     target, sacrifice, transferred, discarded,
     targetPen, sacPen, transferSum, incompatCost, cost, result,
     isFinal: !!isFinal,
+    transferDetails,
   };
 }
 
 // ============================================================
 //  ОПТИМАЛЬНЫЙ ПОРЯДОК СЛИЯНИЯ
-//  На каждом уровне: сортировка по убыванию,
-//  пары «самый большой + самый маленький».
 // ============================================================
 function calculateSteps(enchantList){
   if (!enchantList.length) return [];
 
   const items = enchantList.map(e => ({
-    enchants: [{ ...e, cost: enchantCost(e) }],
+    enchants: [{ ...e }],
     n: 0,
+    isBook: e.isBook,
   }));
 
   const steps = [];
   let current = items;
 
   while (current.length > 1){
-    current.sort((a, b) => itemSum(b) - itemSum(a));
-    const next = [];
-    let left = 0, right = current.length - 1;
+    // Сортируем по возрастанию суммы чар
+    current.sort((a, b) => itemSum(a) - itemSum(b));
 
-    while (left < right){
-      const big   = current[left];
-      const small = current[right];
-      const step  = mergeItems(big, small, false);
+    const next = [];
+    for (let i = 0; i + 1 < current.length; i += 2){
+      const sacrifice = current[i];      // меньшая — в жертву
+      const target    = current[i + 1];  // большая — в цель
+      const step = mergeItems(target, sacrifice, false);
       steps.push(step);
       next.push(step.result);
-      left++; right--;
     }
-    if (left === right) next.push(current[left]); // нечётный — переносим
+    // Если остался один элемент (нечётное количество) — переносим как есть
+    if (current.length % 2 === 1) next.push(current[current.length - 1]);
+
     current = next;
   }
 
-  // Финальное наложение на чистый предмет
   const finalBook = current[0];
-  const cleanItem = { enchants: [], n: 0 };
+  const cleanItem = { enchants: [], n: 0, isBook: false };
   const finalStep = mergeItems(cleanItem, finalBook, true);
   steps.push(finalStep);
 
@@ -285,14 +370,16 @@ function renderEnchants(){
     const div = document.createElement('div');
     div.className = 'enchant-row';
     div.innerHTML = `
-      <input type="text" placeholder="Название"
+      <input type="text" placeholder="Название" list="enchantNames"
              value="${escapeHtml(row.name)}" data-idx="${i}" data-field="name">
       <input type="number" placeholder="Ур." value="${row.level}" min="1"
              data-idx="${i}" data-field="level">
-      <input type="number" placeholder="Стоим." value="${row.cost}" min="1"
-             data-idx="${i}" data-field="cost">
+      <input type="number" placeholder="Множ." value="${row.multiplier || ''}" min="1"
+             data-idx="${i}" data-field="multiplier" title="Оставьте пустым для автоопределения">
       <label><input type="checkbox" ${row.isBook ? 'checked' : ''}
              data-idx="${i}" data-field="isBook"> Книга</label>
+      <input type="number" placeholder="Макс." value="${row.maxLevel || ''}" min="1"
+             data-idx="${i}" data-field="maxLevel" title="Оставьте пустым для автоопределения">
       <input type="text" placeholder="Группа"
              value="${escapeHtml(row.group || '')}" data-idx="${i}" data-field="group">
       <button class="danger" data-idx="${i}" data-action="remove">×</button>
@@ -305,8 +392,8 @@ function renderEnchants(){
       const idx = +e.target.dataset.idx;
       const field = e.target.dataset.field;
       if (field === 'isBook') enchantRows[idx][field] = e.target.checked;
-      else if (field === 'level' || field === 'cost')
-        enchantRows[idx][field] = +e.target.value || 0;
+      else if (field === 'level' || field === 'multiplier' || field === 'maxLevel')
+        enchantRows[idx][field] = e.target.value === '' ? null : (+e.target.value || 0);
       else enchantRows[idx][field] = e.target.value;
     });
   });
@@ -319,8 +406,8 @@ function renderEnchants(){
   });
 }
 
-function addRow(name = '', level = 1, cost = 1, isBook = true, group = ''){
-  enchantRows.push({ name, level, cost, isBook, group });
+function addRow(name = '', level = 1, multiplier = null, isBook = true, group = '', maxLevel = null){
+  enchantRows.push({ name, level, multiplier, isBook, group, maxLevel });
   renderEnchants();
 }
 
@@ -346,15 +433,22 @@ function renderResults(steps){
             `<span style="color:#8a9bb0">(n=${step.sacrifice.n}, штраф=${step.sacPen})</span></div>`;
 
     html += `<div class="formula">`;
-    html += `Стоимость = <span style="color:#7cc4ff">${step.transferSum}</span> (чары жертвы)`;
-    html += ` + <span style="color:#ffa0a0">${step.targetPen}</span> (штраф цели)`;
-    html += ` + <span style="color:#ffa0a0">${step.sacPen}</span> (штраф жертвы)`;
+    html += `Стоимость чар жертвы: <span style="color:#7cc4ff">${step.transferSum}</span>`;
+    if (step.transferDetails.length){
+      html += `<br><span style="font-size:11px;color:#8a9bb0">`;
+      html += step.transferDetails.map(d =>
+        `${d.name} → ур.${d.level} = ${d.cost}`
+      ).join('<br>');
+      html += `</span>`;
+    }
+    html += `<br>Штраф цели: <span style="color:#ffa0a0">${step.targetPen}</span>`;
+    html += ` + штраф жертвы: <span style="color:#ffa0a0">${step.sacPen}</span>`;
     if (step.incompatCost > 0)
-      html += ` + <span style="color:#ffd060">${step.incompatCost}</span> (несовместимость)`;
-    html += ` = <b>${step.cost}</b></div>`;
+      html += ` + несовместимость: <span style="color:#ffd060">${step.incompatCost}</span>`;
+    html += `<br>ИТОГО: <b>${step.cost}</b></div>`;
 
     if (step.discarded.length){
-      html += `<div class="discarded">⚠️ Отброшено (несовместимо): ` +
+      html += `<div class="discarded">⚠️ Отброшено: ` +
               `${step.discarded.map(e => escapeHtml(e.name)).join(', ')}</div>`;
     }
 
@@ -365,28 +459,35 @@ function renderResults(steps){
     container.appendChild(div);
   });
 
-  // Итог
-  const finalCost     = steps[steps.length - 1].cost;
-  const totalCost     = steps.reduce((s, st) => s + st.cost, 0);
+  const finalStep       = steps[steps.length - 1];
+  const finalCost       = finalStep.cost;
+  const totalCost       = steps.reduce((s, st) => s + st.cost, 0);
   const anyTooExpensive = steps.some(st => st.cost > 39);
-  const tooExpensive    = finalCost > 39 || anyTooExpensive;
+
+  // Финальный предмет — то, что получилось после последнего шага
+  const finalItem       = finalStep.result;
+  const finalN          = finalItem.n;
+  const finalPenalty    = penalty(finalN);
 
   const totalDiv = document.createElement('div');
-  totalDiv.className = 'total ' + (tooExpensive ? 'too-expensive' : 'ok');
-  totalDiv.textContent = tooExpensive
+  totalDiv.className = 'total ' + (anyTooExpensive ? 'too-expensive' : 'ok');
+  totalDiv.textContent = anyTooExpensive
     ? `Финальная стоимость: ${finalCost} ур. — Слишком дорого!`
     : `Финальная стоимость: ${finalCost} уровней`;
   container.appendChild(totalDiv);
 
-  // Сводка
   const summary = document.createElement('div');
   summary.className = 'summary';
-  let text = `Общий расход опыта за все операции: <b>${totalCost}</b> уровней<br>`;
-  text += `Количество операций на наковальне: <b>${steps.length}</b><br>`;
-  text += anyTooExpensive
-    ? `<span style="color:#ff8080">⚠️ Некоторые шаги превышают 39 уровней — в режиме выживания это невозможно!</span>`
-    : `<span style="color:#80ff80">✓ Все шаги в пределах 39 уровней — зачарование возможно в режиме выживания.</span>`;
-  summary.innerHTML = text;
+  summary.innerHTML =
+    `Общий расход опыта: <b>${totalCost}</b> уровней<br>` +
+    `Операций: <b>${steps.length}</b><br>` +
+    (anyTooExpensive
+      ? `<span style="color:#ff8080">⚠️ Некоторые шаги превышают 39 уровней — в выживании невозможно!</span>`
+      : `<span style="color:#80ff80">✓ Все шаги в пределах 39 уровней.</span>`) +
+    `<div class="penalty-line">
+       🛠️ Итоговый штраф предмета: n = <b>${finalN}</b> →
+       штраф при следующем использовании = <b>${finalPenalty}</b>
+     </div>`;
   container.appendChild(summary);
 
   document.getElementById('results').style.display = 'block';
@@ -399,20 +500,33 @@ function renderResults(steps){
 const PRESETS = [
   {
     name: 'Пример 1: лич 3, починка 2, прочность 3, Удача 6, эфф 5',
-    data: [ ['Лич',3,3], ['Починка',2,2], ['Прочность',3,3],
-            ['Удача',6,6], ['Эфф',5,5] ],
+    data: [
+      ['Лич', 3], ['Починка', 2], ['Прочность', 3],
+      ['Удача', 6], ['Эффективность', 5],
+    ],
   },
   {
     name: 'Пример 2: взрыв 6, починка 2, прочность 3, тройной выстрел 2, быстрая перезарядка 3, снайпер 2',
-    data: [ ['Взрыв',6,6], ['Починка',2,2], ['Прочность',3,3],
-            ['Тройной выстрел',2,2], ['Быстрая перезарядка',3,3],
-            ['Снайпер',2,2] ],
+    data: [
+      ['Взрыв', 6], ['Починка', 2], ['Прочность', 3],
+      ['Тройной выстрел', 2], ['Быстрая перезарядка', 3],
+      ['Снайпер', 2],
+    ],
   },
   {
     name: 'Пример 3: проч 3, починка 2, душа 12, скорость 4, поступь 3, ледоход 4, лавоход 2',
-    data: [ ['Проч',3,3], ['Починка',2,2], ['Душа',12,12],
-            ['Скорость',4,4], ['Поступь',3,3], ['Ледоход',4,4],
-            ['Лавоход',2,2] ],
+    data: [
+      ['Проч', 3], ['Починка', 2], ['Душа', 12],
+      ['Скорость', 4], ['Поступь', 3], ['Ледоход', 4],
+      ['Лавоход', 2],
+    ],
+  },
+  {
+    name: 'Стандартные: Mending, Unbreaking III, Fortune III, Efficiency V',
+    data: [
+      ['Mending', 1], ['Unbreaking', 3],
+      ['Fortune', 3], ['Efficiency', 5],
+    ],
   },
 ];
 
@@ -424,8 +538,8 @@ function renderPresets(){
     btn.className = 'preset-btn';
     btn.textContent = p.name;
     btn.addEventListener('click', () => {
-      enchantRows = p.data.map(([name, level, cost]) => ({
-        name, level, cost, isBook: true, group: ''
+      enchantRows = p.data.map(([name, level]) => ({
+        name, level, multiplier: null, isBook: true, group: '', maxLevel: null,
       }));
       renderEnchants();
       document.getElementById('results').style.display = 'none';
@@ -444,7 +558,7 @@ document.getElementById('clearBtn').addEventListener('click', () => {
   document.getElementById('results').style.display = 'none';
 });
 document.getElementById('calcBtn').addEventListener('click', () => {
-  const valid = enchantRows.filter(r => r.name.trim() && r.level > 0 && r.cost > 0);
+  const valid = enchantRows.filter(r => r.name.trim() && r.level > 0);
   if (!valid.length){ alert('Добавьте хотя бы одно зачарование'); return; }
   renderResults(calculateSteps(valid));
 });
@@ -453,8 +567,8 @@ document.getElementById('calcBtn').addEventListener('click', () => {
 //  ИНИЦИАЛИЗАЦИЯ
 // ============================================================
 renderPresets();
-addRow('Лич', 3, 3);
-addRow('Починка', 2, 2);
+addRow('Mending', 1, null, true);
+addRow('Unbreaking', 3, null, true);
 </script>
 </body>
 </html>
