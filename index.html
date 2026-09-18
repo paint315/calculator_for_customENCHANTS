@@ -3,80 +3,133 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Калькулятор чар Minecraft — наковальня (исправленный)</title>
+<title>Калькулятор чар Minecraft — наковальня</title>
 <style>
-  :root{
+  /* --- ТЕМЫ --- */
+  :root, [data-theme="dark"] {
     --bg:#0e1621; --panel:#16213e; --panel-2:#0f3460;
     --accent:#f0c040; --accent-2:#7cc4ff;
     --text:#e0e0e0; --text-dim:#8a9bb0;
     --ok:#4caf50; --danger:#e74c3c; --border:#1a4a7a;
+    --input-bg:#0f3460; --input-border:#1a4a7a;
   }
+  [data-theme="light"] {
+    --bg:#f4f6f8; --panel:#ffffff; --panel-2:#e8edf2;
+    --accent:#d4a017; --accent-2:#2a6ea8;
+    --text:#1a1a2e; --text-dim:#5a6a7a;
+    --ok:#2e7d32; --danger:#c62828; --border:#c0ccd8;
+    --input-bg:#ffffff; --input-border:#c0ccd8;
+  }
+
   *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:'Segoe UI',Tahoma,sans-serif;background:var(--bg);
-       color:var(--text);min-height:100vh;padding:20px;line-height:1.5}
+  body{
+    font-family:'Segoe UI',Tahoma,sans-serif;
+    background:var(--bg); color:var(--text);
+    min-height:100vh; padding:20px; line-height:1.5;
+    transition: background .3s, color .3s;
+  }
   .container{max-width:1100px;margin:0 auto}
-  header{text-align:center;margin-bottom:30px}
+
+  header{text-align:center;margin-bottom:30px;position:relative}
   h1{color:var(--accent);font-size:2em;margin-bottom:6px}
   h2{color:var(--accent-2);font-size:1.1em;margin-bottom:15px;
      text-transform:uppercase;letter-spacing:1px}
   .panel{background:var(--panel);border-radius:10px;padding:20px;
-         margin-bottom:20px;border:1px solid var(--border)}
+         margin-bottom:20px;border:1px solid var(--border);
+         transition: background .3s, border-color .3s}
 
+  /* Переключатель темы */
+  #themeToggle{
+    position:absolute;top:0;right:0;
+    background:var(--panel-2);border:1px solid var(--border);
+    color:var(--text);padding:8px 14px;border-radius:20px;
+    cursor:pointer;font-size:13px;font-family:inherit;
+  }
+  #themeToggle:hover{background:var(--accent);color:var(--bg)}
+
+  /* Строки ввода */
   .enchant-row{
     display:grid;
-    grid-template-columns:2fr 60px 80px 90px 70px 90px 36px;
-    gap:8px;margin-bottom:8px;align-items:center;
+    grid-template-columns:2fr 55px 70px 80px 60px 85px 36px;
+    gap:6px;margin-bottom:8px;align-items:center;
   }
   .enchant-row input[type="text"],
   .enchant-row input[type="number"]{
-    background:var(--panel-2);border:1px solid var(--border);
+    background:var(--input-bg);border:1px solid var(--input-border);
     color:var(--text);padding:8px 10px;border-radius:6px;
-    font-size:14px;width:100%;
+    font-size:13px;width:100%;transition:border-color .2s;
   }
-  .enchant-row label{display:flex;align-items:center;gap:5px;
+  .enchant-row input:focus{outline:none;border-color:var(--accent)}
+  .enchant-row label{display:flex;align-items:center;gap:4px;
     font-size:12px;color:var(--text-dim);cursor:pointer}
-  .header-row{color:var(--accent-2);font-size:11px;font-weight:600;
-    text-transform:uppercase;letter-spacing:.5px;padding:0 10px}
+  .header-row{color:var(--accent-2);font-size:10px;font-weight:600;
+    text-transform:uppercase;letter-spacing:.3px;padding:0 8px}
 
+  /* Кнопки */
   button{background:var(--panel-2);color:var(--text);
     border:1px solid var(--border);padding:10px 18px;
     border-radius:6px;cursor:pointer;font-size:14px;
     font-family:inherit;transition:all .2s}
-  button:hover{background:#1a4a7a}
-  button.primary{background:var(--accent);color:#1a1a2e;
+  button:hover{background:var(--accent);color:var(--bg)}
+  button.primary{background:var(--accent);color:var(--bg);
     font-weight:700;border-color:var(--accent);
     font-size:16px;padding:14px 36px;width:100%}
-  button.primary:hover{background:#ffd060}
-  button.danger{background:#3a1a1a;border-color:#6a2a2a;
-    padding:8px;font-size:16px;color:#ff8080}
-  button.danger:hover{background:#5a2a2a}
+  button.primary:hover{background:var(--accent-2);border-color:var(--accent-2)}
+  button.danger{background:var(--danger);border-color:var(--danger);
+    padding:8px;font-size:16px;color:#fff}
   .btn-row{display:flex;gap:10px;margin-top:15px;flex-wrap:wrap}
 
+  /* Опции (ремонт / переименование / n предмета) */
+  .options-panel{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+    gap:12px;margin-bottom:15px;
+  }
+  .option-item{
+    display:flex;align-items:center;gap:8px;
+    background:var(--panel-2);padding:10px 14px;
+    border-radius:8px;border:1px solid var(--border);
+    font-size:13px;
+  }
+  .option-item input[type="checkbox"]{width:16px;height:16px;cursor:pointer}
+  .option-item input[type="number"]{
+    width:70px;background:var(--input-bg);border:1px solid var(--input-border);
+    color:var(--text);padding:6px 8px;border-radius:4px;font-size:13px;
+  }
+  .option-item label{cursor:pointer;user-select:none;color:var(--text)}
+
+  /* Пресеты */
   .preset-btn{margin:4px;font-size:12px;padding:8px 12px;text-align:left}
 
+  /* Шаги */
   .step{background:var(--panel-2);border-left:4px solid var(--accent);
     padding:16px;margin-bottom:12px;border-radius:6px;font-size:14px}
   .step h3{color:var(--accent);margin-bottom:10px;font-size:.95em}
   .step .row{margin-bottom:4px;color:var(--text-dim)}
   .step .row b{color:var(--text)}
   .step .formula{
-    font-family:'Consolas',monospace;background:#0a0e17;
+    font-family:'Consolas',monospace;background:var(--bg);
     padding:12px;border-radius:6px;margin:10px 0;
-    font-size:13px;color:#7ce07c;word-break:break-word;
-    border:1px solid #1a2a3a;
+    font-size:13px;color:var(--ok);word-break:break-word;
+    border:1px solid var(--border);
   }
   .step .formula b{color:var(--accent);font-size:1.1em}
   .step .result-row{margin-top:8px;padding-top:8px;
     border-top:1px solid var(--border);color:var(--ok)}
-  .discarded{color:#ff8080;font-size:13px;margin-top:6px}
+  .discarded{color:var(--danger);font-size:13px;margin-top:6px}
+  .extra-cost{color:var(--accent);font-size:13px;margin-top:6px}
 
+  /* Итог */
   .total{font-size:1.4em;text-align:center;padding:24px;
     border-radius:10px;margin-top:20px;font-weight:700}
   .total.ok{background:linear-gradient(135deg,#1a4a1a,#2a6a2a);
     color:#a0ffa0;border:2px solid #40a040}
+  [data-theme="light"] .total.ok{background:linear-gradient(135deg,#e8f5e9,#c8e6c9);
+    color:#1b5e20;border:2px solid #81c784}
   .total.too-expensive{background:linear-gradient(135deg,#4a1a1a,#6a2a2a);
     color:#ffa0a0;border:2px solid #a04040}
-  .summary{margin-top:15px;padding:16px;background:#0a0e17;
+  [data-theme="light"] .total.too-expensive{background:linear-gradient(135deg,#ffebee,#ffcdd2);
+    color:#b71c1c;border:2px solid #ef9a9a}
+  .summary{margin-top:15px;padding:16px;background:var(--bg);
     border-radius:6px;font-size:13px;color:var(--text-dim);
     line-height:1.8;border:1px solid var(--border)}
   .summary b{color:var(--text)}
@@ -87,6 +140,7 @@
   }
   .summary .penalty-line b{color:var(--accent);font-size:1.1em}
 
+  /* Правила */
   .rules{font-size:13px;color:var(--text-dim);line-height:1.7}
   .rules li{margin-left:18px;margin-bottom:4px}
 
@@ -95,6 +149,7 @@
       background:var(--panel-2);padding:12px;border-radius:8px;
       margin-bottom:12px}
     .header-row{display:none}
+    .options-panel{grid-template-columns:1fr}
   }
 </style>
 </head>
@@ -102,20 +157,38 @@
 <div class="container">
   <header>
     <h1>⚒️ Калькулятор чар Minecraft</h1>
-    <p>Исправленная версия: стоимость = итоговый уровень × множитель</p>
+    <p>Расчёт стоимости зачарования на наковальне</p>
+    <button id="themeToggle">🌙 Тёмная</button>
   </header>
 
   <section class="panel">
     <h2>Зачарования</h2>
     <div class="enchant-row header-row">
-      <div>Название</div><div>Ур.</div><div>Множитель</div>
-      <div>Источник</div><div>Макс. ур.</div>
-      <div>Группа несовм.</div><div></div>
+      <div>Название</div><div>Ур.</div><div>Множ.</div>
+      <div>Источник</div><div>Макс.</div><div>Группа</div><div></div>
     </div>
     <div id="enchantList"></div>
     <div class="btn-row">
       <button id="addBtn">+ Добавить чар</button>
       <button id="clearBtn">Очистить</button>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Дополнительные операции и состояние предмета</h2>
+    <div class="options-panel">
+      <div class="option-item">
+        <input type="checkbox" id="repairCheck">
+        <label for="repairCheck">🔧 Ремонт предмета (+2 ур.)</label>
+      </div>
+      <div class="option-item">
+        <input type="checkbox" id="renameCheck">
+        <label for="renameCheck">✏️ Переименование (+1 ур.)</label>
+      </div>
+      <div class="option-item">
+        <label for="targetN" style="white-space:nowrap">🛠️ n предмета:</label>
+        <input type="number" id="targetN" value="0" min="0" max="30" title="Сколько раз предмет уже использовался в наковальне">
+      </div>
     </div>
   </section>
 
@@ -134,6 +207,8 @@
       <li>Если цель уже имеет чар, стоимость добавляется <b>даже если уровень не меняется</b></li>
       <li>Одинаковые уровни повышаются на 1 (до максимума)</li>
       <li>Несовместимые чары отбрасываются и дают <b>+1</b></li>
+      <li>Ремонт: <b>+2 уровня</b> за операцию</li>
+      <li>Переименование: <b>+1 уровень</b> за операцию</li>
       <li>Если итог &gt; <b>39</b> — «Слишком дорого!»</li>
     </ul>
   </section>
@@ -150,8 +225,23 @@
 
 <script>
 // ============================================================
-//  ТАБЛИЦА МНОЖИТЕЛЕЙ ДЛЯ СТАНДАРТНЫХ ЗАЧАРОВАНИЙ (Java Edition)
-//  Значения: множитель предмета и множитель книги
+//  ТЕМА
+// ============================================================
+const themeToggle = document.getElementById('themeToggle');
+const savedTheme = localStorage.getItem('mc-calc-theme') || 'dark';
+document.documentElement.setAttribute('data-theme', savedTheme);
+themeToggle.textContent = savedTheme === 'dark' ? '🌙 Тёмная' : '☀️ Светлая';
+
+themeToggle.addEventListener('click', () => {
+  const current = document.documentElement.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  themeToggle.textContent = next === 'dark' ? '🌙 Тёмная' : '☀️ Светлая';
+  localStorage.setItem('mc-calc-theme', next);
+});
+
+// ============================================================
+//  ТАБЛИЦА МНОЖИТЕЛЕЙ И МАКСИМАЛЬНЫХ УРОВНЕЙ
 // ============================================================
 const ENCHANT_DATA = {
   'Protection':        { multItem: 1, multBook: 1, maxLevel: 4 },
@@ -203,6 +293,7 @@ const ENCHANT_DATA = {
 //  СОСТОЯНИЕ
 // ============================================================
 let enchantRows = [];
+let extraOptions = { repair: false, rename: false, targetN: 0 };
 
 // ============================================================
 //  УТИЛИТЫ
@@ -242,7 +333,7 @@ function escapeHtml(s){
 }
 
 // ============================================================
-//  ЛОГИКА СЛИЯНИЯ (Java Edition)
+//  ЛОГИКА СЛИЯНИЯ
 // ============================================================
 function isIncompatible(e, targetEnchants){
   if (!e.group) return false;
@@ -287,8 +378,24 @@ function mergeItems(target, sacrifice, isFinal){
   const targetPen    = itemPenalty(target);
   const sacPen       = itemPenalty(sacrifice);
   const incompatCost = discarded.length;
-  const cost         = transferSum + targetPen + sacPen + incompatCost;
 
+  // Дополнительные расходы (только на финальном шаге)
+  let extraCost = 0;
+  let extraDetails = [];
+  if (isFinal){
+    if (extraOptions.repair){
+      extraCost += 2;
+      extraDetails.push('ремонт (+2)');
+    }
+    if (extraOptions.rename){
+      extraCost += 1;
+      extraDetails.push('переименование (+1)');
+    }
+  }
+
+  const cost = transferSum + targetPen + sacPen + incompatCost + extraCost;
+
+  // Собираем результат
   const newEnchants = target.enchants.map(e => ({ ...e }));
   for (const e of transferred){
     const existing = newEnchants.find(x => x.name === e.name);
@@ -312,7 +419,8 @@ function mergeItems(target, sacrifice, isFinal){
 
   return {
     target, sacrifice, transferred, discarded,
-    targetPen, sacPen, transferSum, incompatCost, cost, result,
+    targetPen, sacPen, transferSum, incompatCost, extraCost, extraDetails,
+    cost, result,
     isFinal: !!isFinal,
     transferDetails,
   };
@@ -334,25 +442,26 @@ function calculateSteps(enchantList){
   let current = items;
 
   while (current.length > 1){
-    // Сортируем по возрастанию суммы чар
     current.sort((a, b) => itemSum(a) - itemSum(b));
-
     const next = [];
     for (let i = 0; i + 1 < current.length; i += 2){
-      const sacrifice = current[i];      // меньшая — в жертву
-      const target    = current[i + 1];  // большая — в цель
+      const sacrifice = current[i];
+      const target    = current[i + 1];
       const step = mergeItems(target, sacrifice, false);
       steps.push(step);
       next.push(step.result);
     }
-    // Если остался один элемент (нечётное количество) — переносим как есть
     if (current.length % 2 === 1) next.push(current[current.length - 1]);
-
     current = next;
   }
 
+  // Финальное наложение на предмет
   const finalBook = current[0];
-  const cleanItem = { enchants: [], n: 0, isBook: false };
+  const cleanItem = {
+    enchants: [],
+    n: extraOptions.targetN,
+    isBook: false,
+  };
   const finalStep = mergeItems(cleanItem, finalBook, true);
   steps.push(finalStep);
 
@@ -369,6 +478,7 @@ function renderEnchants(){
   enchantRows.forEach((row, i) => {
     const div = document.createElement('div');
     div.className = 'enchant-row';
+    const maxLvl = row.maxLevel || getMaxLevel(row.name);
     div.innerHTML = `
       <input type="text" placeholder="Название" list="enchantNames"
              value="${escapeHtml(row.name)}" data-idx="${i}" data-field="name">
@@ -378,8 +488,8 @@ function renderEnchants(){
              data-idx="${i}" data-field="multiplier" title="Оставьте пустым для автоопределения">
       <label><input type="checkbox" ${row.isBook ? 'checked' : ''}
              data-idx="${i}" data-field="isBook"> Книга</label>
-      <input type="number" placeholder="Макс." value="${row.maxLevel || ''}" min="1"
-             data-idx="${i}" data-field="maxLevel" title="Оставьте пустым для автоопределения">
+      <input type="number" placeholder="Макс." value="${maxLvl}" min="1"
+             data-idx="${i}" data-field="maxLevel" title="Максимальный уровень чара">
       <input type="text" placeholder="Группа"
              value="${escapeHtml(row.group || '')}" data-idx="${i}" data-field="group">
       <button class="danger" data-idx="${i}" data-action="remove">×</button>
@@ -428,23 +538,25 @@ function renderResults(steps){
 
     let html = `<h3>${title}</h3>`;
     html += `<div class="row">🎯 Цель: <b>${itemLabel(step.target)}</b> ` +
-            `<span style="color:#8a9bb0">(n=${step.target.n}, штраф=${step.targetPen})</span></div>`;
+            `<span style="color:var(--text-dim)">(n=${step.target.n}, штраф=${step.targetPen})</span></div>`;
     html += `<div class="row">📖 Жертва: <b>${itemLabel(step.sacrifice)}</b> ` +
-            `<span style="color:#8a9bb0">(n=${step.sacrifice.n}, штраф=${step.sacPen})</span></div>`;
+            `<span style="color:var(--text-dim)">(n=${step.sacrifice.n}, штраф=${step.sacPen})</span></div>`;
 
     html += `<div class="formula">`;
-    html += `Стоимость чар жертвы: <span style="color:#7cc4ff">${step.transferSum}</span>`;
+    html += `Стоимость чар жертвы: <span style="color:var(--accent-2)">${step.transferSum}</span>`;
     if (step.transferDetails.length){
-      html += `<br><span style="font-size:11px;color:#8a9bb0">`;
+      html += `<br><span style="font-size:11px;color:var(--text-dim)">`;
       html += step.transferDetails.map(d =>
         `${d.name} → ур.${d.level} = ${d.cost}`
       ).join('<br>');
       html += `</span>`;
     }
-    html += `<br>Штраф цели: <span style="color:#ffa0a0">${step.targetPen}</span>`;
-    html += ` + штраф жертвы: <span style="color:#ffa0a0">${step.sacPen}</span>`;
+    html += `<br>Штраф цели: <span style="color:var(--danger)">${step.targetPen}</span>`;
+    html += ` + штраф жертвы: <span style="color:var(--danger)">${step.sacPen}</span>`;
     if (step.incompatCost > 0)
-      html += ` + несовместимость: <span style="color:#ffd060">${step.incompatCost}</span>`;
+      html += ` + несовместимость: <span style="color:var(--accent)">${step.incompatCost}</span>`;
+    if (step.extraCost > 0)
+      html += ` + ${step.extraDetails.join(' + ')}: <span style="color:var(--accent)">${step.extraCost}</span>`;
     html += `<br>ИТОГО: <b>${step.cost}</b></div>`;
 
     if (step.discarded.length){
@@ -453,7 +565,7 @@ function renderResults(steps){
     }
 
     html += `<div class="result-row">✅ Результат: <b>${itemLabel(step.result)}</b> ` +
-            `<span style="color:#8a9bb0">(n=${step.result.n})</span></div>`;
+            `<span style="color:var(--text-dim)">(n=${step.result.n})</span></div>`;
 
     div.innerHTML = html;
     container.appendChild(div);
@@ -464,10 +576,9 @@ function renderResults(steps){
   const totalCost       = steps.reduce((s, st) => s + st.cost, 0);
   const anyTooExpensive = steps.some(st => st.cost > 39);
 
-  // Финальный предмет — то, что получилось после последнего шага
-  const finalItem       = finalStep.result;
-  const finalN          = finalItem.n;
-  const finalPenalty    = penalty(finalN);
+  const finalItem    = finalStep.result;
+  const finalN       = finalItem.n;
+  const finalPenalty = penalty(finalN);
 
   const totalDiv = document.createElement('div');
   totalDiv.className = 'total ' + (anyTooExpensive ? 'too-expensive' : 'ok');
@@ -482,8 +593,8 @@ function renderResults(steps){
     `Общий расход опыта: <b>${totalCost}</b> уровней<br>` +
     `Операций: <b>${steps.length}</b><br>` +
     (anyTooExpensive
-      ? `<span style="color:#ff8080">⚠️ Некоторые шаги превышают 39 уровней — в выживании невозможно!</span>`
-      : `<span style="color:#80ff80">✓ Все шаги в пределах 39 уровней.</span>`) +
+      ? `<span style="color:var(--danger)">⚠️ Некоторые шаги превышают 39 уровней — в выживании невозможно!</span>`
+      : `<span style="color:var(--ok)">✓ Все шаги в пределах 39 уровней.</span>`) +
     `<div class="penalty-line">
        🛠️ Итоговый штраф предмета: n = <b>${finalN}</b> →
        штраф при следующем использовании = <b>${finalPenalty}</b>
@@ -498,6 +609,13 @@ function renderResults(steps){
 //  ПРЕСЕТЫ
 // ============================================================
 const PRESETS = [
+  {
+    name: 'Эффективность V, Прочность III, Починка I, Удача III (33 ур.)',
+    data: [
+      ['Efficiency', 5], ['Unbreaking', 3],
+      ['Mending', 1], ['Fortune', 3],
+    ],
+  },
   {
     name: 'Пример 1: лич 3, починка 2, прочность 3, Удача 6, эфф 5',
     data: [
@@ -557,6 +675,17 @@ document.getElementById('clearBtn').addEventListener('click', () => {
   renderEnchants();
   document.getElementById('results').style.display = 'none';
 });
+
+document.getElementById('repairCheck').addEventListener('change', e => {
+  extraOptions.repair = e.target.checked;
+});
+document.getElementById('renameCheck').addEventListener('change', e => {
+  extraOptions.rename = e.target.checked;
+});
+document.getElementById('targetN').addEventListener('input', e => {
+  extraOptions.targetN = Math.max(0, +e.target.value || 0);
+});
+
 document.getElementById('calcBtn').addEventListener('click', () => {
   const valid = enchantRows.filter(r => r.name.trim() && r.level > 0);
   if (!valid.length){ alert('Добавьте хотя бы одно зачарование'); return; }
