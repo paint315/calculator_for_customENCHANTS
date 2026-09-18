@@ -1,0 +1,593 @@
+/* ============================================================
+   СВЕТЛАЯ ТЕМА (единственная)
+   ============================================================ */
+:root {
+  --bg: #f5f7fa;
+  --bg-dot: rgba(0, 0, 0, 0.02);
+  --panel: #ffffff;
+  --panel-solid: #ffffff;
+  --panel-border: #e2e8f0;
+  --panel-hover: #f0f4f8;
+  --text: #1a2b42;
+  --text-dim: #6b7d92;
+  --text-muted: #9aa8b8;
+  --accent: #d99230;
+  --accent-hover: #e8a33d;
+  --teal: #4fb3a0;
+  --teal-dark: #3a9484;
+  --teal-grad: linear-gradient(135deg, #6bc9b8 0%, #4fb3a0 100%);
+  --input-bg: #f8fafc;
+  --input-border: #d8e0e8;
+  --danger: #d64545;
+  --ok: #3a9484;
+  --pill-bg: #f0f4f8;
+  --pill-border: #e2e8f0;
+  --shadow: 0 4px 20px rgba(20, 40, 80, 0.06);
+}
+
+/* ============================================================
+   БАЗОВЫЕ СТИЛИ
+   ============================================================ */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body { min-height: 100%; }
+
+body {
+  font-family: -apple-system, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  background-color: var(--bg);
+  background-image: radial-gradient(circle, var(--bg-dot) 1px, transparent 1px);
+  background-size: 28px 28px;
+  background-attachment: fixed;
+  color: var(--text);
+  line-height: 1.55;
+  font-size: 15px;
+  padding: 32px 24px 60px;
+}
+
+.container { max-width: 1100px; margin: 0 auto; }
+
+/* ============================================================
+   HERO
+   ============================================================ */
+.hero {
+  position: relative;
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: 24px;
+  padding: 44px 48px;
+  margin-bottom: 40px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+.hero::before {
+  content: "";
+  position: absolute;
+  right: -80px;
+  bottom: -80px;
+  width: 320px;
+  height: 320px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(79, 179, 160, 0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border: 1px solid var(--pill-border);
+  border-radius: 8px;
+  background: var(--pill-bg);
+  color: var(--text-dim);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+.hero-badge-icon {
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  background: var(--teal-grad);
+  color: #ffffff;
+  font-size: 10px;
+}
+.hero h1 {
+  font-size: 3em;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  line-height: 1.1;
+  margin-bottom: 16px;
+}
+.hero h1 .highlight { color: var(--accent); }
+.hero-description {
+  color: var(--text-dim);
+  font-size: 1.05em;
+  max-width: 620px;
+  margin-bottom: 28px;
+  line-height: 1.6;
+}
+.hero-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.stat-pill {
+  padding: 6px 14px;
+  border: 1px solid var(--pill-border);
+  border-radius: 20px;
+  background: var(--pill-bg);
+  font-size: 12px;
+  color: var(--text-dim);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.stat-pill b { color: var(--text); font-weight: 700; }
+
+/* ============================================================
+   СЕКЦИИ И ПАНЕЛИ
+   ============================================================ */
+.section-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+.section-label::before {
+  content: "";
+  width: 14px;
+  height: 2px;
+  background: var(--accent);
+  border-radius: 2px;
+}
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: 20px;
+  padding: 26px 28px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow);
+}
+.panel h2 {
+  font-size: 1.15em;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.panel h2::before {
+  content: "";
+  width: 4px;
+  height: 18px;
+  background: var(--teal-grad);
+  border-radius: 2px;
+}
+
+.hint-text {
+  color: var(--text-muted);
+  font-size: 12px;
+  margin-top: 14px;
+}
+
+.conflict-warning {
+  color: var(--danger);
+  font-size: 12px;
+  margin-top: 12px;
+}
+
+/* ============================================================
+   ПЕРЕКЛЮЧАТЕЛЬ РЕЖИМА
+   ============================================================ */
+.mode-switch {
+  display: inline-flex;
+  gap: 4px;
+  padding: 5px;
+  border-radius: 14px;
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  margin-bottom: 24px;
+  box-shadow: var(--shadow);
+}
+.mode-switch button {
+  padding: 11px 24px;
+  background: transparent;
+  color: var(--text-dim);
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-family: inherit;
+  font-weight: 600;
+  border-radius: 10px;
+  transition: all 0.2s;
+}
+.mode-switch button.active {
+  background: var(--teal-grad);
+  color: #ffffff;
+  box-shadow: 0 2px 12px rgba(79, 179, 160, 0.25);
+}
+.mode-switch button:hover:not(.active) {
+  color: var(--text);
+  background: var(--panel-hover);
+}
+
+/* ============================================================
+   СЕТКИ КНОПОК
+   ============================================================ */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 10px;
+}
+.grid button {
+  background: var(--input-bg);
+  color: var(--text);
+  border: 1px solid var(--input-border);
+  padding: 13px 16px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 14px;
+  font-family: inherit;
+  font-weight: 500;
+  transition: all 0.2s;
+  text-align: left;
+}
+.grid button:hover:not(:disabled) {
+  background: var(--panel-hover);
+  border-color: var(--teal);
+  color: var(--teal);
+  transform: translateY(-1px);
+}
+.grid button.selected {
+  background: rgba(79, 179, 160, 0.1);
+  color: var(--teal);
+  border-color: var(--teal);
+  font-weight: 700;
+  box-shadow: 0 0 0 1px var(--teal);
+}
+.grid button:disabled,
+.grid button.disabled {
+  opacity: 0.28;
+  cursor: not-allowed;
+  text-decoration: line-through;
+  background: var(--input-bg);
+  color: var(--text-muted);
+  border-color: var(--input-border);
+}
+.grid button:disabled:hover { background: var(--input-bg); }
+
+/* ============================================================
+   ФОРМА КАСТОМНОГО ЧАРА
+   ============================================================ */
+.custom-form {
+  display: grid;
+  grid-template-columns: 2fr 60px 80px 80px 100px 90px 130px;
+  gap: 8px;
+  align-items: center;
+}
+.custom-form input {
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  color: var(--text);
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-size: 13px;
+  width: 100%;
+  font-family: inherit;
+  transition: border-color 0.2s;
+}
+.custom-form input:focus {
+  outline: none;
+  border-color: var(--teal);
+  box-shadow: 0 0 0 3px rgba(79, 179, 160, 0.12);
+}
+.custom-form label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  color: var(--text-dim);
+  cursor: pointer;
+}
+.custom-form button {
+  background: var(--accent);
+  color: #ffffff;
+  font-weight: 700;
+  border: none;
+  padding: 11px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 13px;
+  transition: background 0.2s;
+}
+.custom-form button:hover { background: var(--accent-hover); }
+.custom-hint {
+  grid-column: 1 / -1;
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 4px;
+  font-style: italic;
+}
+
+/* ============================================================
+   ТАБЛИЦА ОПЫТНОГО РЕЖИМА
+   ============================================================ */
+.enchant-row {
+  display: grid;
+  grid-template-columns: 2fr 55px 70px 80px 60px 85px 36px;
+  gap: 6px;
+  margin-bottom: 8px;
+  align-items: center;
+}
+.enchant-row input {
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  color: var(--text);
+  padding: 9px 11px;
+  border-radius: 10px;
+  font-size: 13px;
+  width: 100%;
+  font-family: inherit;
+}
+.enchant-row input:focus {
+  outline: none;
+  border-color: var(--teal);
+  box-shadow: 0 0 0 3px rgba(79, 179, 160, 0.12);
+}
+.enchant-row input.conflict {
+  border-color: var(--danger);
+  box-shadow: 0 0 0 3px rgba(214, 69, 69, 0.12);
+}
+.enchant-row label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--text-dim);
+  cursor: pointer;
+}
+.header-row {
+  color: var(--accent);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  padding: 0 10px;
+}
+.enchant-row button.danger {
+  background: var(--danger);
+  border: none;
+  color: #fff;
+  padding: 9px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: opacity 0.2s;
+}
+.enchant-row button.danger:hover { opacity: 0.85; }
+
+/* ============================================================
+   ПРОСТОЙ СПИСОК (НОВИЧОК)
+   ============================================================ */
+.book-row {
+  display: grid;
+  grid-template-columns: 2fr 70px 50px 40px;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 8px;
+  background: var(--input-bg);
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--input-border);
+}
+.book-row input[type="number"] {
+  background: var(--panel-solid);
+  border: 1px solid var(--input-border);
+  color: var(--text);
+  padding: 7px 9px;
+  border-radius: 8px;
+  font-size: 13px;
+  width: 100%;
+}
+.book-row input.invalid { border-color: var(--danger); }
+.book-row button {
+  background: var(--danger);
+  border: none;
+  color: #fff;
+  padding: 7px 11px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: opacity 0.2s;
+}
+.book-row button:hover { opacity: 0.85; }
+
+/* ============================================================
+   ДОПОЛНИТЕЛЬНЫЕ ОПЦИИ
+   ============================================================ */
+.options-panel {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+  margin-bottom: 15px;
+}
+.option-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--input-bg);
+  padding: 13px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--input-border);
+  font-size: 13px;
+  transition: border-color 0.2s;
+}
+.option-item:hover { border-color: var(--teal); }
+.option-item input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: var(--teal-dark);
+}
+.option-item input[type="number"] {
+  width: 70px;
+  background: var(--panel-solid);
+  border: 1px solid var(--input-border);
+  color: var(--text);
+  padding: 7px 9px;
+  border-radius: 8px;
+  font-size: 13px;
+}
+.option-item label { cursor: pointer; color: var(--text); }
+
+/* ============================================================
+   ОСНОВНАЯ КНОПКА
+   ============================================================ */
+button.primary {
+  background: var(--teal-grad);
+  color: #ffffff;
+  font-weight: 800;
+  border: none;
+  font-size: 15px;
+  padding: 16px 36px;
+  width: 100%;
+  border-radius: 14px;
+  cursor: pointer;
+  font-family: inherit;
+  letter-spacing: 0.5px;
+  transition: transform 0.15s, box-shadow 0.2s;
+  box-shadow: 0 4px 16px rgba(79, 179, 160, 0.2);
+}
+button.primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 22px rgba(79, 179, 160, 0.3);
+}
+button.primary:active { transform: translateY(0); }
+
+/* ============================================================
+   РЕЗУЛЬТАТЫ
+   ============================================================ */
+.step {
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  border-left: 3px solid var(--teal);
+  padding: 18px 20px;
+  margin-bottom: 12px;
+  border-radius: 12px;
+  font-size: 14px;
+}
+.step h3 {
+  color: var(--accent);
+  margin-bottom: 12px;
+  font-size: 0.9em;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+.step .row { margin-bottom: 5px; color: var(--text-dim); font-size: 13px; }
+.step .row b { color: var(--text); }
+.step .formula {
+  font-family: 'Consolas', 'Courier New', monospace;
+  background: var(--panel-solid);
+  padding: 14px 16px;
+  border-radius: 10px;
+  margin: 12px 0;
+  font-size: 13px;
+  color: var(--teal);
+  word-break: break-word;
+  border: 1px solid var(--input-border);
+  line-height: 1.7;
+}
+.step .formula b { color: var(--accent); font-size: 1.15em; }
+.step .result-row {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--input-border);
+  color: var(--teal);
+  font-size: 13px;
+}
+.discarded { color: var(--danger); font-size: 13px; margin-top: 8px; }
+
+.total {
+  font-size: 1.35em;
+  text-align: center;
+  padding: 26px;
+  border-radius: 16px;
+  margin-top: 22px;
+  font-weight: 800;
+  letter-spacing: -0.2px;
+}
+.total.ok {
+  background: rgba(79, 179, 160, 0.1);
+  color: var(--teal);
+  border: 1px solid rgba(79, 179, 160, 0.35);
+}
+.total.too-expensive {
+  background: rgba(214, 69, 69, 0.1);
+  color: var(--danger);
+  border: 1px solid rgba(214, 69, 69, 0.35);
+}
+
+.summary {
+  margin-top: 16px;
+  padding: 18px 20px;
+  background: var(--input-bg);
+  border-radius: 12px;
+  font-size: 13px;
+  color: var(--text-dim);
+  line-height: 1.9;
+  border: 1px solid var(--input-border);
+}
+.summary b { color: var(--text); font-weight: 700; }
+.summary .penalty-line {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--input-border);
+  color: var(--accent);
+  font-size: 14px;
+}
+.summary .penalty-line b { color: var(--accent); font-size: 1.15em; }
+
+/* ============================================================
+   ПРАВИЛА
+   ============================================================ */
+.rules { font-size: 13.5px; color: var(--text-dim); line-height: 1.9; }
+.rules li { margin-left: 22px; margin-bottom: 6px; }
+.rules b { color: var(--text); }
+
+/* ============================================================
+   АДАПТИВ
+   ============================================================ */
+@media (max-width: 800px) {
+  body { padding: 16px 16px 40px; }
+  .hero { padding: 28px 24px; border-radius: 20px; }
+  .hero h1 { font-size: 2em; }
+  .enchant-row {
+    grid-template-columns: 1fr 1fr;
+    background: var(--input-bg);
+    padding: 12px;
+    border-radius: 10px;
+    margin-bottom: 12px;
+  }
+  .header-row { display: none; }
+  .options-panel { grid-template-columns: 1fr; }
+  .grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
+  .custom-form { grid-template-columns: 1fr 1fr; }
+  .custom-form button { grid-column: 1 / -1; }
+  .book-row { grid-template-columns: 1fr 60px 40px 36px; }
+  .mode-switch { width: 100%; }
+  .mode-switch button { flex: 1; }
+}
