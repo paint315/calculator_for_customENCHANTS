@@ -5,14 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Калькулятор чар Minecraft — наковальня</title>
 <style>
-  /* ---------- ТЕМЫ ---------- */
   :root, [data-theme="dark"] {
     --bg:#0e1621; --panel:#16213e; --panel-2:#0f3460;
     --accent:#f0c040; --accent-2:#7cc4ff;
     --text:#e0e0e0; --text-dim:#8a9bb0;
     --ok:#4caf50; --danger:#e74c3c; --border:#1a4a7a;
     --input-bg:#0f3460; --input-border:#1a4a7a;
-    --btn-hover:#1a4a7a; --btn-active:#f0c040;
+    --btn-hover:#1a4a7a;
   }
   [data-theme="light"] {
     --bg:#f4f6f8; --panel:#ffffff; --panel-2:#e8edf2;
@@ -20,9 +19,8 @@
     --text:#1a1a2e; --text-dim:#5a6a7a;
     --ok:#2e7d32; --danger:#c62828; --border:#c0ccd8;
     --input-bg:#ffffff; --input-border:#c0ccd8;
-    --btn-hover:#d0d8e0; --btn-active:#d4a017;
+    --btn-hover:#d0d8e0;
   }
-
   *{box-sizing:border-box;margin:0;padding:0}
   body{
     font-family:'Segoe UI',Tahoma,sans-serif;
@@ -31,7 +29,6 @@
     transition: background .3s, color .3s;
   }
   .container{max-width:1100px;margin:0 auto}
-
   header{text-align:center;margin-bottom:30px;position:relative}
   h1{color:var(--accent);font-size:2em;margin-bottom:6px}
   h2{color:var(--accent-2);font-size:1.1em;margin-bottom:15px;
@@ -40,137 +37,95 @@
          margin-bottom:20px;border:1px solid var(--border);
          transition: background .3s, border-color .3s}
 
-  /* ---------- ПЕРЕКЛЮЧАТЕЛИ ---------- */
-  .top-controls{
-    position:absolute;top:0;right:0;
-    display:flex;gap:10px;align-items:center;
-  }
-  #themeToggle{
-    background:var(--panel-2);border:1px solid var(--border);
+  .top-controls{position:absolute;top:0;right:0;display:flex;gap:10px;align-items:center}
+  #themeToggle{background:var(--panel-2);border:1px solid var(--border);
     color:var(--text);padding:8px 14px;border-radius:20px;
-    cursor:pointer;font-size:13px;font-family:inherit;
-  }
+    cursor:pointer;font-size:13px;font-family:inherit}
   #themeToggle:hover{background:var(--accent);color:var(--bg)}
 
-  .mode-switch{
-    display:flex;gap:0;border-radius:8px;overflow:hidden;
-    border:1px solid var(--border);margin-bottom:20px;
-  }
-  .mode-switch button{
-    flex:1;padding:12px;background:var(--panel-2);color:var(--text);
-    border:none;cursor:pointer;font-size:15px;font-family:inherit;
-    transition:background .2s;
-  }
-  .mode-switch button.active{
-    background:var(--accent);color:var(--bg);font-weight:700;
-  }
+  .mode-switch{display:flex;gap:0;border-radius:8px;overflow:hidden;
+    border:1px solid var(--border);margin-bottom:20px}
+  .mode-switch button{flex:1;padding:12px;background:var(--panel-2);
+    color:var(--text);border:none;cursor:pointer;font-size:15px;
+    font-family:inherit;transition:background .2s}
+  .mode-switch button.active{background:var(--accent);color:var(--bg);font-weight:700}
   .mode-switch button:hover:not(.active){background:var(--btn-hover)}
 
-  /* ---------- СЕТКИ КНОПОК ---------- */
-  .grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(140px,1fr));
-    gap:10px;
-  }
-  .grid button{
-    background:var(--panel-2);color:var(--text);
-    border:1px solid var(--border);padding:12px;
-    border-radius:8px;cursor:pointer;font-size:14px;
-    font-family:inherit;transition:all .2s;
-    text-align:center;
-  }
-  .grid button:hover{background:var(--btn-hover);border-color:var(--accent-2)}
-  .grid button.selected{
-    background:var(--accent);color:var(--bg);
-    border-color:var(--accent);font-weight:700;
-  }
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px}
+  .grid button{background:var(--panel-2);color:var(--text);
+    border:1px solid var(--border);padding:12px;border-radius:8px;
+    cursor:pointer;font-size:14px;font-family:inherit;transition:all .2s;
+    text-align:center}
+  .grid button:hover:not(:disabled){background:var(--btn-hover);border-color:var(--accent-2)}
+  .grid button.selected{background:var(--accent);color:var(--bg);
+    border-color:var(--accent);font-weight:700}
+  .grid button:disabled,.grid button.disabled{
+    opacity:0.35;cursor:not-allowed;text-decoration:line-through;
+    background:var(--panel);color:var(--text-dim);border-color:var(--border)}
+  .grid button:disabled:hover{background:var(--panel)}
 
-  /* ---------- ВЫБРАННЫЕ КНИГИ ---------- */
-  .book-row{
-    display:grid;
-    grid-template-columns:2fr 70px 50px 40px;
-    gap:8px;align-items:center;margin-bottom:8px;
-    background:var(--panel-2);padding:10px;border-radius:6px;
-    border:1px solid var(--border);
-  }
-  .book-row input[type="number"]{
-    background:var(--input-bg);border:1px solid var(--input-border);
-    color:var(--text);padding:6px 8px;border-radius:4px;
-    font-size:13px;width:100%;
-  }
-  .book-row button{
-    background:var(--danger);border:none;color:#fff;
-    padding:6px 10px;border-radius:4px;cursor:pointer;
-    font-size:14px;
-  }
+  .custom-form{display:grid;
+    grid-template-columns:2fr 60px 80px 80px 100px 90px 130px;
+    gap:8px;align-items:center}
+  .custom-form input{background:var(--input-bg);border:1px solid var(--input-border);
+    color:var(--text);padding:8px 10px;border-radius:6px;font-size:13px;width:100%}
+  .custom-form input:focus{outline:none;border-color:var(--accent)}
+  .custom-form label{display:flex;align-items:center;gap:5px;
+    font-size:12px;color:var(--text-dim);cursor:pointer}
+  .custom-form button{background:var(--accent);color:var(--bg);font-weight:700;
+    border:none;padding:10px;border-radius:6px;cursor:pointer;
+    font-family:inherit;font-size:13px;transition:background .2s}
+  .custom-form button:hover{background:var(--accent-2)}
+  .custom-hint{grid-column:1 / -1;font-size:12px;color:var(--text-dim);margin-top:4px}
 
-  /* ---------- ТАБЛИЦА ОПЫТНОГО РЕЖИМА ---------- */
-  .enchant-row{
-    display:grid;
+  .enchant-row{display:grid;
     grid-template-columns:2fr 55px 70px 80px 60px 85px 36px;
-    gap:6px;margin-bottom:8px;align-items:center;
-  }
-  .enchant-row input{
-    background:var(--input-bg);border:1px solid var(--input-border);
-    color:var(--text);padding:8px 10px;border-radius:6px;
-    font-size:13px;width:100%;
-  }
+    gap:6px;margin-bottom:8px;align-items:center}
+  .enchant-row input{background:var(--input-bg);border:1px solid var(--input-border);
+    color:var(--text);padding:8px 10px;border-radius:6px;font-size:13px;width:100%}
+  .enchant-row input:focus{outline:none;border-color:var(--accent)}
+  .enchant-row input.conflict{border-color:var(--danger);box-shadow:0 0 0 2px rgba(231,76,60,0.3)}
   .enchant-row label{display:flex;align-items:center;gap:4px;
     font-size:12px;color:var(--text-dim);cursor:pointer}
   .header-row{color:var(--accent-2);font-size:10px;font-weight:600;
     text-transform:uppercase;letter-spacing:.3px;padding:0 8px}
-  .enchant-row button.danger{
-    background:var(--danger);border:none;color:#fff;
-    padding:8px;border-radius:4px;cursor:pointer;font-size:16px;
-  }
+  .enchant-row button.danger{background:var(--danger);border:none;color:#fff;
+    padding:8px;border-radius:4px;cursor:pointer;font-size:16px}
 
-  /* ---------- ОПЦИИ ---------- */
-  .options-panel{
-    display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-    gap:12px;margin-bottom:15px;
-  }
-  .option-item{
-    display:flex;align-items:center;gap:8px;
-    background:var(--panel-2);padding:10px 14px;
-    border-radius:8px;border:1px solid var(--border);
-    font-size:13px;
-  }
+  .book-row{display:grid;grid-template-columns:2fr 70px 50px 40px;
+    gap:8px;align-items:center;margin-bottom:8px;
+    background:var(--panel-2);padding:10px;border-radius:6px;
+    border:1px solid var(--border)}
+  .book-row input[type="number"]{background:var(--input-bg);
+    border:1px solid var(--input-border);color:var(--text);
+    padding:6px 8px;border-radius:4px;font-size:13px;width:100%}
+  .book-row input.invalid{border-color:var(--danger)}
+  .book-row button{background:var(--danger);border:none;color:#fff;
+    padding:6px 10px;border-radius:4px;cursor:pointer;font-size:14px}
+
+  .options-panel{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+    gap:12px;margin-bottom:15px}
+  .option-item{display:flex;align-items:center;gap:8px;
+    background:var(--panel-2);padding:10px 14px;border-radius:8px;
+    border:1px solid var(--border);font-size:13px}
   .option-item input[type="checkbox"]{width:16px;height:16px;cursor:pointer}
-  .option-item input[type="number"]{
-    width:70px;background:var(--input-bg);border:1px solid var(--input-border);
-    color:var(--text);padding:6px 8px;border-radius:4px;font-size:13px;
-  }
+  .option-item input[type="number"]{width:70px;background:var(--input-bg);
+    border:1px solid var(--input-border);color:var(--text);
+    padding:6px 8px;border-radius:4px;font-size:13px}
 
-  /* ---------- КНОПКИ ОБЩИЕ ---------- */
-  button.primary{
-    background:var(--accent);color:var(--bg);
-    font-weight:700;border:1px solid var(--accent);
-    font-size:16px;padding:14px 36px;width:100%;
-    border-radius:6px;cursor:pointer;font-family:inherit;
-    transition:background .2s;
-  }
+  button.primary{background:var(--accent);color:var(--bg);font-weight:700;
+    border:1px solid var(--accent);font-size:16px;padding:14px 36px;width:100%;
+    border-radius:6px;cursor:pointer;font-family:inherit;transition:background .2s}
   button.primary:hover{background:var(--accent-2);border-color:var(--accent-2)}
-  .btn-row{display:flex;gap:10px;margin-top:15px;flex-wrap:wrap}
-  .btn-row button{
-    background:var(--panel-2);color:var(--text);
-    border:1px solid var(--border);padding:10px 18px;
-    border-radius:6px;cursor:pointer;font-size:14px;
-    font-family:inherit;
-  }
-  .btn-row button:hover{background:var(--btn-hover)}
 
-  /* ---------- ШАГИ ---------- */
   .step{background:var(--panel-2);border-left:4px solid var(--accent);
     padding:16px;margin-bottom:12px;border-radius:6px;font-size:14px}
   .step h3{color:var(--accent);margin-bottom:10px;font-size:.95em}
   .step .row{margin-bottom:4px;color:var(--text-dim)}
   .step .row b{color:var(--text)}
-  .step .formula{
-    font-family:'Consolas',monospace;background:var(--bg);
-    padding:12px;border-radius:6px;margin:10px 0;
-    font-size:13px;color:var(--ok);word-break:break-word;
-    border:1px solid var(--border);
-  }
+  .step .formula{font-family:'Consolas',monospace;background:var(--bg);
+    padding:12px;border-radius:6px;margin:10px 0;font-size:13px;
+    color:var(--ok);word-break:break-word;border:1px solid var(--border)}
   .step .formula b{color:var(--accent);font-size:1.1em}
   .step .result-row{margin-top:8px;padding-top:8px;
     border-top:1px solid var(--border);color:var(--ok)}
@@ -186,27 +141,24 @@
     color:#ffa0a0;border:2px solid #a04040}
   [data-theme="light"] .total.too-expensive{background:linear-gradient(135deg,#ffebee,#ffcdd2);
     color:#b71c1c;border:2px solid #ef9a9a}
-  .summary{margin-top:15px;padding:16px;background:var(--bg);
-    border-radius:6px;font-size:13px;color:var(--text-dim);
-    line-height:1.8;border:1px solid var(--border)}
+  .summary{margin-top:15px;padding:16px;background:var(--bg);border-radius:6px;
+    font-size:13px;color:var(--text-dim);line-height:1.8;border:1px solid var(--border)}
   .summary b{color:var(--text)}
-  .summary .penalty-line{
-    margin-top:10px;padding-top:10px;
-    border-top:1px dashed var(--border);
-    color:var(--accent);font-size:14px;
-  }
+  .summary .penalty-line{margin-top:10px;padding-top:10px;
+    border-top:1px dashed var(--border);color:var(--accent);font-size:14px}
   .summary .penalty-line b{color:var(--accent);font-size:1.1em}
 
   .rules{font-size:13px;color:var(--text-dim);line-height:1.7}
   .rules li{margin-left:18px;margin-bottom:4px}
 
   @media(max-width:800px){
-    .enchant-row{grid-template-columns:1fr 1fr;
-      background:var(--panel-2);padding:12px;border-radius:8px;
-      margin-bottom:12px}
+    .enchant-row{grid-template-columns:1fr 1fr;background:var(--panel-2);
+      padding:12px;border-radius:8px;margin-bottom:12px}
     .header-row{display:none}
     .options-panel{grid-template-columns:1fr}
-    .grid{grid-template-columns:repeat(auto-fill,minmax(110px,1fr))}
+    .grid{grid-template-columns:repeat(auto-fill,minmax(120px,1fr))}
+    .custom-form{grid-template-columns:1fr 1fr}
+    .custom-form button{grid-column:1 / -1}
     .book-row{grid-template-columns:1fr 60px 40px 36px}
   }
 </style>
@@ -221,50 +173,50 @@
     </div>
   </header>
 
-  <!-- Переключатель режима -->
   <div class="mode-switch">
     <button id="modeNovice" class="active">🧑‍🌾 Новичок</button>
     <button id="modeExpert">🧙 Опытный игрок</button>
   </div>
 
-  <!-- ================= РЕЖИМ НОВИЧКА ================= -->
-  <div id="novicePanel">
-    <section class="panel">
-      <h2>1. Выберите предмет</h2>
-      <div id="itemGrid" class="grid"></div>
-    </section>
-
-    <section class="panel" id="enchantPanel" style="display:none">
-      <h2>2. Выберите чары</h2>
-      <div id="enchantGrid" class="grid"></div>
-    </section>
-  </div>
-
-  <!-- ================= РЕЖИМ ОПЫТНОГО ================= -->
-  <div id="expertPanel" style="display:none">
-    <section class="panel">
-      <h2>Кастомные чары</h2>
-      <div class="enchant-row header-row">
-        <div>Название</div><div>Ур.</div><div>Множ.</div>
-        <div>Источник</div><div>Макс.</div><div>Группа</div><div></div>
-      </div>
-      <div id="expertEnchantList"></div>
-      <div class="btn-row">
-        <button id="expertAddBtn">+ Добавить чар</button>
-        <button id="expertClearBtn">Очистить</button>
-      </div>
-    </section>
-  </div>
-
-  <!-- ================= ВЫБРАННЫЕ КНИГИ (ОБЩИЕ) ================= -->
-  <section class="panel" id="selectedPanel" style="display:none">
-    <h2>Выбранные книги</h2>
-    <div id="selectedList"></div>
+  <section class="panel">
+    <h2>1. Выберите предмет</h2>
+    <div id="itemGrid" class="grid"></div>
   </section>
 
-  <!-- ================= ДОПОЛНИТЕЛЬНЫЕ ОПЦИИ ================= -->
+  <section class="panel" id="enchantPanel" style="display:none">
+    <h2>2. Выберите чары</h2>
+    <div id="enchantGrid" class="grid"></div>
+    <p id="enchantHint" style="color:var(--text-dim);font-size:12px;margin-top:10px;display:none">
+      🚫 Зачёркнутые чары несовместимы с уже выбранными. Число в скобках — текущий/максимальный уровень.
+    </p>
+  </section>
+
+  <section class="panel" id="customPanel" style="display:none">
+    <h2>3. Добавить свой чар</h2>
+    <div class="custom-form">
+      <input id="customName" type="text" placeholder="Название">
+      <input id="customLevel" type="number" placeholder="Ур." value="1" min="1">
+      <input id="customMult" type="number" placeholder="Множ." min="1">
+      <input id="customMax" type="number" placeholder="Макс." min="1">
+      <input id="customGroup" type="text" placeholder="Группа">
+      <label><input id="customIsBook" type="checkbox" checked> Книга</label>
+      <button id="customAdd">+ Добавить</button>
+      <div class="custom-hint">
+        💡 «Множ.» и «Макс.» можно оставить пустыми — будут взяты автоматически.
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" id="selectedPanel" style="display:none">
+    <h2>4. Выбранные книги</h2>
+    <div id="selectedList"></div>
+    <p id="conflictWarning" style="display:none;color:var(--danger);font-size:12px;margin-top:8px">
+      ⚠️ Обнаружены конфликтующие чары — при слиянии один из них будет отброшен (+1 к стоимости).
+    </p>
+  </section>
+
   <section class="panel">
-    <h2>Дополнительно</h2>
+    <h2>5. Дополнительно</h2>
     <div class="options-panel">
       <div class="option-item">
         <input type="checkbox" id="repairCheck">
@@ -326,7 +278,7 @@ themeToggle.addEventListener('click', () => {
 });
 
 // ============================================================
-//  ДАННЫЕ ЗАЧАРОВАНИЙ (Java Edition)
+//  ТАБЛИЦА МНОЖИТЕЛЕЙ И МАКС. УРОВНЕЙ
 // ============================================================
 const ENCHANT_DATA = {
   'Protection':        { multItem: 1, multBook: 1, maxLevel: 4 },
@@ -375,7 +327,7 @@ const ENCHANT_DATA = {
 };
 
 // ============================================================
-//  ПРЕДМЕТЫ И ИХ ДОСТУПНЫЕ ЧАРЫ (РЕЖИМ НОВИЧКА)
+//  ПРЕДМЕТЫ И ИХ ЧАРЫ
 // ============================================================
 const ITEM_ENCHANTS = {
   'Меч': ['Sharpness', 'Smite', 'Bane of Arthropods', 'Knockback', 'Fire Aspect',
@@ -416,12 +368,28 @@ const ITEM_ENCHANTS = {
 };
 
 // ============================================================
+//  ГРУППЫ НЕСОВМЕСТИМОСТИ
+// ============================================================
+const INCOMPATIBLE_GROUPS = {
+  'protection': ['Protection', 'Fire Protection', 'Blast Protection', 'Projectile Protection'],
+  'damage':     ['Sharpness', 'Smite', 'Bane of Arthropods'],
+  'mining':     ['Silk Touch', 'Fortune'],
+  'trident':    ['Riptide', 'Loyalty', 'Channeling'],
+  'boots':      ['Depth Strider', 'Frost Walker'],
+  'crossbow':   ['Multishot', 'Piercing'],
+};
+
+const ENCHANT_TO_GROUP = {};
+for (const [group, list] of Object.entries(INCOMPATIBLE_GROUPS)){
+  for (const name of list) ENCHANT_TO_GROUP[name] = group;
+}
+
+// ============================================================
 //  СОСТОЯНИЕ
 // ============================================================
-let currentMode = 'novice'; // 'novice' | 'expert'
-let selectedItem = null;    // выбранный предмет в режиме новичка
-let noviceBooks = [];       // книги, добавленные в режиме новичка
-let expertEnchants = [];    // чары в режиме опытного игрока
+let currentMode = 'novice';
+let selectedItem = null;
+let selectedBooks = [];
 let extraOptions = { repair: false, rename: false, targetN: 0 };
 
 // ============================================================
@@ -440,8 +408,18 @@ function getMaxLevel(name){
   return data ? data.maxLevel : 99;
 }
 
-function enchantCost(e, isBook){
-  return e.level * getMultiplier(e.name, isBook);
+function getEffectiveMax(book){
+  if (book.maxLevel != null && book.maxLevel > 0) return book.maxLevel;
+  return getMaxLevel(book.name) || 99;
+}
+
+// ВАЖНО: множитель зависит от контекста ПРЕДМЕТА (isBookContext),
+// а не от самого чара. Это критично для корректной сортировки и подсчёта.
+function enchantCost(e, isBookContext){
+  const mult = (e.multiplier != null && e.multiplier > 0)
+    ? e.multiplier
+    : getMultiplier(e.name, isBookContext);
+  return e.level * mult;
 }
 
 function itemSum(item){
@@ -450,13 +428,27 @@ function itemSum(item){
 
 function itemLabel(item){
   if (!item.enchants.length) return 'Пустой предмет';
-  return item.enchants.map(e => `${e.name} ${e.level}`).join(' + ');
+  return item.enchants
+    .map(e => `${escapeHtml(e.name)} ${e.level}`)
+    .join(' + ');
 }
 
 function escapeHtml(s){
   return String(s).replace(/[&<>"']/g, c => ({
     '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
   })[c]);
+}
+
+// ============================================================
+//  ПРОВЕРКА СОВМЕСТИМОСТИ (с учётом кастомной группы)
+// ============================================================
+function isIncompatibleWithSelected(name, customGroup){
+  const g = (customGroup && customGroup.trim()) || ENCHANT_TO_GROUP[name];
+  if (!g) return false;
+  return selectedBooks.some(b => {
+    const bGroup = (b.group && b.group.trim()) || ENCHANT_TO_GROUP[b.name];
+    return bGroup === g && b.name !== name;
+  });
 }
 
 // ============================================================
@@ -481,7 +473,7 @@ function mergeItems(target, sacrifice, isFinal){
 
   for (const e of transferred){
     const existing = target.enchants.find(x => x.name === e.name);
-    const maxLvl = getMaxLevel(e.name);
+    const maxLvl = getEffectiveMax(e);
     let finalLevel;
 
     if (existing){
@@ -496,7 +488,10 @@ function mergeItems(target, sacrifice, isFinal){
       finalLevel = e.level;
     }
 
-    const mult = getMultiplier(e.name, sacrifice.isBook);
+    // Стоимость = итоговый уровень × множитель (с учётом контекста жертвы)
+    const mult = (e.multiplier != null && e.multiplier > 0)
+      ? e.multiplier
+      : getMultiplier(e.name, sacrifice.isBook);
     const cost = finalLevel * mult;
     transferSum += cost;
     transferDetails.push({ name: e.name, level: finalLevel, cost });
@@ -506,8 +501,9 @@ function mergeItems(target, sacrifice, isFinal){
   const sacPen       = penalty(sacrifice.n);
   const incompatCost = discarded.length;
 
+  // Дополнительные операции (только на финальном шаге)
   let extraCost = 0;
-  let extraDetails = [];
+  const extraDetails = [];
   if (isFinal){
     if (extraOptions.repair){
       extraCost += 2;
@@ -525,13 +521,14 @@ function mergeItems(target, sacrifice, isFinal){
   const newEnchants = target.enchants.map(e => ({ ...e }));
   for (const e of transferred){
     const existing = newEnchants.find(x => x.name === e.name);
-    const maxLvl = getMaxLevel(e.name);
+    const maxLvl = getEffectiveMax(e);
     if (existing){
       if (existing.level === e.level && existing.level < maxLvl){
         existing.level += 1;
       } else if (e.level > existing.level){
         existing.level = e.level;
       }
+      // если уровень жертвы меньше — ничего не меняем
     } else {
       newEnchants.push({ ...e });
     }
@@ -546,9 +543,7 @@ function mergeItems(target, sacrifice, isFinal){
   return {
     target, sacrifice, transferred, discarded,
     targetPen, sacPen, transferSum, incompatCost, extraCost, extraDetails,
-    cost, result,
-    isFinal: !!isFinal,
-    transferDetails,
+    cost, result, isFinal: !!isFinal, transferDetails,
   };
 }
 
@@ -582,11 +577,7 @@ function calculateSteps(enchantList){
   }
 
   const finalBook = current[0];
-  const cleanItem = {
-    enchants: [],
-    n: extraOptions.targetN,
-    isBook: false,
-  };
+  const cleanItem = { enchants: [], n: extraOptions.targetN, isBook: false };
   const finalStep = mergeItems(cleanItem, finalBook, true);
   steps.push(finalStep);
 
@@ -594,7 +585,7 @@ function calculateSteps(enchantList){
 }
 
 // ============================================================
-//  РЕЖИМ НОВИЧКА: ОТРИСОВКА
+//  РЕНДЕР СЕТКИ ПРЕДМЕТОВ
 // ============================================================
 function renderItemGrid(){
   const grid = document.getElementById('itemGrid');
@@ -608,137 +599,281 @@ function renderItemGrid(){
       renderItemGrid();
       renderEnchantGrid();
       document.getElementById('enchantPanel').style.display = 'block';
-      document.getElementById('selectedPanel').style.display = 'block';
-      renderSelectedList();
+      document.getElementById('enchantHint').style.display = 'block';
     });
     grid.appendChild(btn);
   });
 }
 
+// ============================================================
+//  РЕНДЕР СЕТКИ ЧАР
+//  Улучшение 4: показываем текущий уровень на кнопке.
+// ============================================================
 function renderEnchantGrid(){
   const grid = document.getElementById('enchantGrid');
   grid.innerHTML = '';
   if (!selectedItem) return;
   const enchants = ITEM_ENCHANTS[selectedItem] || [];
+
   enchants.forEach(name => {
     const btn = document.createElement('button');
-    btn.textContent = name;
-    btn.addEventListener('click', () => {
-      // Проверяем, есть ли уже такая книга
-      const existing = noviceBooks.find(b => b.name === name);
-      if (existing){
-        // Если есть, повышаем уровень (если не максимум)
-        const maxLvl = getMaxLevel(name);
-        if (existing.level < maxLvl) {
-          existing.level += 1;
-        }
-      } else {
-        noviceBooks.push({
-          name,
-          level: 1,
-          multiplier: null,
-          isBook: true,
-          group: '',
-          maxLevel: null,
-        });
-      }
-      renderSelectedList();
-    });
+    const selectedBook = selectedBooks.find(b => b.name === name);
+    const maxLvl = selectedBook ? getEffectiveMax(selectedBook) : getMaxLevel(name);
+
+    // Показываем текущий/максимальный уровень, если чар уже выбран
+    const levelBadge = selectedBook ? ` (${selectedBook.level}/${maxLvl})` : '';
+    btn.textContent = name + levelBadge;
+
+    const isSelected = !!selectedBook;
+    const blocked = isIncompatibleWithSelected(name);
+
+    if (isSelected) btn.classList.add('selected');
+
+    if (blocked && !isSelected){
+      btn.disabled = true;
+      btn.classList.add('disabled');
+      btn.title = 'Несовместимо с уже выбранными чарами';
+    } else {
+      btn.addEventListener('click', () => addBookFromGrid(name));
+    }
+
     grid.appendChild(btn);
   });
 }
 
+// ============================================================
+//  ДОБАВЛЕНИЕ ЧАРА ИЗ СЕТКИ
+// ============================================================
+function addBookFromGrid(name){
+  const existing = selectedBooks.find(b => b.name === name);
+  if (existing){
+    const maxLvl = getEffectiveMax(existing);
+    if (existing.level < maxLvl) existing.level++;
+  } else {
+    selectedBooks.push({
+      name, level: 1, multiplier: null, isBook: true,
+      group: ENCHANT_TO_GROUP[name] || '',
+      maxLevel: null, custom: false,
+    });
+  }
+  renderSelectedList();
+  renderEnchantGrid();
+  updateConflictWarning();
+  document.getElementById('selectedPanel').style.display = 'block';
+}
+
+// ============================================================
+//  ДОБАВЛЕНИЕ КАСТОМНОГО ЧАРА
+// ============================================================
+function addCustomEnchant(){
+  const name = document.getElementById('customName').value.trim();
+  if (!name){ alert('Введите название чара'); return; }
+
+  const level    = Math.max(1, +document.getElementById('customLevel').value || 1);
+  const multVal  = document.getElementById('customMult').value;
+  const maxVal   = document.getElementById('customMax').value;
+  const groupVal = document.getElementById('customGroup').value.trim();
+
+  // Проверка несовместимости (с учётом явно указанной группы)
+  if (isIncompatibleWithSelected(name, groupVal)){
+    alert(`Чар «${name}» несовместим с уже выбранными чарами из той же группы.`);
+    return;
+  }
+
+  const existing = selectedBooks.find(b => b.name === name);
+  if (existing){
+    const maxLvl = getEffectiveMax(existing);
+    if (existing.level < maxLvl) existing.level++;
+  } else {
+    selectedBooks.push({
+      name, level,
+      multiplier: multVal ? +multVal : null,
+      isBook: document.getElementById('customIsBook').checked,
+      group: groupVal || ENCHANT_TO_GROUP[name] || '',
+      maxLevel: maxVal ? +maxVal : null,
+      custom: true,
+    });
+  }
+
+  // Очистка формы
+  document.getElementById('customName').value = '';
+  document.getElementById('customLevel').value = '1';
+  document.getElementById('customMult').value = '';
+  document.getElementById('customMax').value = '';
+  document.getElementById('customGroup').value = '';
+  document.getElementById('customIsBook').checked = true;
+
+  renderSelectedList();
+  renderEnchantGrid();
+  updateConflictWarning();
+  document.getElementById('selectedPanel').style.display = 'block';
+}
+
+// ============================================================
+//  ПРОВЕРКА КОНФЛИКТОВ В СПИСКЕ
+// ============================================================
+function updateConflictWarning(){
+  const anyConflict = selectedBooks.some((b, i) => {
+    const g = (b.group && b.group.trim()) || ENCHANT_TO_GROUP[b.name];
+    if (!g) return false;
+    return selectedBooks.some((other, j) => {
+      if (i === j) return false;
+      const otherG = (other.group && other.group.trim()) || ENCHANT_TO_GROUP[other.name];
+      return otherG === g;
+    });
+  });
+  document.getElementById('conflictWarning').style.display = anyConflict ? 'block' : 'none';
+}
+
+// ============================================================
+//  РЕНДЕР СПИСКА ВЫБРАННЫХ КНИГ
+// ============================================================
 function renderSelectedList(){
   const list = document.getElementById('selectedList');
   list.innerHTML = '';
-  if (!noviceBooks.length){
-    list.innerHTML = '<p style="color:var(--text-dim)">Пока ничего не выбрано. Нажмите на чары выше.</p>';
+
+  if (!selectedBooks.length){
+    list.innerHTML = '<p style="color:var(--text-dim);text-align:center;padding:15px">Пока ничего не выбрано.</p>';
     return;
   }
-  noviceBooks.forEach((book, i) => {
-    const div = document.createElement('div');
-    div.className = 'book-row';
-    const maxLvl = getMaxLevel(book.name);
-    div.innerHTML = `
-      <span><b>${escapeHtml(book.name)}</b> <span style="color:var(--text-dim);font-size:12px">(макс. ${maxLvl})</span></span>
-      <input type="number" value="${book.level}" min="1" max="${maxLvl}" data-idx="${i}">
-      <span style="color:var(--text-dim);font-size:12px">ур.</span>
-      <button data-idx="${i}">✕</button>
-    `;
-    div.querySelector('input').addEventListener('input', e => {
-      const idx = +e.target.dataset.idx;
-      const val = Math.max(1, Math.min(maxLvl, +e.target.value || 1));
-      noviceBooks[idx].level = val;
-      e.target.value = val;
-    });
-    div.querySelector('button').addEventListener('click', e => {
-      const idx = +e.target.dataset.idx;
-      noviceBooks.splice(idx, 1);
-      renderSelectedList();
-    });
-    list.appendChild(div);
-  });
-}
 
-// ============================================================
-//  РЕЖИМ ОПЫТНОГО: ОТРИСОВКА ТАБЛИЦЫ
-// ============================================================
-function renderExpertList(){
-  const list = document.getElementById('expertEnchantList');
-  list.innerHTML = '';
-  expertEnchants.forEach((row, i) => {
-    const div = document.createElement('div');
-    div.className = 'enchant-row';
-    const maxLvl = row.maxLevel || getMaxLevel(row.name);
-    div.innerHTML = `
-      <input type="text" placeholder="Название" value="${escapeHtml(row.name)}" data-idx="${i}" data-field="name">
-      <input type="number" placeholder="Ур." value="${row.level}" min="1" data-idx="${i}" data-field="level">
-      <input type="number" placeholder="Множ." value="${row.multiplier || ''}" min="1" data-idx="${i}" data-field="multiplier">
-      <label><input type="checkbox" ${row.isBook ? 'checked' : ''} data-idx="${i}" data-field="isBook"> Книга</label>
-      <input type="number" placeholder="Макс." value="${maxLvl}" min="1" data-idx="${i}" data-field="maxLevel">
-      <input type="text" placeholder="Группа" value="${escapeHtml(row.group || '')}" data-idx="${i}" data-field="group">
-      <button class="danger" data-idx="${i}">✕</button>
-    `;
-    list.appendChild(div);
-  });
-
-  list.querySelectorAll('input').forEach(inp => {
-    inp.addEventListener('input', e => {
-      const idx = +e.target.dataset.idx;
-      const field = e.target.dataset.field;
-      if (field === 'isBook') expertEnchants[idx][field] = e.target.checked;
-      else if (field === 'level' || field === 'multiplier' || field === 'maxLevel')
-        expertEnchants[idx][field] = e.target.value === '' ? null : (+e.target.value || 0);
-      else expertEnchants[idx][field] = e.target.value;
+  if (currentMode === 'novice'){
+    // ----- Простой список (новичок) -----
+    selectedBooks.forEach((book, i) => {
+      const div = document.createElement('div');
+      div.className = 'book-row';
+      const maxLvl = getEffectiveMax(book);
+      div.innerHTML = `
+        <span>
+          <b>${escapeHtml(book.name)}</b>
+          ${book.custom ? '<span style="color:var(--accent);font-size:11px"> [кастом]</span>' : ''}
+          <span style="color:var(--text-dim);font-size:12px">(макс. ${maxLvl})</span>
+        </span>
+        <input type="number" value="${book.level}" min="1" max="${maxLvl}" data-idx="${i}" data-field="level">
+        <span style="color:var(--text-dim);font-size:12px">ур.</span>
+        <button data-action="remove" data-idx="${i}">✕</button>
+      `;
+      list.appendChild(div);
     });
-  });
 
-  list.querySelectorAll('button.danger').forEach(btn => {
+    // Улучшение 1: ограничение ввода уровня
+    list.querySelectorAll('input[data-field="level"]').forEach(inp => {
+      inp.addEventListener('input', e => {
+        const idx = +e.target.dataset.idx;
+        const maxLvl = getEffectiveMax(selectedBooks[idx]);
+        let val = +e.target.value;
+        if (isNaN(val)) return;
+        if (val > maxLvl){
+          val = maxLvl;
+          e.target.value = val;
+        }
+        if (val < 1) val = 1;
+        selectedBooks[idx].level = val;
+        renderEnchantGrid(); // обновляем бейдж на кнопке
+      });
+      inp.addEventListener('blur', e => {
+        const idx = +e.target.dataset.idx;
+        const maxLvl = getEffectiveMax(selectedBooks[idx]);
+        let val = +e.target.value || 1;
+        val = Math.max(1, Math.min(maxLvl, val));
+        e.target.value = val;
+        selectedBooks[idx].level = val;
+        renderEnchantGrid();
+      });
+    });
+  } else {
+    // ----- Полная таблица (опытный игрок) -----
+    const header = document.createElement('div');
+    header.className = 'enchant-row header-row';
+    header.innerHTML = `<div>Название</div><div>Ур.</div><div>Множ.</div>
+      <div>Источник</div><div>Макс.</div><div>Группа</div><div></div>`;
+    list.appendChild(header);
+
+    selectedBooks.forEach((book, i) => {
+      const div = document.createElement('div');
+      div.className = 'enchant-row';
+      const autoMax = getMaxLevel(book.name) || 99;
+      const maxDisplay = book.maxLevel != null ? book.maxLevel : autoMax;
+      div.innerHTML = `
+        <input type="text" value="${escapeHtml(book.name)}" data-idx="${i}" data-field="name">
+        <input type="number" value="${book.level}" min="1" data-idx="${i}" data-field="level">
+        <input type="number" value="${book.multiplier != null ? book.multiplier : ''}" placeholder="авто" min="1" data-idx="${i}" data-field="multiplier">
+        <label><input type="checkbox" ${book.isBook ? 'checked' : ''} data-idx="${i}" data-field="isBook"> Книга</label>
+        <input type="number" value="${maxDisplay}" min="1" data-idx="${i}" data-field="maxLevel">
+        <input type="text" value="${escapeHtml(book.group || '')}" data-idx="${i}" data-field="group">
+        <button class="danger" data-idx="${i}" data-action="remove">✕</button>
+      `;
+      list.appendChild(div);
+    });
+
+    // Общие обработчики
+    list.querySelectorAll('input').forEach(inp => {
+      inp.addEventListener('input', e => {
+        const idx = +e.target.dataset.idx;
+        const field = e.target.dataset.field;
+        if (field === 'isBook') selectedBooks[idx][field] = e.target.checked;
+        else if (field === 'level' || field === 'multiplier' || field === 'maxLevel')
+          selectedBooks[idx][field] = e.target.value === '' ? null : (+e.target.value || 0);
+        else selectedBooks[idx][field] = e.target.value;
+
+        // Улучшение 2: повторная проверка конфликта при изменении
+        if (field === 'name' || field === 'group'){
+          checkRowConflict(idx, e.target);
+          updateConflictWarning();
+          renderEnchantGrid();
+        }
+      });
+    });
+  }
+
+  // Удаление
+  list.querySelectorAll('button[data-action="remove"]').forEach(btn => {
     btn.addEventListener('click', e => {
-      expertEnchants.splice(+e.target.dataset.idx, 1);
-      renderExpertList();
+      selectedBooks.splice(+e.target.dataset.idx, 1);
+      renderSelectedList();
+      renderEnchantGrid();
+      updateConflictWarning();
+      if (!selectedBooks.length){
+        document.getElementById('selectedPanel').style.display = 'none';
+      }
     });
   });
 }
 
 // ============================================================
-//  ПЕРЕКЛЮЧЕНИЕ РЕЖИМОВ
+//  ПРОВЕРКА КОНФЛИКТА ДЛЯ КОНКРЕТНОЙ СТРОКИ
+// ============================================================
+function checkRowConflict(idx, inputEl){
+  const book = selectedBooks[idx];
+  const g = (book.group && book.group.trim()) || ENCHANT_TO_GROUP[book.name];
+  if (!g){
+    inputEl.classList.remove('conflict');
+    return;
+  }
+  const hasConflict = selectedBooks.some((other, j) => {
+    if (i === j) return false;
+    const otherG = (other.group && other.group.trim()) || ENCHANT_TO_GROUP[other.name];
+    return otherG === g;
+  });
+  inputEl.classList.toggle('conflict', hasConflict);
+}
+
+// ============================================================
+//  РЕЖИМЫ (со сбросом)
 // ============================================================
 function switchMode(mode){
+  if (mode !== currentMode){
+    selectedBooks = [];
+    document.getElementById('selectedPanel').style.display = 'none';
+    document.getElementById('results').style.display = 'none';
+  }
   currentMode = mode;
   document.getElementById('modeNovice').classList.toggle('active', mode === 'novice');
   document.getElementById('modeExpert').classList.toggle('active', mode === 'expert');
-  document.getElementById('novicePanel').style.display = mode === 'novice' ? 'block' : 'none';
-  document.getElementById('expertPanel').style.display = mode === 'expert' ? 'block' : 'none';
-
-  if (mode === 'novice'){
-    document.getElementById('selectedPanel').style.display = selectedItem ? 'block' : 'none';
-    renderSelectedList();
-  } else {
-    document.getElementById('selectedPanel').style.display = expertEnchants.length ? 'block' : 'none';
-    renderExpertList();
-  }
-  document.getElementById('results').style.display = 'none';
+  document.getElementById('customPanel').style.display = mode === 'expert' ? 'block' : 'none';
+  renderSelectedList();
+  renderEnchantGrid();
+  updateConflictWarning();
 }
 
 // ============================================================
@@ -751,7 +886,6 @@ function renderResults(steps){
   steps.forEach((step, i) => {
     const div = document.createElement('div');
     div.className = 'step';
-
     const title = step.isFinal
       ? `Шаг ${i + 1} — Наложение на предмет`
       : `Шаг ${i + 1} — Слияние`;
@@ -767,7 +901,7 @@ function renderResults(steps){
     if (step.transferDetails.length){
       html += `<br><span style="font-size:11px;color:var(--text-dim)">`;
       html += step.transferDetails.map(d =>
-        `${d.name} → ур.${d.level} = ${d.cost}`
+        `${escapeHtml(d.name)} → ур.${d.level} = ${d.cost}`
       ).join('<br>');
       html += `</span>`;
     }
@@ -786,7 +920,6 @@ function renderResults(steps){
 
     html += `<div class="result-row">✅ Результат: <b>${itemLabel(step.result)}</b> ` +
             `<span style="color:var(--text-dim)">(n=${step.result.n})</span></div>`;
-
     div.innerHTML = html;
     container.appendChild(div);
   });
@@ -830,20 +963,12 @@ function renderResults(steps){
 // ============================================================
 document.getElementById('modeNovice').addEventListener('click', () => switchMode('novice'));
 document.getElementById('modeExpert').addEventListener('click', () => switchMode('expert'));
+document.getElementById('customAdd').addEventListener('click', addCustomEnchant);
 
-document.getElementById('expertAddBtn').addEventListener('click', () => {
-  expertEnchants.push({
-    name: '', level: 1, multiplier: null, isBook: true, group: '', maxLevel: null,
+['customName','customLevel','customMult','customMax','customGroup'].forEach(id => {
+  document.getElementById(id).addEventListener('keydown', e => {
+    if (e.key === 'Enter') addCustomEnchant();
   });
-  renderExpertList();
-  document.getElementById('selectedPanel').style.display = 'block';
-});
-
-document.getElementById('expertClearBtn').addEventListener('click', () => {
-  expertEnchants = [];
-  renderExpertList();
-  document.getElementById('selectedPanel').style.display = 'none';
-  document.getElementById('results').style.display = 'none';
 });
 
 document.getElementById('repairCheck').addEventListener('change', e => {
@@ -857,17 +982,9 @@ document.getElementById('targetN').addEventListener('input', e => {
 });
 
 document.getElementById('calcBtn').addEventListener('click', () => {
-  let enchantList;
-  if (currentMode === 'novice'){
-    enchantList = noviceBooks.filter(b => b.name.trim() && b.level > 0);
-  } else {
-    enchantList = expertEnchants.filter(r => r.name.trim() && r.level > 0);
-  }
-  if (!enchantList.length){
-    alert('Добавьте хотя бы одно зачарование');
-    return;
-  }
-  renderResults(calculateSteps(enchantList));
+  const valid = selectedBooks.filter(b => b.name.trim() && b.level > 0);
+  if (!valid.length){ alert('Добавьте хотя бы одно зачарование'); return; }
+  renderResults(calculateSteps(valid));
 });
 
 // ============================================================
