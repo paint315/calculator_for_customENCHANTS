@@ -3,196 +3,758 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Калькулятор чар Minecraft — наковальня</title>
+<title>Калькулятор чар — ALOHA Wiki</title>
 <style>
+  /* ============================================================
+     ПЕРЕМЕННЫЕ ТЕМ
+     ============================================================ */
   :root, [data-theme="dark"] {
-    --bg:#0e1621; --panel:#16213e; --panel-2:#0f3460;
-    --accent:#f0c040; --accent-2:#7cc4ff;
-    --text:#e0e0e0; --text-dim:#8a9bb0;
-    --ok:#4caf50; --danger:#e74c3c; --border:#1a4a7a;
-    --input-bg:#0f3460; --input-border:#1a4a7a;
-    --btn-hover:#1a4a7a;
+    --bg: #0a1628;
+    --bg-dot: rgba(255, 255, 255, 0.035);
+    --panel: rgba(15, 31, 53, 0.55);
+    --panel-solid: #0f1f35;
+    --panel-border: rgba(125, 211, 192, 0.15);
+    --panel-hover: rgba(125, 211, 192, 0.06);
+    --text: #e8eef5;
+    --text-dim: #7d92a8;
+    --text-muted: #4d6478;
+    --accent: #e8a33d;
+    --accent-hover: #f0b355;
+    --teal: #7dd3c0;
+    --teal-dark: #5cbdb0;
+    --teal-grad: linear-gradient(135deg, #7dd3c0 0%, #5cbdb0 100%);
+    --input-bg: rgba(10, 22, 40, 0.6);
+    --input-border: rgba(125, 211, 192, 0.18);
+    --danger: #e05555;
+    --ok: #7dd3c0;
+    --pill-bg: rgba(15, 31, 53, 0.8);
+    --pill-border: rgba(125, 211, 192, 0.18);
+    --shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
   }
+
   [data-theme="light"] {
-    --bg:#f4f6f8; --panel:#ffffff; --panel-2:#e8edf2;
-    --accent:#d4a017; --accent-2:#2a6ea8;
-    --text:#1a1a2e; --text-dim:#5a6a7a;
-    --ok:#2e7d32; --danger:#c62828; --border:#c0ccd8;
-    --input-bg:#ffffff; --input-border:#c0ccd8;
-    --btn-hover:#d0d8e0;
+    --bg: #f5f7fa;
+    --bg-dot: rgba(0, 0, 0, 0.02);
+    --panel: #ffffff;
+    --panel-solid: #ffffff;
+    --panel-border: #e2e8f0;
+    --panel-hover: #f0f4f8;
+    --text: #1a2b42;
+    --text-dim: #6b7d92;
+    --text-muted: #9aa8b8;
+    --accent: #d99230;
+    --accent-hover: #e8a33d;
+    --teal: #4fb3a0;
+    --teal-dark: #3a9484;
+    --teal-grad: linear-gradient(135deg, #6bc9b8 0%, #4fb3a0 100%);
+    --input-bg: #f8fafc;
+    --input-border: #d8e0e8;
+    --danger: #d64545;
+    --ok: #3a9484;
+    --pill-bg: #f0f4f8;
+    --pill-border: #e2e8f0;
+    --shadow: 0 4px 20px rgba(20, 40, 80, 0.06);
   }
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{
-    font-family:'Segoe UI',Tahoma,sans-serif;
-    background:var(--bg); color:var(--text);
-    min-height:100vh; padding:20px; line-height:1.5;
-    transition: background .3s, color .3s;
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    min-height: 100%;
   }
-  .container{max-width:1100px;margin:0 auto}
-  header{text-align:center;margin-bottom:30px;position:relative}
-  h1{color:var(--accent);font-size:2em;margin-bottom:6px}
-  h2{color:var(--accent-2);font-size:1.1em;margin-bottom:15px;
-     text-transform:uppercase;letter-spacing:1px}
-  .panel{background:var(--panel);border-radius:10px;padding:20px;
-         margin-bottom:20px;border:1px solid var(--border);
-         transition: background .3s, border-color .3s}
 
-  .top-controls{position:absolute;top:0;right:0;display:flex;gap:10px;align-items:center}
-  #themeToggle{background:var(--panel-2);border:1px solid var(--border);
-    color:var(--text);padding:8px 14px;border-radius:20px;
-    cursor:pointer;font-size:13px;font-family:inherit}
-  #themeToggle:hover{background:var(--accent);color:var(--bg)}
+  body {
+    font-family: -apple-system, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    background-color: var(--bg);
+    background-image: radial-gradient(circle, var(--bg-dot) 1px, transparent 1px);
+    background-size: 28px 28px;
+    background-attachment: fixed;
+    color: var(--text);
+    line-height: 1.55;
+    font-size: 15px;
+    padding: 0 24px 60px;
+    transition: background-color 0.3s, color 0.3s;
+  }
 
-  .mode-switch{display:flex;gap:0;border-radius:8px;overflow:hidden;
-    border:1px solid var(--border);margin-bottom:20px}
-  .mode-switch button{flex:1;padding:12px;background:var(--panel-2);
-    color:var(--text);border:none;cursor:pointer;font-size:15px;
-    font-family:inherit;transition:background .2s}
-  .mode-switch button.active{background:var(--accent);color:var(--bg);font-weight:700}
-  .mode-switch button:hover:not(.active){background:var(--btn-hover)}
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
 
-  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px}
-  .grid button{background:var(--panel-2);color:var(--text);
-    border:1px solid var(--border);padding:12px;border-radius:8px;
-    cursor:pointer;font-size:14px;font-family:inherit;transition:all .2s;
-    text-align:center}
-  .grid button:hover:not(:disabled){background:var(--btn-hover);border-color:var(--accent-2)}
-  .grid button.selected{background:var(--accent);color:var(--bg);
-    border-color:var(--accent);font-weight:700}
-  .grid button:disabled,.grid button.disabled{
-    opacity:0.35;cursor:not-allowed;text-decoration:line-through;
-    background:var(--panel);color:var(--text-dim);border-color:var(--border)}
-  .grid button:disabled:hover{background:var(--panel)}
+  /* ============================================================
+     ВЕРХНЯЯ ПАНЕЛЬ
+     ============================================================ */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px 0;
+    margin-bottom: 32px;
+    border-bottom: 1px solid var(--panel-border);
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+  }
+  .brand-icon {
+    font-size: 1.4em;
+    filter: hue-rotate(-15deg);
+  }
+  .brand-name { color: var(--text); }
+  .brand-accent { color: var(--accent); }
 
-  .custom-form{display:grid;
-    grid-template-columns:2fr 60px 80px 80px 100px 90px 130px;
-    gap:8px;align-items:center}
-  .custom-form input{background:var(--input-bg);border:1px solid var(--input-border);
-    color:var(--text);padding:8px 10px;border-radius:6px;font-size:13px;width:100%}
-  .custom-form input:focus{outline:none;border-color:var(--accent)}
-  .custom-form label{display:flex;align-items:center;gap:5px;
-    font-size:12px;color:var(--text-dim);cursor:pointer}
-  .custom-form button{background:var(--accent);color:var(--bg);font-weight:700;
-    border:none;padding:10px;border-radius:6px;cursor:pointer;
-    font-family:inherit;font-size:13px;transition:background .2s}
-  .custom-form button:hover{background:var(--accent-2)}
-  .custom-hint{grid-column:1 / -1;font-size:12px;color:var(--text-dim);margin-top:4px}
+  .topbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .nav-link {
+    color: var(--text-dim);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: color 0.2s;
+    text-decoration: none;
+  }
+  .nav-link:hover { color: var(--text); }
+  .nav-link.active { color: var(--accent); }
 
-  .enchant-row{display:grid;
-    grid-template-columns:2fr 55px 70px 80px 60px 85px 36px;
-    gap:6px;margin-bottom:8px;align-items:center}
-  .enchant-row input{background:var(--input-bg);border:1px solid var(--input-border);
-    color:var(--text);padding:8px 10px;border-radius:6px;font-size:13px;width:100%}
-  .enchant-row input:focus{outline:none;border-color:var(--accent)}
-  .enchant-row input.conflict{border-color:var(--danger);box-shadow:0 0 0 2px rgba(231,76,60,0.3)}
-  .enchant-row label{display:flex;align-items:center;gap:4px;
-    font-size:12px;color:var(--text-dim);cursor:pointer}
-  .header-row{color:var(--accent-2);font-size:10px;font-weight:600;
-    text-transform:uppercase;letter-spacing:.3px;padding:0 8px}
-  .enchant-row button.danger{background:var(--danger);border:none;color:#fff;
-    padding:8px;border-radius:4px;cursor:pointer;font-size:16px}
+  #themeToggle {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 1px solid var(--panel-border);
+    background: var(--panel);
+    color: var(--accent);
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+  }
+  #themeToggle:hover {
+    border-color: var(--teal);
+    background: var(--panel-hover);
+  }
 
-  .book-row{display:grid;grid-template-columns:2fr 70px 50px 40px;
-    gap:8px;align-items:center;margin-bottom:8px;
-    background:var(--panel-2);padding:10px;border-radius:6px;
-    border:1px solid var(--border)}
-  .book-row input[type="number"]{background:var(--input-bg);
-    border:1px solid var(--input-border);color:var(--text);
-    padding:6px 8px;border-radius:4px;font-size:13px;width:100%}
-  .book-row input.invalid{border-color:var(--danger)}
-  .book-row button{background:var(--danger);border:none;color:#fff;
-    padding:6px 10px;border-radius:4px;cursor:pointer;font-size:14px}
+  /* ============================================================
+     HERO-СЕКЦИЯ
+     ============================================================ */
+  .hero {
+    position: relative;
+    background: var(--panel);
+    border: 1px solid var(--panel-border);
+    border-radius: 24px;
+    padding: 44px 48px;
+    margin-bottom: 40px;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+    box-shadow: var(--shadow);
+  }
+  .hero::before {
+    content: "";
+    position: absolute;
+    right: -80px;
+    bottom: -80px;
+    width: 320px;
+    height: 320px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(125, 211, 192, 0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    border: 1px solid var(--pill-border);
+    border-radius: 8px;
+    background: var(--pill-bg);
+    color: var(--text-dim);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  .hero-badge-icon {
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    background: var(--teal-grad);
+    color: #0a1628;
+    font-size: 10px;
+  }
 
-  .options-panel{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-    gap:12px;margin-bottom:15px}
-  .option-item{display:flex;align-items:center;gap:8px;
-    background:var(--panel-2);padding:10px 14px;border-radius:8px;
-    border:1px solid var(--border);font-size:13px}
-  .option-item input[type="checkbox"]{width:16px;height:16px;cursor:pointer}
-  .option-item input[type="number"]{width:70px;background:var(--input-bg);
-    border:1px solid var(--input-border);color:var(--text);
-    padding:6px 8px;border-radius:4px;font-size:13px}
+  .hero h1 {
+    font-size: 3em;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+  .hero h1 .highlight { color: var(--accent); }
 
-  button.primary{background:var(--accent);color:var(--bg);font-weight:700;
-    border:1px solid var(--accent);font-size:16px;padding:14px 36px;width:100%;
-    border-radius:6px;cursor:pointer;font-family:inherit;transition:background .2s}
-  button.primary:hover{background:var(--accent-2);border-color:var(--accent-2)}
+  .hero-description {
+    color: var(--text-dim);
+    font-size: 1.05em;
+    max-width: 620px;
+    margin-bottom: 28px;
+    line-height: 1.6;
+  }
 
-  .step{background:var(--panel-2);border-left:4px solid var(--accent);
-    padding:16px;margin-bottom:12px;border-radius:6px;font-size:14px}
-  .step h3{color:var(--accent);margin-bottom:10px;font-size:.95em}
-  .step .row{margin-bottom:4px;color:var(--text-dim)}
-  .step .row b{color:var(--text)}
-  .step .formula{font-family:'Consolas',monospace;background:var(--bg);
-    padding:12px;border-radius:6px;margin:10px 0;font-size:13px;
-    color:var(--ok);word-break:break-word;border:1px solid var(--border)}
-  .step .formula b{color:var(--accent);font-size:1.1em}
-  .step .result-row{margin-top:8px;padding-top:8px;
-    border-top:1px solid var(--border);color:var(--ok)}
-  .discarded{color:var(--danger);font-size:13px;margin-top:6px}
+  .hero-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .stat-pill {
+    padding: 6px 14px;
+    border: 1px solid var(--pill-border);
+    border-radius: 20px;
+    background: var(--pill-bg);
+    font-size: 12px;
+    color: var(--text-dim);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .stat-pill b { color: var(--text); font-weight: 700; }
 
-  .total{font-size:1.4em;text-align:center;padding:24px;
-    border-radius:10px;margin-top:20px;font-weight:700}
-  .total.ok{background:linear-gradient(135deg,#1a4a1a,#2a6a2a);
-    color:#a0ffa0;border:2px solid #40a040}
-  [data-theme="light"] .total.ok{background:linear-gradient(135deg,#e8f5e9,#c8e6c9);
-    color:#1b5e20;border:2px solid #81c784}
-  .total.too-expensive{background:linear-gradient(135deg,#4a1a1a,#6a2a2a);
-    color:#ffa0a0;border:2px solid #a04040}
-  [data-theme="light"] .total.too-expensive{background:linear-gradient(135deg,#ffebee,#ffcdd2);
-    color:#b71c1c;border:2px solid #ef9a9a}
-  .summary{margin-top:15px;padding:16px;background:var(--bg);border-radius:6px;
-    font-size:13px;color:var(--text-dim);line-height:1.8;border:1px solid var(--border)}
-  .summary b{color:var(--text)}
-  .summary .penalty-line{margin-top:10px;padding-top:10px;
-    border-top:1px dashed var(--border);color:var(--accent);font-size:14px}
-  .summary .penalty-line b{color:var(--accent);font-size:1.1em}
+  /* ============================================================
+     СЕКЦИИ И ПАНЕЛИ
+     ============================================================ */
+  .section-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 6px;
+  }
+  .section-label::before {
+    content: "";
+    width: 14px;
+    height: 2px;
+    background: var(--accent);
+    border-radius: 2px;
+  }
 
-  .rules{font-size:13px;color:var(--text-dim);line-height:1.7}
-  .rules li{margin-left:18px;margin-bottom:4px}
+  .section-title {
+    font-size: 1.6em;
+    font-weight: 800;
+    letter-spacing: -0.3px;
+    margin-bottom: 24px;
+  }
 
-  @media(max-width:800px){
-    .enchant-row{grid-template-columns:1fr 1fr;background:var(--panel-2);
-      padding:12px;border-radius:8px;margin-bottom:12px}
-    .header-row{display:none}
-    .options-panel{grid-template-columns:1fr}
-    .grid{grid-template-columns:repeat(auto-fill,minmax(120px,1fr))}
-    .custom-form{grid-template-columns:1fr 1fr}
-    .custom-form button{grid-column:1 / -1}
-    .book-row{grid-template-columns:1fr 60px 40px 36px}
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--panel-border);
+    border-radius: 20px;
+    padding: 26px 28px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(10px);
+    transition: background 0.3s, border-color 0.3s;
+  }
+
+  .panel h2 {
+    font-size: 1.15em;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .panel h2::before {
+    content: "";
+    width: 4px;
+    height: 18px;
+    background: var(--teal-grad);
+    border-radius: 2px;
+  }
+
+  /* ============================================================
+     ПЕРЕКЛЮЧАТЕЛЬ РЕЖИМА
+     ============================================================ */
+  .mode-switch {
+    display: inline-flex;
+    gap: 4px;
+    padding: 5px;
+    border-radius: 14px;
+    background: var(--panel);
+    border: 1px solid var(--panel-border);
+    margin-bottom: 24px;
+  }
+  .mode-switch button {
+    padding: 11px 24px;
+    background: transparent;
+    color: var(--text-dim);
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    font-family: inherit;
+    font-weight: 600;
+    border-radius: 10px;
+    transition: all 0.2s;
+  }
+  .mode-switch button.active {
+    background: var(--teal-grad);
+    color: #0a1628;
+    box-shadow: 0 2px 12px rgba(125, 211, 192, 0.25);
+  }
+  .mode-switch button:hover:not(.active) {
+    color: var(--text);
+    background: var(--panel-hover);
+  }
+
+  /* ============================================================
+     СЕТКИ КНОПОК
+     ============================================================ */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    gap: 10px;
+  }
+  .grid button {
+    background: var(--input-bg);
+    color: var(--text);
+    border: 1px solid var(--input-border);
+    padding: 13px 16px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 14px;
+    font-family: inherit;
+    font-weight: 500;
+    transition: all 0.2s;
+    text-align: left;
+  }
+  .grid button:hover:not(:disabled) {
+    background: var(--panel-hover);
+    border-color: var(--teal);
+    color: var(--teal);
+    transform: translateY(-1px);
+  }
+  .grid button.selected {
+    background: rgba(125, 211, 192, 0.1);
+    color: var(--teal);
+    border-color: var(--teal);
+    font-weight: 700;
+    box-shadow: 0 0 0 1px var(--teal);
+  }
+  .grid button:disabled,
+  .grid button.disabled {
+    opacity: 0.28;
+    cursor: not-allowed;
+    text-decoration: line-through;
+    background: var(--input-bg);
+    color: var(--text-muted);
+    border-color: var(--input-border);
+  }
+  .grid button:disabled:hover { background: var(--input-bg); }
+
+  /* ============================================================
+     ФОРМА КАСТОМНОГО ЧАРА
+     ============================================================ */
+  .custom-form {
+    display: grid;
+    grid-template-columns: 2fr 60px 80px 80px 100px 90px 130px;
+    gap: 8px;
+    align-items: center;
+  }
+  .custom-form input {
+    background: var(--input-bg);
+    border: 1px solid var(--input-border);
+    color: var(--text);
+    padding: 10px 12px;
+    border-radius: 10px;
+    font-size: 13px;
+    width: 100%;
+    font-family: inherit;
+    transition: border-color 0.2s;
+  }
+  .custom-form input:focus {
+    outline: none;
+    border-color: var(--teal);
+    box-shadow: 0 0 0 3px rgba(125, 211, 192, 0.12);
+  }
+  .custom-form label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    color: var(--text-dim);
+    cursor: pointer;
+  }
+  .custom-form button {
+    background: var(--accent);
+    color: #0a1628;
+    font-weight: 700;
+    border: none;
+    padding: 11px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 13px;
+    transition: background 0.2s;
+  }
+  .custom-form button:hover { background: var(--accent-hover); }
+  .custom-hint {
+    grid-column: 1 / -1;
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 4px;
+    font-style: italic;
+  }
+
+  /* ============================================================
+     ТАБЛИЦА ОПЫТНОГО РЕЖИМА
+     ============================================================ */
+  .enchant-row {
+    display: grid;
+    grid-template-columns: 2fr 55px 70px 80px 60px 85px 36px;
+    gap: 6px;
+    margin-bottom: 8px;
+    align-items: center;
+  }
+  .enchant-row input {
+    background: var(--input-bg);
+    border: 1px solid var(--input-border);
+    color: var(--text);
+    padding: 9px 11px;
+    border-radius: 10px;
+    font-size: 13px;
+    width: 100%;
+    font-family: inherit;
+  }
+  .enchant-row input:focus {
+    outline: none;
+    border-color: var(--teal);
+    box-shadow: 0 0 0 3px rgba(125, 211, 192, 0.12);
+  }
+  .enchant-row input.conflict {
+    border-color: var(--danger);
+    box-shadow: 0 0 0 3px rgba(224, 85, 85, 0.12);
+  }
+  .enchant-row label {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    color: var(--text-dim);
+    cursor: pointer;
+  }
+  .header-row {
+    color: var(--accent);
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    padding: 0 10px;
+  }
+  .enchant-row button.danger {
+    background: var(--danger);
+    border: none;
+    color: #fff;
+    padding: 9px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: opacity 0.2s;
+  }
+  .enchant-row button.danger:hover { opacity: 0.85; }
+
+  /* ============================================================
+     ПРОСТОЙ СПИСОК (НОВИЧОК)
+     ============================================================ */
+  .book-row {
+    display: grid;
+    grid-template-columns: 2fr 70px 50px 40px;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 8px;
+    background: var(--input-bg);
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 1px solid var(--input-border);
+  }
+  .book-row input[type="number"] {
+    background: var(--panel-solid);
+    border: 1px solid var(--input-border);
+    color: var(--text);
+    padding: 7px 9px;
+    border-radius: 8px;
+    font-size: 13px;
+    width: 100%;
+  }
+  .book-row input.invalid { border-color: var(--danger); }
+  .book-row button {
+    background: var(--danger);
+    border: none;
+    color: #fff;
+    padding: 7px 11px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: opacity 0.2s;
+  }
+  .book-row button:hover { opacity: 0.85; }
+
+  /* ============================================================
+     ДОПОЛНИТЕЛЬНЫЕ ОПЦИИ
+     ============================================================ */
+  .options-panel {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+    margin-bottom: 15px;
+  }
+  .option-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--input-bg);
+    padding: 13px 16px;
+    border-radius: 12px;
+    border: 1px solid var(--input-border);
+    font-size: 13px;
+    transition: border-color 0.2s;
+  }
+  .option-item:hover { border-color: var(--teal); }
+  .option-item input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: var(--teal-dark);
+  }
+  .option-item input[type="number"] {
+    width: 70px;
+    background: var(--panel-solid);
+    border: 1px solid var(--input-border);
+    color: var(--text);
+    padding: 7px 9px;
+    border-radius: 8px;
+    font-size: 13px;
+  }
+  .option-item label { cursor: pointer; color: var(--text); }
+
+  /* ============================================================
+     ОСНОВНАЯ КНОПКА
+     ============================================================ */
+  button.primary {
+    background: var(--teal-grad);
+    color: #0a1628;
+    font-weight: 800;
+    border: none;
+    font-size: 15px;
+    padding: 16px 36px;
+    width: 100%;
+    border-radius: 14px;
+    cursor: pointer;
+    font-family: inherit;
+    letter-spacing: 0.5px;
+    transition: transform 0.15s, box-shadow 0.2s;
+    box-shadow: 0 4px 16px rgba(125, 211, 192, 0.2);
+  }
+  button.primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 22px rgba(125, 211, 192, 0.3);
+  }
+  button.primary:active { transform: translateY(0); }
+
+  /* ============================================================
+     РЕЗУЛЬТАТЫ
+     ============================================================ */
+  .step {
+    background: var(--input-bg);
+    border: 1px solid var(--input-border);
+    border-left: 3px solid var(--teal);
+    padding: 18px 20px;
+    margin-bottom: 12px;
+    border-radius: 12px;
+    font-size: 14px;
+  }
+  .step h3 {
+    color: var(--accent);
+    margin-bottom: 12px;
+    font-size: 0.9em;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  .step .row { margin-bottom: 5px; color: var(--text-dim); font-size: 13px; }
+  .step .row b { color: var(--text); }
+  .step .formula {
+    font-family: 'Consolas', 'Courier New', monospace;
+    background: var(--panel-solid);
+    padding: 14px 16px;
+    border-radius: 10px;
+    margin: 12px 0;
+    font-size: 13px;
+    color: var(--teal);
+    word-break: break-word;
+    border: 1px solid var(--input-border);
+    line-height: 1.7;
+  }
+  .step .formula b { color: var(--accent); font-size: 1.15em; }
+  .step .result-row {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--input-border);
+    color: var(--teal);
+    font-size: 13px;
+  }
+  .discarded { color: var(--danger); font-size: 13px; margin-top: 8px; }
+
+  .total {
+    font-size: 1.35em;
+    text-align: center;
+    padding: 26px;
+    border-radius: 16px;
+    margin-top: 22px;
+    font-weight: 800;
+    letter-spacing: -0.2px;
+  }
+  .total.ok {
+    background: rgba(125, 211, 192, 0.1);
+    color: var(--teal);
+    border: 1px solid rgba(125, 211, 192, 0.35);
+  }
+  .total.too-expensive {
+    background: rgba(224, 85, 85, 0.1);
+    color: var(--danger);
+    border: 1px solid rgba(224, 85, 85, 0.35);
+  }
+  .summary {
+    margin-top: 16px;
+    padding: 18px 20px;
+    background: var(--input-bg);
+    border-radius: 12px;
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.9;
+    border: 1px solid var(--input-border);
+  }
+  .summary b { color: var(--text); font-weight: 700; }
+  .summary .penalty-line {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px dashed var(--input-border);
+    color: var(--accent);
+    font-size: 14px;
+  }
+  .summary .penalty-line b { color: var(--accent); font-size: 1.15em; }
+
+  /* ============================================================
+     ПРАВИЛА
+     ============================================================ */
+  .rules { font-size: 13.5px; color: var(--text-dim); line-height: 1.9; }
+  .rules li { margin-left: 22px; margin-bottom: 6px; }
+  .rules b { color: var(--text); }
+
+  /* ============================================================
+     АДАПТИВ
+     ============================================================ */
+  @media (max-width: 800px) {
+    body { padding: 0 16px 40px; }
+    .topbar { flex-wrap: wrap; gap: 12px; }
+    .topbar-actions { gap: 12px; }
+    .nav-link { display: none; }
+    .hero { padding: 28px 24px; border-radius: 20px; }
+    .hero h1 { font-size: 2em; }
+    .enchant-row {
+      grid-template-columns: 1fr 1fr;
+      background: var(--input-bg);
+      padding: 12px;
+      border-radius: 10px;
+      margin-bottom: 12px;
+    }
+    .header-row { display: none; }
+    .options-panel { grid-template-columns: 1fr; }
+    .grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
+    .custom-form { grid-template-columns: 1fr 1fr; }
+    .custom-form button { grid-column: 1 / -1; }
+    .book-row { grid-template-columns: 1fr 60px 40px 36px; }
+    .mode-switch { width: 100%; }
+    .mode-switch button { flex: 1; }
   }
 </style>
 </head>
 <body>
 <div class="container">
-  <header>
-    <h1>⚒️ Калькулятор чар Minecraft</h1>
-    <p>Расчёт стоимости зачарования на наковальне</p>
-    <div class="top-controls">
-      <button id="themeToggle">🌙 Тёмная</button>
-    </div>
-  </header>
 
+  <!-- ================= ВЕРХНЯЯ ПАНЕЛЬ ================= -->
+  <nav class="topbar">
+    <div class="brand">
+      <span class="brand-icon">⚒️</span>
+      <span class="brand-name">ALOHA <span class="brand-accent">КАЛЬКУЛЯТОР</span></span>
+    </div>
+    <div class="topbar-actions">
+      <a class="nav-link active">Калькулятор</a>
+      <a class="nav-link">Правила</a>
+      <button id="themeToggle" title="Сменить тему">🌙</button>
+    </div>
+  </nav>
+
+  <!-- ================= HERO ================= -->
+  <section class="hero">
+    <div class="hero-badge">
+      <span class="hero-badge-icon">⚒</span>
+      Инструмент для игроков
+    </div>
+    <h1>Калькулятор <span class="highlight">зачарований</span></h1>
+    <p class="hero-description">
+      Точный расчёт стоимости зачарования на наковальне по механикам Java Edition.
+      Учитывает штрафы за прошлые использования, множители редкости и несовместимость чар.
+    </p>
+    <div class="hero-stats">
+      <span class="stat-pill"><b>2</b> режима</span>
+      <span class="stat-pill"><b>40+</b> зачарований</span>
+      <span class="stat-pill"><b>15</b> предметов</span>
+      <span class="stat-pill">Java Edition</span>
+    </div>
+  </section>
+
+  <!-- ================= ПЕРЕКЛЮЧАТЕЛЬ РЕЖИМА ================= -->
   <div class="mode-switch">
     <button id="modeNovice" class="active">🧑‍🌾 Новичок</button>
     <button id="modeExpert">🧙 Опытный игрок</button>
   </div>
 
+  <!-- ================= ВЫБОР ПРЕДМЕТА ================= -->
   <section class="panel">
-    <h2>1. Выберите предмет</h2>
+    <div class="section-label">Шаг 1</div>
+    <h2>Выберите предмет</h2>
     <div id="itemGrid" class="grid"></div>
   </section>
 
+  <!-- ================= ВЫБОР ЧАР ================= -->
   <section class="panel" id="enchantPanel" style="display:none">
-    <h2>2. Выберите чары</h2>
+    <div class="section-label">Шаг 2</div>
+    <h2>Выберите чары</h2>
     <div id="enchantGrid" class="grid"></div>
-    <p id="enchantHint" style="color:var(--text-dim);font-size:12px;margin-top:10px;display:none">
+    <p id="enchantHint" style="color:var(--text-muted);font-size:12px;margin-top:14px;display:none">
       🚫 Зачёркнутые чары несовместимы с уже выбранными. Число в скобках — текущий/максимальный уровень.
     </p>
   </section>
 
+  <!-- ================= КАСТОМНЫЕ ЧАРЫ ================= -->
   <section class="panel" id="customPanel" style="display:none">
-    <h2>3. Добавить свой чар</h2>
+    <div class="section-label">Шаг 3</div>
+    <h2>Добавить свой чар</h2>
     <div class="custom-form">
       <input id="customName" type="text" placeholder="Название">
       <input id="customLevel" type="number" placeholder="Ур." value="1" min="1">
@@ -207,16 +769,20 @@
     </div>
   </section>
 
+  <!-- ================= ВЫБРАННЫЕ КНИГИ ================= -->
   <section class="panel" id="selectedPanel" style="display:none">
-    <h2>4. Выбранные книги</h2>
+    <div class="section-label">Шаг 4</div>
+    <h2>Выбранные книги</h2>
     <div id="selectedList"></div>
-    <p id="conflictWarning" style="display:none;color:var(--danger);font-size:12px;margin-top:8px">
+    <p id="conflictWarning" style="display:none;color:var(--danger);font-size:12px;margin-top:12px">
       ⚠️ Обнаружены конфликтующие чары — при слиянии один из них будет отброшен (+1 к стоимости).
     </p>
   </section>
 
+  <!-- ================= ДОПОЛНИТЕЛЬНО ================= -->
   <section class="panel">
-    <h2>5. Дополнительно</h2>
+    <div class="section-label">Шаг 5</div>
+    <h2>Дополнительно</h2>
     <div class="options-panel">
       <div class="option-item">
         <input type="checkbox" id="repairCheck">
@@ -234,16 +800,21 @@
     </div>
   </section>
 
-  <section class="panel" style="text-align:center;padding:10px">
+  <!-- ================= КНОПКА РАСЧЁТА ================= -->
+  <section class="panel" style="padding:16px">
     <button id="calcBtn" class="primary">Рассчитать стоимость</button>
   </section>
 
+  <!-- ================= РЕЗУЛЬТАТЫ ================= -->
   <section class="panel" id="results" style="display:none">
+    <div class="section-label">Результат</div>
     <h2>Пошаговый расчёт</h2>
     <div id="resultContent"></div>
   </section>
 
+  <!-- ================= ПРАВИЛА ================= -->
   <section class="panel">
+    <div class="section-label">Справка</div>
     <h2>Правила расчёта (Java Edition)</h2>
     <ul class="rules">
       <li>Штраф за прошлые использования: <b>2ⁿ − 1</b> (0, 1, 3, 7, 15, …)</li>
@@ -267,13 +838,13 @@
 const themeToggle = document.getElementById('themeToggle');
 const savedTheme = localStorage.getItem('mc-calc-theme') || 'dark';
 document.documentElement.setAttribute('data-theme', savedTheme);
-themeToggle.textContent = savedTheme === 'dark' ? '🌙 Тёмная' : '☀️ Светлая';
+themeToggle.textContent = savedTheme === 'dark' ? '🌙' : '☀️';
 
 themeToggle.addEventListener('click', () => {
   const current = document.documentElement.getAttribute('data-theme');
   const next = current === 'dark' ? 'light' : 'dark';
   document.documentElement.setAttribute('data-theme', next);
-  themeToggle.textContent = next === 'dark' ? '🌙 Тёмная' : '☀️ Светлая';
+  themeToggle.textContent = next === 'dark' ? '🌙' : '☀️';
   localStorage.setItem('mc-calc-theme', next);
 });
 
@@ -326,9 +897,6 @@ const ENCHANT_DATA = {
   'Sweeping Edge':     { multItem: 4, multBook: 2, maxLevel: 3 },
 };
 
-// ============================================================
-//  ПРЕДМЕТЫ И ИХ ЧАРЫ
-// ============================================================
 const ITEM_ENCHANTS = {
   'Меч': ['Sharpness', 'Smite', 'Bane of Arthropods', 'Knockback', 'Fire Aspect',
           'Looting', 'Sweeping Edge', 'Unbreaking', 'Mending', 'Curse of Vanishing'],
@@ -367,9 +935,6 @@ const ITEM_ENCHANTS = {
               'Curse of Vanishing'],
 };
 
-// ============================================================
-//  ГРУППЫ НЕСОВМЕСТИМОСТИ
-// ============================================================
 const INCOMPATIBLE_GROUPS = {
   'protection': ['Protection', 'Fire Protection', 'Blast Protection', 'Projectile Protection'],
   'damage':     ['Sharpness', 'Smite', 'Bane of Arthropods'],
@@ -384,9 +949,6 @@ for (const [group, list] of Object.entries(INCOMPATIBLE_GROUPS)){
   for (const name of list) ENCHANT_TO_GROUP[name] = group;
 }
 
-// ============================================================
-//  СОСТОЯНИЕ
-// ============================================================
 let currentMode = 'novice';
 let selectedItem = null;
 let selectedBooks = [];
@@ -413,8 +975,6 @@ function getEffectiveMax(book){
   return getMaxLevel(book.name) || 99;
 }
 
-// ВАЖНО: множитель зависит от контекста ПРЕДМЕТА (isBookContext),
-// а не от самого чара. Это критично для корректной сортировки и подсчёта.
 function enchantCost(e, isBookContext){
   const mult = (e.multiplier != null && e.multiplier > 0)
     ? e.multiplier
@@ -428,9 +988,7 @@ function itemSum(item){
 
 function itemLabel(item){
   if (!item.enchants.length) return 'Пустой предмет';
-  return item.enchants
-    .map(e => `${escapeHtml(e.name)} ${e.level}`)
-    .join(' + ');
+  return item.enchants.map(e => `${escapeHtml(e.name)} ${e.level}`).join(' + ');
 }
 
 function escapeHtml(s){
@@ -439,9 +997,6 @@ function escapeHtml(s){
   })[c]);
 }
 
-// ============================================================
-//  ПРОВЕРКА СОВМЕСТИМОСТИ (с учётом кастомной группы)
-// ============================================================
 function isIncompatibleWithSelected(name, customGroup){
   const g = (customGroup && customGroup.trim()) || ENCHANT_TO_GROUP[name];
   if (!g) return false;
@@ -477,18 +1032,13 @@ function mergeItems(target, sacrifice, isFinal){
     let finalLevel;
 
     if (existing){
-      if (e.level > existing.level){
-        finalLevel = e.level;
-      } else if (e.level === existing.level && existing.level < maxLvl){
-        finalLevel = existing.level + 1;
-      } else {
-        finalLevel = existing.level;
-      }
+      if (e.level > existing.level) finalLevel = e.level;
+      else if (e.level === existing.level && existing.level < maxLvl) finalLevel = existing.level + 1;
+      else finalLevel = existing.level;
     } else {
       finalLevel = e.level;
     }
 
-    // Стоимость = итоговый уровень × множитель (с учётом контекста жертвы)
     const mult = (e.multiplier != null && e.multiplier > 0)
       ? e.multiplier
       : getMultiplier(e.name, sacrifice.isBook);
@@ -501,34 +1051,22 @@ function mergeItems(target, sacrifice, isFinal){
   const sacPen       = penalty(sacrifice.n);
   const incompatCost = discarded.length;
 
-  // Дополнительные операции (только на финальном шаге)
   let extraCost = 0;
   const extraDetails = [];
   if (isFinal){
-    if (extraOptions.repair){
-      extraCost += 2;
-      extraDetails.push('ремонт (+2)');
-    }
-    if (extraOptions.rename){
-      extraCost += 1;
-      extraDetails.push('переименование (+1)');
-    }
+    if (extraOptions.repair){ extraCost += 2; extraDetails.push('ремонт (+2)'); }
+    if (extraOptions.rename){ extraCost += 1; extraDetails.push('переименование (+1)'); }
   }
 
   const cost = transferSum + targetPen + sacPen + incompatCost + extraCost;
 
-  // Собираем результат
   const newEnchants = target.enchants.map(e => ({ ...e }));
   for (const e of transferred){
     const existing = newEnchants.find(x => x.name === e.name);
     const maxLvl = getEffectiveMax(e);
     if (existing){
-      if (existing.level === e.level && existing.level < maxLvl){
-        existing.level += 1;
-      } else if (e.level > existing.level){
-        existing.level = e.level;
-      }
-      // если уровень жертвы меньше — ничего не меняем
+      if (existing.level === e.level && existing.level < maxLvl) existing.level += 1;
+      else if (e.level > existing.level) existing.level = e.level;
     } else {
       newEnchants.push({ ...e });
     }
@@ -547,16 +1085,11 @@ function mergeItems(target, sacrifice, isFinal){
   };
 }
 
-// ============================================================
-//  ОПТИМАЛЬНЫЙ ПОРЯДОК СЛИЯНИЯ
-// ============================================================
 function calculateSteps(enchantList){
   if (!enchantList.length) return [];
 
   const items = enchantList.map(e => ({
-    enchants: [{ ...e }],
-    n: 0,
-    isBook: e.isBook,
+    enchants: [{ ...e }], n: 0, isBook: e.isBook,
   }));
 
   const steps = [];
@@ -585,7 +1118,7 @@ function calculateSteps(enchantList){
 }
 
 // ============================================================
-//  РЕНДЕР СЕТКИ ПРЕДМЕТОВ
+//  РЕНДЕР
 // ============================================================
 function renderItemGrid(){
   const grid = document.getElementById('itemGrid');
@@ -605,10 +1138,6 @@ function renderItemGrid(){
   });
 }
 
-// ============================================================
-//  РЕНДЕР СЕТКИ ЧАР
-//  Улучшение 4: показываем текущий уровень на кнопке.
-// ============================================================
 function renderEnchantGrid(){
   const grid = document.getElementById('enchantGrid');
   grid.innerHTML = '';
@@ -619,8 +1148,6 @@ function renderEnchantGrid(){
     const btn = document.createElement('button');
     const selectedBook = selectedBooks.find(b => b.name === name);
     const maxLvl = selectedBook ? getEffectiveMax(selectedBook) : getMaxLevel(name);
-
-    // Показываем текущий/максимальный уровень, если чар уже выбран
     const levelBadge = selectedBook ? ` (${selectedBook.level}/${maxLvl})` : '';
     btn.textContent = name + levelBadge;
 
@@ -636,14 +1163,10 @@ function renderEnchantGrid(){
     } else {
       btn.addEventListener('click', () => addBookFromGrid(name));
     }
-
     grid.appendChild(btn);
   });
 }
 
-// ============================================================
-//  ДОБАВЛЕНИЕ ЧАРА ИЗ СЕТКИ
-// ============================================================
 function addBookFromGrid(name){
   const existing = selectedBooks.find(b => b.name === name);
   if (existing){
@@ -662,9 +1185,6 @@ function addBookFromGrid(name){
   document.getElementById('selectedPanel').style.display = 'block';
 }
 
-// ============================================================
-//  ДОБАВЛЕНИЕ КАСТОМНОГО ЧАРА
-// ============================================================
 function addCustomEnchant(){
   const name = document.getElementById('customName').value.trim();
   if (!name){ alert('Введите название чара'); return; }
@@ -674,7 +1194,6 @@ function addCustomEnchant(){
   const maxVal   = document.getElementById('customMax').value;
   const groupVal = document.getElementById('customGroup').value.trim();
 
-  // Проверка несовместимости (с учётом явно указанной группы)
   if (isIncompatibleWithSelected(name, groupVal)){
     alert(`Чар «${name}» несовместим с уже выбранными чарами из той же группы.`);
     return;
@@ -695,7 +1214,6 @@ function addCustomEnchant(){
     });
   }
 
-  // Очистка формы
   document.getElementById('customName').value = '';
   document.getElementById('customLevel').value = '1';
   document.getElementById('customMult').value = '';
@@ -709,9 +1227,6 @@ function addCustomEnchant(){
   document.getElementById('selectedPanel').style.display = 'block';
 }
 
-// ============================================================
-//  ПРОВЕРКА КОНФЛИКТОВ В СПИСКЕ
-// ============================================================
 function updateConflictWarning(){
   const anyConflict = selectedBooks.some((b, i) => {
     const g = (b.group && b.group.trim()) || ENCHANT_TO_GROUP[b.name];
@@ -725,20 +1240,16 @@ function updateConflictWarning(){
   document.getElementById('conflictWarning').style.display = anyConflict ? 'block' : 'none';
 }
 
-// ============================================================
-//  РЕНДЕР СПИСКА ВЫБРАННЫХ КНИГ
-// ============================================================
 function renderSelectedList(){
   const list = document.getElementById('selectedList');
   list.innerHTML = '';
 
   if (!selectedBooks.length){
-    list.innerHTML = '<p style="color:var(--text-dim);text-align:center;padding:15px">Пока ничего не выбрано.</p>';
+    list.innerHTML = '<p style="color:var(--text-muted);text-align:center;padding:15px">Пока ничего не выбрано.</p>';
     return;
   }
 
   if (currentMode === 'novice'){
-    // ----- Простой список (новичок) -----
     selectedBooks.forEach((book, i) => {
       const div = document.createElement('div');
       div.className = 'book-row';
@@ -747,29 +1258,25 @@ function renderSelectedList(){
         <span>
           <b>${escapeHtml(book.name)}</b>
           ${book.custom ? '<span style="color:var(--accent);font-size:11px"> [кастом]</span>' : ''}
-          <span style="color:var(--text-dim);font-size:12px">(макс. ${maxLvl})</span>
+          <span style="color:var(--text-muted);font-size:12px">(макс. ${maxLvl})</span>
         </span>
         <input type="number" value="${book.level}" min="1" max="${maxLvl}" data-idx="${i}" data-field="level">
-        <span style="color:var(--text-dim);font-size:12px">ур.</span>
+        <span style="color:var(--text-muted);font-size:12px">ур.</span>
         <button data-action="remove" data-idx="${i}">✕</button>
       `;
       list.appendChild(div);
     });
 
-    // Улучшение 1: ограничение ввода уровня
     list.querySelectorAll('input[data-field="level"]').forEach(inp => {
       inp.addEventListener('input', e => {
         const idx = +e.target.dataset.idx;
         const maxLvl = getEffectiveMax(selectedBooks[idx]);
         let val = +e.target.value;
         if (isNaN(val)) return;
-        if (val > maxLvl){
-          val = maxLvl;
-          e.target.value = val;
-        }
+        if (val > maxLvl){ val = maxLvl; e.target.value = val; }
         if (val < 1) val = 1;
         selectedBooks[idx].level = val;
-        renderEnchantGrid(); // обновляем бейдж на кнопке
+        renderEnchantGrid();
       });
       inp.addEventListener('blur', e => {
         const idx = +e.target.dataset.idx;
@@ -782,7 +1289,6 @@ function renderSelectedList(){
       });
     });
   } else {
-    // ----- Полная таблица (опытный игрок) -----
     const header = document.createElement('div');
     header.className = 'enchant-row header-row';
     header.innerHTML = `<div>Название</div><div>Ур.</div><div>Множ.</div>
@@ -806,7 +1312,6 @@ function renderSelectedList(){
       list.appendChild(div);
     });
 
-    // Общие обработчики
     list.querySelectorAll('input').forEach(inp => {
       inp.addEventListener('input', e => {
         const idx = +e.target.dataset.idx;
@@ -816,7 +1321,6 @@ function renderSelectedList(){
           selectedBooks[idx][field] = e.target.value === '' ? null : (+e.target.value || 0);
         else selectedBooks[idx][field] = e.target.value;
 
-        // Улучшение 2: повторная проверка конфликта при изменении
         if (field === 'name' || field === 'group'){
           checkRowConflict(idx, e.target);
           updateConflictWarning();
@@ -826,7 +1330,6 @@ function renderSelectedList(){
     });
   }
 
-  // Удаление
   list.querySelectorAll('button[data-action="remove"]').forEach(btn => {
     btn.addEventListener('click', e => {
       selectedBooks.splice(+e.target.dataset.idx, 1);
@@ -840,27 +1343,18 @@ function renderSelectedList(){
   });
 }
 
-// ============================================================
-//  ПРОВЕРКА КОНФЛИКТА ДЛЯ КОНКРЕТНОЙ СТРОКИ
-// ============================================================
 function checkRowConflict(idx, inputEl){
   const book = selectedBooks[idx];
   const g = (book.group && book.group.trim()) || ENCHANT_TO_GROUP[book.name];
-  if (!g){
-    inputEl.classList.remove('conflict');
-    return;
-  }
+  if (!g){ inputEl.classList.remove('conflict'); return; }
   const hasConflict = selectedBooks.some((other, j) => {
-    if (i === j) return false;
+    if (idx === j) return false;
     const otherG = (other.group && other.group.trim()) || ENCHANT_TO_GROUP[other.name];
     return otherG === g;
   });
   inputEl.classList.toggle('conflict', hasConflict);
 }
 
-// ============================================================
-//  РЕЖИМЫ (со сбросом)
-// ============================================================
 function switchMode(mode){
   if (mode !== currentMode){
     selectedBooks = [];
@@ -876,9 +1370,6 @@ function switchMode(mode){
   updateConflictWarning();
 }
 
-// ============================================================
-//  ОТРИСОВКА РЕЗУЛЬТАТОВ
-// ============================================================
 function renderResults(steps){
   const container = document.getElementById('resultContent');
   container.innerHTML = '';
@@ -892,14 +1383,14 @@ function renderResults(steps){
 
     let html = `<h3>${title}</h3>`;
     html += `<div class="row">🎯 Цель: <b>${itemLabel(step.target)}</b> ` +
-            `<span style="color:var(--text-dim)">(n=${step.target.n}, штраф=${step.targetPen})</span></div>`;
+            `<span style="color:var(--text-muted)">(n=${step.target.n}, штраф=${step.targetPen})</span></div>`;
     html += `<div class="row">📖 Жертва: <b>${itemLabel(step.sacrifice)}</b> ` +
-            `<span style="color:var(--text-dim)">(n=${step.sacrifice.n}, штраф=${step.sacPen})</span></div>`;
+            `<span style="color:var(--text-muted)">(n=${step.sacrifice.n}, штраф=${step.sacPen})</span></div>`;
 
     html += `<div class="formula">`;
-    html += `Стоимость чар жертвы: <span style="color:var(--accent-2)">${step.transferSum}</span>`;
+    html += `Стоимость чар жертвы: <span style="color:var(--teal)">${step.transferSum}</span>`;
     if (step.transferDetails.length){
-      html += `<br><span style="font-size:11px;color:var(--text-dim)">`;
+      html += `<br><span style="font-size:11px;color:var(--text-muted)">`;
       html += step.transferDetails.map(d =>
         `${escapeHtml(d.name)} → ур.${d.level} = ${d.cost}`
       ).join('<br>');
@@ -919,7 +1410,7 @@ function renderResults(steps){
     }
 
     html += `<div class="result-row">✅ Результат: <b>${itemLabel(step.result)}</b> ` +
-            `<span style="color:var(--text-dim)">(n=${step.result.n})</span></div>`;
+            `<span style="color:var(--text-muted)">(n=${step.result.n})</span></div>`;
     div.innerHTML = html;
     container.appendChild(div);
   });
@@ -958,9 +1449,6 @@ function renderResults(steps){
   document.getElementById('results').scrollIntoView({ behavior:'smooth' });
 }
 
-// ============================================================
-//  СОБЫТИЯ
-// ============================================================
 document.getElementById('modeNovice').addEventListener('click', () => switchMode('novice'));
 document.getElementById('modeExpert').addEventListener('click', () => switchMode('expert'));
 document.getElementById('customAdd').addEventListener('click', addCustomEnchant);
