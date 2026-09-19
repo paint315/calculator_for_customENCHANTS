@@ -23,7 +23,7 @@
     <div class="hero-stats">
       <span class="stat-pill"><b>2</b> режима</span>
       <span class="stat-pill"><b>40+</b> зачарований</span>
-      <span class="stat-pill"><b>15</b> предметов</span>
+      <span class="stat-pill"><b>20</b> предметов</span>
       <span class="stat-pill">Java Edition</span>
     </div>
   </section>
@@ -79,23 +79,21 @@
     </p>
   </section>
 
-  <!-- ================= ДОПОЛНИТЕЛЬНО ================= -->
-  <section class="panel">
+  <!-- ================= ДОПОЛНИТЕЛЬНО (только опытный) ================= -->
+  <section class="panel" id="extraPanel" style="display:none">
     <div class="section-label">Шаг 5</div>
     <h2>Дополнительно</h2>
     <div class="options-panel">
+      <button type="button" class="toggle-btn" id="repairBtn">
+        🔧 Ремонт предмета (+2 ур.)
+      </button>
+      <button type="button" class="toggle-btn" id="renameBtn">
+        ✏️ Переименование (+1 ур.)
+      </button>
       <div class="option-item">
-        <input type="checkbox" id="repairCheck">
-        <label for="repairCheck">🔧 Ремонт предмета (+2 ур.)</label>
-      </div>
-      <div class="option-item">
-        <input type="checkbox" id="renameCheck">
-        <label for="renameCheck">✏️ Переименование (+1 ур.)</label>
-      </div>
-      <div class="option-item">
-        <label for="targetN" style="white-space:nowrap">🛠️ Штраф предмета:</label>
+        <label for="targetN" style="white-space:nowrap">🛠️ Прошлых использований (n):</label>
         <input type="number" id="targetN" value="0" min="0" max="30"
-               title="Сколько раз предмет уже использовался в наковальне">
+               title="Сколько раз предмет уже использовался в наковальне. Штраф считается как 2ⁿ − 1.">
       </div>
     </div>
   </section>
@@ -112,22 +110,20 @@
     <div id="resultContent"></div>
   </section>
 
-  <!-- ================= ПРАВИЛА ================= -->
+  <!-- ================= СПРАВКА ================= -->
   <section class="panel">
     <div class="section-label">Справка</div>
-    <!-- <h2>Правила расчёта (Java Edition)</h2>
-    <ul class="rules">
-      <li>Штраф за прошлые использования: <b>2ⁿ − 1</b> (0, 1, 3, 7, 15, …)</li>
-      <li>Стоимость операции = <b>сумма стоимостей переносимых чар + штраф цели + штраф жертвы</b></li>
-      <li>Стоимость чара = <b>итоговый уровень × множитель</b></li>
-      <li>Множитель книги = <b>половина</b> множителя предмета</li>
-      <li>Если цель уже имеет чар, стоимость добавляется <b>даже если уровень не меняется</b></li>
-      <li>Одинаковые уровни повышаются на 1 (до максимума)</li>
-      <li>Несовместимые чары отбрасываются и дают <b>+1</b></li>
-      <li>Ремонт: <b>+2 уровня</b> за операцию</li>
-      <li>Переименование: <b>+1 уровень</b> за операцию</li>
-      <li>Если итог &gt; <b>39</b> — «Слишком дорого!»</li>
-    </ul> -->
+    <h2>Справка</h2>
+
+    <details class="accordion">
+      <summary>Для новичков</summary>
+      <p>Ты новичок</p>
+    </details>
+
+    <details class="accordion">
+      <summary>Для опытных игроков</summary>
+      <p>Ты профессионал</p>
+    </details>
   </section>
 </div>
 

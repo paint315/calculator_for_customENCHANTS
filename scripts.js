@@ -1,96 +1,101 @@
 // ============================================================
-//  ТАБЛИЦА МНОЖИТЕЛЕЙ И МАКС. УРОВНЕЙ
+//  ТАБЛИЦА МНОЖИТЕЛЕЙ И МАКС. УРОВНЕЙ (русские названия)
 // ============================================================
 const ENCHANT_DATA = {
-  'Protection':        { multItem: 1, multBook: 1, maxLevel: 4 },
-  'Fire Protection':   { multItem: 2, multBook: 1, maxLevel: 4 },
-  'Feather Falling':   { multItem: 2, multBook: 1, maxLevel: 4 },
-  'Blast Protection':  { multItem: 4, multBook: 2, maxLevel: 4 },
-  'Projectile Protection': { multItem: 2, multBook: 1, maxLevel: 4 },
-  'Thorns':            { multItem: 8, multBook: 4, maxLevel: 3 },
-  'Respiration':       { multItem: 4, multBook: 2, maxLevel: 3 },
-  'Depth Strider':     { multItem: 4, multBook: 2, maxLevel: 3 },
-  'Aqua Affinity':     { multItem: 4, multBook: 2, maxLevel: 1 },
-  'Sharpness':         { multItem: 1, multBook: 1, maxLevel: 5 },
-  'Smite':             { multItem: 2, multBook: 1, maxLevel: 5 },
-  'Bane of Arthropods':{ multItem: 2, multBook: 1, maxLevel: 5 },
-  'Knockback':         { multItem: 2, multBook: 1, maxLevel: 2 },
-  'Fire Aspect':       { multItem: 4, multBook: 2, maxLevel: 2 },
-  'Looting':           { multItem: 4, multBook: 2, maxLevel: 3 },
-  'Efficiency':        { multItem: 1, multBook: 1, maxLevel: 5 },
-  'Silk Touch':        { multItem: 8, multBook: 4, maxLevel: 1 },
-  'Unbreaking':        { multItem: 2, multBook: 1, maxLevel: 3 },
-  'Fortune':           { multItem: 4, multBook: 2, maxLevel: 3 },
-  'Power':             { multItem: 1, multBook: 1, maxLevel: 5 },
-  'Punch':             { multItem: 4, multBook: 2, maxLevel: 2 },
-  'Flame':             { multItem: 4, multBook: 2, maxLevel: 1 },
-  'Infinity':          { multItem: 8, multBook: 4, maxLevel: 1 },
-  'Luck of the Sea':   { multItem: 4, multBook: 2, maxLevel: 3 },
-  'Lure':              { multItem: 4, multBook: 2, maxLevel: 3 },
-  'Frost Walker':      { multItem: 4, multBook: 2, maxLevel: 2 },
-  'Mending':           { multItem: 4, multBook: 2, maxLevel: 1 },
-  'Curse of Binding':  { multItem: 8, multBook: 4, maxLevel: 1 },
-  'Curse of Vanishing':{ multItem: 8, multBook: 4, maxLevel: 1 },
-  'Impaling':          { multItem: 4, multBook: 2, maxLevel: 5 },
-  'Riptide':           { multItem: 4, multBook: 2, maxLevel: 3 },
-  'Loyalty':           { multItem: 1, multBook: 1, maxLevel: 3 },
-  'Channeling':        { multItem: 8, multBook: 4, maxLevel: 1 },
-  'Multishot':         { multItem: 4, multBook: 2, maxLevel: 1 },
-  'Piercing':          { multItem: 1, multBook: 1, maxLevel: 4 },
-  'Quick Charge':      { multItem: 2, multBook: 1, maxLevel: 3 },
-  'Soul Speed':        { multItem: 8, multBook: 4, maxLevel: 3 },
-  'Swift Sneak':       { multItem: 8, multBook: 4, maxLevel: 3 },
-  'Wind Burst':        { multItem: 4, multBook: 2, maxLevel: 3 },
-  'Density':           { multItem: 2, multBook: 1, maxLevel: 5 },
-  'Breach':            { multItem: 4, multBook: 2, maxLevel: 4 },
-  'Lunge':             { multItem: 2, multBook: 1, maxLevel: 3 },
-  'Sweeping Edge':     { multItem: 4, multBook: 2, maxLevel: 3 },
+  'Защита':                    { multItem: 1, multBook: 1, maxLevel: 4 },
+  'Огнеупорность':             { multItem: 2, multBook: 1, maxLevel: 4 },
+  'Невесомость':               { multItem: 2, multBook: 1, maxLevel: 4 },
+  'Взрывоустойчивость':        { multItem: 4, multBook: 2, maxLevel: 4 },
+  'Защита от снарядов':        { multItem: 2, multBook: 1, maxLevel: 4 },
+  'Шипы':                      { multItem: 8, multBook: 4, maxLevel: 3 },
+  'Подводное дыхание':         { multItem: 4, multBook: 2, maxLevel: 3 },
+  'Подводная ходьба':          { multItem: 4, multBook: 2, maxLevel: 3 },
+  'Родство с водой':           { multItem: 4, multBook: 2, maxLevel: 1 },
+  'Острота':                   { multItem: 1, multBook: 1, maxLevel: 5 },
+  'Небесная кара':             { multItem: 2, multBook: 1, maxLevel: 5 },
+  'Бич членистоногих':         { multItem: 2, multBook: 1, maxLevel: 5 },
+  'Отдача':                    { multItem: 2, multBook: 1, maxLevel: 2 },
+  'Заговор огня':              { multItem: 4, multBook: 2, maxLevel: 2 },
+  'Добыча':                    { multItem: 4, multBook: 2, maxLevel: 3 },
+  'Эффективность':             { multItem: 1, multBook: 1, maxLevel: 5 },
+  'Шёлковое касание':          { multItem: 8, multBook: 4, maxLevel: 1 },
+  'Прочность':                 { multItem: 2, multBook: 1, maxLevel: 3 },
+  'Удача':                     { multItem: 4, multBook: 2, maxLevel: 3 },
+  'Сила':                      { multItem: 1, multBook: 1, maxLevel: 5 },
+  'Откидывание':               { multItem: 4, multBook: 2, maxLevel: 2 },
+  'Воспламенение':             { multItem: 4, multBook: 2, maxLevel: 1 },
+  'Бесконечность':             { multItem: 8, multBook: 4, maxLevel: 1 },
+  'Удача рыбака':              { multItem: 4, multBook: 2, maxLevel: 3 },
+  'Приманка':                  { multItem: 4, multBook: 2, maxLevel: 3 },
+  'Ледоход':                   { multItem: 4, multBook: 2, maxLevel: 2 },
+  'Починка':                   { multItem: 4, multBook: 2, maxLevel: 1 },
+  'Проклятие несъёмности':     { multItem: 8, multBook: 4, maxLevel: 1 },
+  'Проклятие утраты':          { multItem: 8, multBook: 4, maxLevel: 1 },
+  'Пронзание':                 { multItem: 4, multBook: 2, maxLevel: 5 },
+  'Тягун':                     { multItem: 4, multBook: 2, maxLevel: 3 },
+  'Верность':                  { multItem: 1, multBook: 1, maxLevel: 3 },
+  'Громоотвод':                { multItem: 8, multBook: 4, maxLevel: 1 },
+  'Тройной выстрел':           { multItem: 4, multBook: 2, maxLevel: 1 },
+  'Пронзающий выстрел':        { multItem: 1, multBook: 1, maxLevel: 4 },
+  'Быстрая перезарядка':       { multItem: 2, multBook: 1, maxLevel: 3 },
+  'Скорость души':             { multItem: 8, multBook: 4, maxLevel: 3 },
+  'Быстрый подкрад':           { multItem: 8, multBook: 4, maxLevel: 3 },
+  'Порыв ветра':               { multItem: 4, multBook: 2, maxLevel: 3 },
+  'Плотность':                 { multItem: 2, multBook: 1, maxLevel: 5 },
+  'Пробой':                    { multItem: 4, multBook: 2, maxLevel: 4 },
+  'Выпад':                     { multItem: 2, multBook: 1, maxLevel: 3 },
+  'Разящий клинок':            { multItem: 4, multBook: 2, maxLevel: 3 },
 };
 
 // ============================================================
 //  ПРЕДМЕТЫ И ИХ ЧАРЫ
 // ============================================================
 const ITEM_ENCHANTS = {
-  'Меч': ['Sharpness', 'Smite', 'Bane of Arthropods', 'Knockback', 'Fire Aspect',
-          'Looting', 'Sweeping Edge', 'Unbreaking', 'Mending', 'Curse of Vanishing'],
-  'Кирка': ['Efficiency', 'Fortune', 'Silk Touch', 'Unbreaking', 'Mending',
-            'Curse of Vanishing'],
-  'Топор': ['Efficiency', 'Fortune', 'Silk Touch', 'Sharpness', 'Smite',
-            'Bane of Arthropods', 'Unbreaking', 'Mending', 'Curse of Vanishing'],
-  'Лопата': ['Efficiency', 'Fortune', 'Silk Touch', 'Unbreaking', 'Mending',
-             'Curse of Vanishing'],
-  'Мотыга': ['Efficiency', 'Fortune', 'Silk Touch', 'Unbreaking', 'Mending',
-             'Curse of Vanishing'],
-  'Шлем': ['Protection', 'Fire Protection', 'Blast Protection',
-           'Projectile Protection', 'Respiration', 'Aqua Affinity', 'Thorns',
-           'Unbreaking', 'Mending', 'Curse of Vanishing', 'Curse of Binding'],
-  'Нагрудник': ['Protection', 'Fire Protection', 'Blast Protection',
-                'Projectile Protection', 'Thorns', 'Unbreaking', 'Mending',
-                'Curse of Vanishing', 'Curse of Binding'],
-  'Штаны': ['Protection', 'Fire Protection', 'Blast Protection',
-            'Projectile Protection', 'Thorns', 'Unbreaking', 'Mending',
-            'Curse of Vanishing', 'Curse of Binding'],
-  'Ботинки': ['Protection', 'Fire Protection', 'Blast Protection',
-              'Projectile Protection', 'Feather Falling', 'Depth Strider',
-              'Frost Walker', 'Soul Speed', 'Swift Sneak', 'Thorns',
-              'Unbreaking', 'Mending', 'Curse of Vanishing', 'Curse of Binding'],
-  'Лук': ['Power', 'Punch', 'Flame', 'Infinity', 'Unbreaking', 'Mending',
-          'Curse of Vanishing'],
-  'Арбалет': ['Quick Charge', 'Multishot', 'Piercing', 'Unbreaking', 'Mending',
-              'Curse of Vanishing'],
-  'Трезубец': ['Loyalty', 'Impaling', 'Riptide', 'Channeling', 'Unbreaking',
-               'Mending', 'Curse of Vanishing'],
-  'Удочка': ['Luck of the Sea', 'Lure', 'Unbreaking', 'Mending',
-             'Curse of Vanishing'],
-  'Булава': ['Density', 'Breach', 'Wind Burst', 'Smite', 'Bane of Arthropods',
-             'Fire Aspect', 'Unbreaking', 'Mending', 'Curse of Vanishing'],
-  'Ножницы': ['Efficiency', 'Silk Touch', 'Unbreaking', 'Mending',
-              'Curse of Vanishing'],
+  'Меч': ['Острота', 'Небесная кара', 'Бич членистоногих', 'Отдача', 'Заговор огня',
+          'Добыча', 'Разящий клинок', 'Прочность', 'Починка', 'Проклятие утраты'],
+  'Кирка': ['Эффективность', 'Удача', 'Шёлковое касание', 'Прочность', 'Починка',
+            'Проклятие утраты'],
+  'Топор': ['Эффективность', 'Удача', 'Шёлковое касание', 'Острота', 'Небесная кара',
+            'Бич членистоногих', 'Прочность', 'Починка', 'Проклятие утраты'],
+  'Лопата': ['Эффективность', 'Удача', 'Шёлковое касание', 'Прочность', 'Починка',
+             'Проклятие утраты'],
+  'Мотыга': ['Эффективность', 'Удача', 'Шёлковое касание', 'Прочность', 'Починка',
+             'Проклятие утраты'],
+  'Шлем': ['Защита', 'Огнеупорность', 'Взрывоустойчивость',
+           'Защита от снарядов', 'Подводное дыхание', 'Родство с водой', 'Шипы',
+           'Прочность', 'Починка', 'Проклятие утраты', 'Проклятие несъёмности'],
+  'Нагрудник': ['Защита', 'Огнеупорность', 'Взрывоустойчивость',
+                'Защита от снарядов', 'Шипы', 'Прочность', 'Починка',
+                'Проклятие утраты', 'Проклятие несъёмности'],
+  'Штаны': ['Защита', 'Огнеупорность', 'Взрывоустойчивость',
+            'Защита от снарядов', 'Шипы', 'Прочность', 'Починка',
+            'Проклятие утраты', 'Проклятие несъёмности'],
+  'Ботинки': ['Защита', 'Огнеупорность', 'Взрывоустойчивость',
+              'Защита от снарядов', 'Невесомость', 'Подводная ходьба',
+              'Ледоход', 'Скорость души', 'Быстрый подкрад', 'Шипы',
+              'Прочность', 'Починка', 'Проклятие утраты', 'Проклятие несъёмности'],
+  'Лук': ['Сила', 'Откидывание', 'Воспламенение', 'Бесконечность', 'Прочность', 'Починка',
+          'Проклятие утраты'],
+  'Арбалет': ['Быстрая перезарядка', 'Тройной выстрел', 'Пронзающий выстрел', 'Прочность', 'Починка',
+              'Проклятие утраты'],
+  'Трезубец': ['Верность', 'Пронзание', 'Тягун', 'Громоотвод', 'Прочность',
+               'Починка', 'Проклятие утраты'],
+  'Удочка': ['Удача рыбака', 'Приманка', 'Прочность', 'Починка',
+             'Проклятие утраты'],
+  'Булава': ['Плотность', 'Пробой', 'Порыв ветра', 'Небесная кара', 'Бич членистоногих',
+             'Заговор огня', 'Прочность', 'Починка', 'Проклятие утраты'],
+  'Ножницы': ['Эффективность', 'Шёлковое касание', 'Прочность', 'Починка',
+              'Проклятие утраты'],
+  'Кисточка': ['Прочность', 'Починка'],
+  'Элитры': ['Прочность', 'Починка', 'Проклятие утраты', 'Проклятие несъёмности'],
+  'Щит': ['Прочность', 'Починка', 'Проклятие утраты'],
+  'Огниво': ['Прочность', 'Починка', 'Проклятие утраты'],
+  'Копьё': ['Острота', 'Небесная кара', 'Бич членистоногих', 'Выпад', 'Прочность',
+            'Починка', 'Проклятие утраты'],
 };
 
 // ============================================================
 //  ИКОНКИ ПРЕДМЕТОВ
-//  Путь указывается относительно index.html
 // ============================================================
 const ITEM_ICONS = {
   'Топор': 'icons/diamond_axe.png',
@@ -113,19 +118,18 @@ const ITEM_ICONS = {
   'Трезубец': 'icons/trident.png',
   'Огниво': 'icons/flint_and_steel.png',
   'Ножницы': 'icons/shears.png',
-
 };
 
 // ============================================================
 //  ГРУППЫ НЕСОВМЕСТИМОСТИ
 // ============================================================
 const INCOMPATIBLE_GROUPS = {
-  'protection': ['Protection', 'Fire Protection', 'Blast Protection', 'Projectile Protection'],
-  'damage':     ['Sharpness', 'Smite', 'Bane of Arthropods'],
-  'mining':     ['Silk Touch', 'Fortune'],
-  'trident':    ['Riptide', 'Loyalty', 'Channeling'],
-  'boots':      ['Depth Strider', 'Frost Walker'],
-  'crossbow':   ['Multishot', 'Piercing'],
+  'protection': ['Защита', 'Огнеупорность', 'Взрывоустойчивость', 'Защита от снарядов'],
+  'damage':     ['Острота', 'Небесная кара', 'Бич членистоногих'],
+  'mining':     ['Шёлковое касание', 'Удача'],
+  'trident':    ['Тягун', 'Верность', 'Громоотвод'],
+  'boots':      ['Подводная ходьба', 'Ледоход'],
+  'crossbow':   ['Тройной выстрел', 'Пронзающий выстрел'],
 };
 
 const ENCHANT_TO_GROUP = {};
@@ -305,7 +309,7 @@ function calculateSteps(enchantList){
 }
 
 // ============================================================
-//  РЕНДЕР
+//  РЕНДЕР СЕТКИ ПРЕДМЕТОВ
 // ============================================================
 function renderItemGrid(){
   const grid = document.getElementById('itemGrid');
@@ -319,8 +323,7 @@ function renderItemGrid(){
       img.src = iconPath;
       img.alt = item;
       img.className = 'item-icon';
-      // На случай, если картинки нет — скрываем её
-      img.onerror = () => { img.style.display = 'none'; };
+      img.onerror = () => { img.remove(); };
       btn.appendChild(img);
     }
 
@@ -341,6 +344,9 @@ function renderItemGrid(){
   });
 }
 
+// ============================================================
+//  РЕНДЕР СЕТКИ ЧАР
+// ============================================================
 function renderEnchantGrid(){
   const grid = document.getElementById('enchantGrid');
   grid.innerHTML = '';
@@ -370,6 +376,9 @@ function renderEnchantGrid(){
   });
 }
 
+// ============================================================
+//  ДОБАВЛЕНИЕ ЧАРА ИЗ СЕТКИ
+// ============================================================
 function addBookFromGrid(name){
   const existing = selectedBooks.find(b => b.name === name);
   if (existing){
@@ -388,6 +397,9 @@ function addBookFromGrid(name){
   document.getElementById('selectedPanel').style.display = 'block';
 }
 
+// ============================================================
+//  ДОБАВЛЕНИЕ КАСТОМНОГО ЧАРА
+// ============================================================
 function addCustomEnchant(){
   const name = document.getElementById('customName').value.trim();
   if (!name){ alert('Введите название чара'); return; }
@@ -430,6 +442,9 @@ function addCustomEnchant(){
   document.getElementById('selectedPanel').style.display = 'block';
 }
 
+// ============================================================
+//  ПРОВЕРКА КОНФЛИКТОВ
+// ============================================================
 function updateConflictWarning(){
   const anyConflict = selectedBooks.some((b, i) => {
     const g = (b.group && b.group.trim()) || ENCHANT_TO_GROUP[b.name];
@@ -443,6 +458,9 @@ function updateConflictWarning(){
   document.getElementById('conflictWarning').style.display = anyConflict ? 'block' : 'none';
 }
 
+// ============================================================
+//  РЕНДЕР СПИСКА ВЫБРАННЫХ КНИГ
+// ============================================================
 function renderSelectedList(){
   const list = document.getElementById('selectedList');
   list.innerHTML = '';
@@ -558,6 +576,9 @@ function checkRowConflict(idx, inputEl){
   inputEl.classList.toggle('conflict', hasConflict);
 }
 
+// ============================================================
+//  РЕЖИМЫ
+// ============================================================
 function switchMode(mode){
   if (mode !== currentMode){
     selectedBooks = [];
@@ -568,11 +589,29 @@ function switchMode(mode){
   document.getElementById('modeNovice').classList.toggle('active', mode === 'novice');
   document.getElementById('modeExpert').classList.toggle('active', mode === 'expert');
   document.getElementById('customPanel').style.display = mode === 'expert' ? 'block' : 'none';
+
+  const extraPanel = document.getElementById('extraPanel');
+  if (mode === 'expert'){
+    extraPanel.style.display = 'block';
+  } else {
+    // В режиме новичка скрываем шаг 5 и сбрасываем его настройки
+    extraPanel.style.display = 'none';
+    extraOptions.repair = false;
+    extraOptions.rename = false;
+    extraOptions.targetN = 0;
+    document.getElementById('repairBtn').classList.remove('active');
+    document.getElementById('renameBtn').classList.remove('active');
+    document.getElementById('targetN').value = '0';
+  }
+
   renderSelectedList();
   renderEnchantGrid();
   updateConflictWarning();
 }
 
+// ============================================================
+//  ОТРИСОВКА РЕЗУЛЬТАТОВ
+// ============================================================
 function renderResults(steps){
   const container = document.getElementById('resultContent');
   container.innerHTML = '';
@@ -665,12 +704,20 @@ document.getElementById('customAdd').addEventListener('click', addCustomEnchant)
   });
 });
 
-document.getElementById('repairCheck').addEventListener('change', e => {
-  extraOptions.repair = e.target.checked;
+// Кнопки-переключатели
+const repairBtn = document.getElementById('repairBtn');
+const renameBtn = document.getElementById('renameBtn');
+
+repairBtn.addEventListener('click', () => {
+  extraOptions.repair = !extraOptions.repair;
+  repairBtn.classList.toggle('active', extraOptions.repair);
 });
-document.getElementById('renameCheck').addEventListener('change', e => {
-  extraOptions.rename = e.target.checked;
+
+renameBtn.addEventListener('click', () => {
+  extraOptions.rename = !extraOptions.rename;
+  renameBtn.classList.toggle('active', extraOptions.rename);
 });
+
 document.getElementById('targetN').addEventListener('input', e => {
   extraOptions.targetN = Math.max(0, +e.target.value || 0);
 });

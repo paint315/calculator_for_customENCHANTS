@@ -243,6 +243,9 @@ body {
   font-weight: 500;
   transition: all 0.2s;
   text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 .grid button:hover:not(:disabled) {
   background: var(--panel-hover);
@@ -267,6 +270,22 @@ body {
   border-color: var(--input-border);
 }
 .grid button:disabled:hover { background: var(--input-bg); }
+
+/* ============================================================
+   ИКОНКИ ПРЕДМЕТОВ
+   ============================================================ */
+.item-icon {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  flex-shrink: 0;
+  filter: drop-shadow(0 1px 2px rgba(20, 40, 80, 0.15));
+}
+
+.item-label {
+  flex: 1;
+  text-align: left;
+}
 
 /* ============================================================
    ФОРМА КАСТОМНОГО ЧАРА
@@ -342,6 +361,7 @@ body {
   width: 100%;
   font-family: inherit;
 }
+
 .enchant-row input:focus {
   outline: none;
   border-color: var(--teal);
@@ -393,6 +413,12 @@ body {
   border-radius: 12px;
   border: 1px solid var(--input-border);
 }
+.book-row span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
 .book-row input[type="number"] {
   background: var(--panel-solid);
   border: 1px solid var(--input-border);
@@ -436,12 +462,6 @@ body {
   transition: border-color 0.2s;
 }
 .option-item:hover { border-color: var(--teal); }
-.option-item input[type="checkbox"] {
-  width: 18px;
-  height: 18px;
-  cursor: pointer;
-  accent-color: var(--teal-dark);
-}
 .option-item input[type="number"] {
   width: 70px;
   background: var(--panel-solid);
@@ -452,6 +472,83 @@ body {
   font-size: 13px;
 }
 .option-item label { cursor: pointer; color: var(--text); }
+
+/* Кнопки-переключатели (эффект нажатия, как у предметов) */
+.toggle-btn {
+  background: var(--input-bg);
+  color: var(--text);
+  border: 1px solid var(--input-border);
+  padding: 13px 16px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 13px;
+  font-family: inherit;
+  font-weight: 500;
+  text-align: left;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.toggle-btn:hover {
+  background: var(--panel-hover);
+  border-color: var(--teal);
+  color: var(--teal);
+  transform: translateY(-1px);
+}
+.toggle-btn.active {
+  background: rgba(79, 179, 160, 0.1);
+  border-color: var(--teal);
+  color: var(--teal);
+  font-weight: 700;
+  box-shadow: 0 0 0 1px var(--teal);
+}
+
+/* ============================================================
+   АККОРДЕОН (справка)
+   ============================================================ */
+.accordion {
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  border-radius: 12px;
+  margin-bottom: 8px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+.accordion:hover { border-color: var(--teal); }
+.accordion[open] { border-color: var(--teal); }
+.accordion summary {
+  padding: 14px 18px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--text);
+  user-select: none;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: background 0.2s;
+}
+.accordion summary:hover {
+  background: var(--panel-hover);
+}
+.accordion summary::-webkit-details-marker { display: none; }
+.accordion summary::before {
+  content: "▶";
+  font-size: 10px;
+  color: var(--accent);
+  transition: transform 0.2s;
+  display: inline-block;
+}
+.accordion[open] summary::before {
+  transform: rotate(90deg);
+}
+.accordion p {
+  padding: 0 18px 16px 38px;
+  color: var(--text-dim);
+  font-size: 13.5px;
+}
 
 /* ============================================================
    ОСНОВНАЯ КНОПКА
@@ -562,13 +659,6 @@ button.primary:active { transform: translateY(0); }
 .summary .penalty-line b { color: var(--accent); font-size: 1.15em; }
 
 /* ============================================================
-   ПРАВИЛА
-   ============================================================ */
-.rules { font-size: 13.5px; color: var(--text-dim); line-height: 1.9; }
-.rules li { margin-left: 22px; margin-bottom: 6px; }
-.rules b { color: var(--text); }
-
-/* ============================================================
    АДАПТИВ
    ============================================================ */
 @media (max-width: 800px) {
@@ -590,31 +680,4 @@ button.primary:active { transform: translateY(0); }
   .book-row { grid-template-columns: 1fr 60px 40px 36px; }
   .mode-switch { width: 100%; }
   .mode-switch button { flex: 1; }
-}
-
-/* ============================================================
-   ИКОНКИ ПРЕДМЕТОВ
-   ============================================================ */
-.grid button {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.item-icon {
-  width: 28px;
-  height: 28px;
-  object-fit: contain;
-  flex-shrink: 0;
-  filter: drop-shadow(0 1px 2px rgba(20, 40, 80, 0.15));
-}
-
-.item-label {
-  flex: 1;
-  text-align: left;
-}
-
-/* Чтобы кнопки с иконками и без них выглядели одинаково по высоте */
-.grid button:not(:has(.item-icon)) {
-  padding-left: 16px;
 }
