@@ -1,140 +1,161 @@
 // ============================================================
-//  ТАБЛИЦА МНОЖИТЕЛЕЙ И МАКС. УРОВНЕЙ (русские названия)
+//  РЕЕСТР ЗАЧАРОВАНИЙ
+//  Каждый чар описывается один раз.
+//  Поля:
+//    multItem  — множитель для предмета
+//    multBook  — множитель для книги
+//    maxLevel  — максимальный уровень
+//    group     — (опционально) группа несовместимости
 // ============================================================
-const ENCHANT_DATA = {
-  'Защита':                    { multItem: 1, multBook: 1, maxLevel: 4 },
-  'Огнеупорность':             { multItem: 2, multBook: 1, maxLevel: 4 },
-  'Невесомость':               { multItem: 2, multBook: 1, maxLevel: 4 },
-  'Взрывоустойчивость':        { multItem: 4, multBook: 2, maxLevel: 4 },
-  'Защита от снарядов':        { multItem: 2, multBook: 1, maxLevel: 4 },
-  'Шипы':                      { multItem: 8, multBook: 4, maxLevel: 3 },
-  'Подводное дыхание':         { multItem: 4, multBook: 2, maxLevel: 3 },
-  'Подводная ходьба':          { multItem: 4, multBook: 2, maxLevel: 3 },
-  'Родство с водой':           { multItem: 4, multBook: 2, maxLevel: 1 },
-  'Острота':                   { multItem: 1, multBook: 1, maxLevel: 5 },
-  'Небесная кара':             { multItem: 2, multBook: 1, maxLevel: 5 },
-  'Бич членистоногих':         { multItem: 2, multBook: 1, maxLevel: 5 },
-  'Отдача':                    { multItem: 2, multBook: 1, maxLevel: 2 },
-  'Заговор огня':              { multItem: 4, multBook: 2, maxLevel: 2 },
-  'Добыча':                    { multItem: 4, multBook: 2, maxLevel: 3 },
-  'Эффективность':             { multItem: 1, multBook: 1, maxLevel: 5 },
-  'Шёлковое касание':          { multItem: 8, multBook: 4, maxLevel: 1 },
-  'Прочность':                 { multItem: 2, multBook: 1, maxLevel: 3 },
-  'Удача':                     { multItem: 4, multBook: 2, maxLevel: 3 },
-  'Сила':                      { multItem: 1, multBook: 1, maxLevel: 5 },
-  'Откидывание':               { multItem: 4, multBook: 2, maxLevel: 2 },
-  'Воспламенение':             { multItem: 4, multBook: 2, maxLevel: 1 },
-  'Бесконечность':             { multItem: 8, multBook: 4, maxLevel: 1 },
-  'Удача рыбака':              { multItem: 4, multBook: 2, maxLevel: 3 },
-  'Приманка':                  { multItem: 4, multBook: 2, maxLevel: 3 },
-  'Ледоход':                   { multItem: 4, multBook: 2, maxLevel: 2 },
-  'Починка':                   { multItem: 4, multBook: 2, maxLevel: 1 },
-  'Проклятие несъёмности':     { multItem: 8, multBook: 4, maxLevel: 1 },
-  'Проклятие утраты':          { multItem: 8, multBook: 4, maxLevel: 1 },
-  'Пронзание':                 { multItem: 4, multBook: 2, maxLevel: 5 },
-  'Тягун':                     { multItem: 4, multBook: 2, maxLevel: 3 },
-  'Верность':                  { multItem: 1, multBook: 1, maxLevel: 3 },
-  'Громоотвод':                { multItem: 8, multBook: 4, maxLevel: 1 },
-  'Тройной выстрел':           { multItem: 4, multBook: 2, maxLevel: 1 },
-  'Пронзающий выстрел':        { multItem: 1, multBook: 1, maxLevel: 4 },
-  'Быстрая перезарядка':       { multItem: 2, multBook: 1, maxLevel: 3 },
-  'Скорость души':             { multItem: 8, multBook: 4, maxLevel: 3 },
-  'Быстрый подкрад':           { multItem: 8, multBook: 4, maxLevel: 3 },
-  'Порыв ветра':               { multItem: 4, multBook: 2, maxLevel: 3 },
-  'Плотность':                 { multItem: 2, multBook: 1, maxLevel: 5 },
-  'Пробой':                    { multItem: 4, multBook: 2, maxLevel: 4 },
-  'Выпад':                     { multItem: 2, multBook: 1, maxLevel: 3 },
-  'Разящий клинок':            { multItem: 4, multBook: 2, maxLevel: 3 },
+const ENCHANTS = {
+  'Защита':                { multItem: 1, multBook: 1, maxLevel: 4, group: 'protection' },
+  'Огнеупорность':         { multItem: 2, multBook: 1, maxLevel: 4, group: 'protection' },
+  'Невесомость':           { multItem: 2, multBook: 1, maxLevel: 4 },
+  'Взрывоустойчивость':    { multItem: 4, multBook: 2, maxLevel: 4, group: 'protection' },
+  'Защита от снарядов':    { multItem: 2, multBook: 1, maxLevel: 4, group: 'protection' },
+  'Шипы':                  { multItem: 8, multBook: 4, maxLevel: 3 },
+  'Подводное дыхание':     { multItem: 4, multBook: 2, maxLevel: 3 },
+  'Подводная ходьба':      { multItem: 4, multBook: 2, maxLevel: 3, group: 'boots' },
+  'Родство с водой':       { multItem: 4, multBook: 2, maxLevel: 1 },
+  'Острота':               { multItem: 1, multBook: 1, maxLevel: 5, group: 'damage' },
+  'Небесная кара':         { multItem: 2, multBook: 1, maxLevel: 5, group: 'damage' },
+  'Бич членистоногих':     { multItem: 2, multBook: 1, maxLevel: 5, group: 'damage' },
+  'Отдача':                { multItem: 2, multBook: 1, maxLevel: 2 },
+  'Заговор огня':          { multItem: 4, multBook: 2, maxLevel: 2 },
+  'Добыча':                { multItem: 4, multBook: 2, maxLevel: 3 },
+  'Эффективность':         { multItem: 1, multBook: 1, maxLevel: 5 },
+  'Шёлковое касание':      { multItem: 8, multBook: 4, maxLevel: 1, group: 'mining' },
+  'Прочность':             { multItem: 2, multBook: 1, maxLevel: 3 },
+  'Удача':                 { multItem: 4, multBook: 2, maxLevel: 3, group: 'mining' },
+  'Сила':                  { multItem: 1, multBook: 1, maxLevel: 5 },
+  'Откидывание':           { multItem: 4, multBook: 2, maxLevel: 2 },
+  'Воспламенение':         { multItem: 4, multBook: 2, maxLevel: 1 },
+  'Бесконечность':         { multItem: 8, multBook: 4, maxLevel: 1 },
+  'Удача рыбака':          { multItem: 4, multBook: 2, maxLevel: 3 },
+  'Приманка':              { multItem: 4, multBook: 2, maxLevel: 3 },
+  'Ледоход':               { multItem: 4, multBook: 2, maxLevel: 2, group: 'boots' },
+  'Починка':               { multItem: 4, multBook: 2, maxLevel: 1 },
+  'Проклятие несъёмности': { multItem: 8, multBook: 4, maxLevel: 1 },
+  'Проклятие утраты':      { multItem: 8, multBook: 4, maxLevel: 1 },
+  'Пронзание':             { multItem: 4, multBook: 2, maxLevel: 5 },
+  'Тягун':                 { multItem: 4, multBook: 2, maxLevel: 3, group: 'trident' },
+  'Верность':              { multItem: 1, multBook: 1, maxLevel: 3, group: 'trident' },
+  'Громоотвод':            { multItem: 8, multBook: 4, maxLevel: 1, group: 'trident' },
+  'Тройной выстрел':       { multItem: 4, multBook: 2, maxLevel: 1, group: 'crossbow' },
+  'Пронзающий выстрел':    { multItem: 1, multBook: 1, maxLevel: 4, group: 'crossbow' },
+  'Быстрая перезарядка':   { multItem: 2, multBook: 1, maxLevel: 3 },
+  'Скорость души':         { multItem: 8, multBook: 4, maxLevel: 3 },
+  'Быстрый подкрад':       { multItem: 8, multBook: 4, maxLevel: 3 },
+  'Порыв ветра':           { multItem: 4, multBook: 2, maxLevel: 3 },
+  'Плотность':             { multItem: 2, multBook: 1, maxLevel: 5 },
+  'Пробой':                { multItem: 4, multBook: 2, maxLevel: 4 },
+  'Выпад':                 { multItem: 2, multBook: 1, maxLevel: 3 },
+  'Разящий клинок':        { multItem: 4, multBook: 2, maxLevel: 3 },
 };
 
 // ============================================================
-//  ПРЕДМЕТЫ И ИХ ЧАРЫ
+//  РЕЕСТР ПРЕДМЕТОВ
+//  Поля:
+//    icon     — (опционально) путь к иконке
+//    enchants — список доступных чар
 // ============================================================
-const ITEM_ENCHANTS = {
-  'Меч': ['Острота', 'Небесная кара', 'Бич членистоногих', 'Отдача', 'Заговор огня',
-          'Добыча', 'Разящий клинок', 'Прочность', 'Починка', 'Проклятие утраты'],
-  'Кирка': ['Эффективность', 'Удача', 'Шёлковое касание', 'Прочность', 'Починка',
-            'Проклятие утраты'],
-  'Топор': ['Эффективность', 'Удача', 'Шёлковое касание', 'Острота', 'Небесная кара',
-            'Бич членистоногих', 'Прочность', 'Починка', 'Проклятие утраты'],
-  'Лопата': ['Эффективность', 'Удача', 'Шёлковое касание', 'Прочность', 'Починка',
-             'Проклятие утраты'],
-  'Мотыга': ['Эффективность', 'Удача', 'Шёлковое касание', 'Прочность', 'Починка',
-             'Проклятие утраты'],
-  'Шлем': ['Защита', 'Огнеупорность', 'Взрывоустойчивость',
-           'Защита от снарядов', 'Подводное дыхание', 'Родство с водой', 'Шипы',
-           'Прочность', 'Починка', 'Проклятие утраты', 'Проклятие несъёмности'],
-  'Нагрудник': ['Защита', 'Огнеупорность', 'Взрывоустойчивость',
-                'Защита от снарядов', 'Шипы', 'Прочность', 'Починка',
-                'Проклятие утраты', 'Проклятие несъёмности'],
-  'Штаны': ['Защита', 'Огнеупорность', 'Взрывоустойчивость',
-            'Защита от снарядов', 'Шипы', 'Прочность', 'Починка',
-            'Проклятие утраты', 'Проклятие несъёмности'],
-  'Ботинки': ['Защита', 'Огнеупорность', 'Взрывоустойчивость',
-              'Защита от снарядов', 'Невесомость', 'Подводная ходьба',
-              'Ледоход', 'Скорость души', 'Быстрый подкрад', 'Шипы',
-              'Прочность', 'Починка', 'Проклятие утраты', 'Проклятие несъёмности'],
-  'Лук': ['Сила', 'Откидывание', 'Воспламенение', 'Бесконечность', 'Прочность', 'Починка',
-          'Проклятие утраты'],
-  'Арбалет': ['Быстрая перезарядка', 'Тройной выстрел', 'Пронзающий выстрел', 'Прочность', 'Починка',
-              'Проклятие утраты'],
-  'Трезубец': ['Верность', 'Пронзание', 'Тягун', 'Громоотвод', 'Прочность',
-               'Починка', 'Проклятие утраты'],
-  'Удочка': ['Удача рыбака', 'Приманка', 'Прочность', 'Починка',
-             'Проклятие утраты'],
-  'Булава': ['Плотность', 'Пробой', 'Порыв ветра', 'Небесная кара', 'Бич членистоногих',
-             'Заговор огня', 'Прочность', 'Починка', 'Проклятие утраты'],
-  'Ножницы': ['Эффективность', 'Шёлковое касание', 'Прочность', 'Починка',
-              'Проклятие утраты'],
-  'Кисточка': ['Прочность', 'Починка'],
-  'Элитры': ['Прочность', 'Починка', 'Проклятие утраты', 'Проклятие несъёмности'],
-  'Щит': ['Прочность', 'Починка', 'Проклятие утраты'],
-  'Огниво': ['Прочность', 'Починка', 'Проклятие утраты'],
-  'Копьё': ['Острота', 'Небесная кара', 'Бич членистоногих', 'Выпад', 'Прочность',
-            'Починка', 'Проклятие утраты'],
+const ITEMS = {
+  'Меч':       { icon: 'icons/diamond_sword.png',      enchants: ['Острота', 'Небесная кара', 'Бич членистоногих', 'Отдача', 'Заговор огня', 'Добыча', 'Разящий клинок', 'Прочность', 'Починка', 'Проклятие утраты'] },
+  'Кирка':     { icon: 'icons/diamond_pickaxe.png',    enchants: ['Эффективность', 'Удача', 'Шёлковое касание', 'Прочность', 'Починка', 'Проклятие утраты'] },
+  'Топор':     { icon: 'icons/diamond_axe.png',        enchants: ['Эффективность', 'Удача', 'Шёлковое касание', 'Острота', 'Небесная кара', 'Бич членистоногих', 'Прочность', 'Починка', 'Проклятие утраты'] },
+  'Лопата':    { icon: 'icons/diamond_shovel.png',     enchants: ['Эффективность', 'Удача', 'Шёлковое касание', 'Прочность', 'Починка', 'Проклятие утраты'] },
+  'Мотыга':    { icon: 'icons/diamond_hoe.png',        enchants: ['Эффективность', 'Удача', 'Шёлковое касание', 'Прочность', 'Починка', 'Проклятие утраты'] },
+  'Шлем':      { icon: 'icons/diamond_helmet.png',     enchants: ['Защита', 'Огнеупорность', 'Взрывоустойчивость', 'Защита от снарядов', 'Подводное дыхание', 'Родство с водой', 'Шипы', 'Прочность', 'Починка', 'Проклятие утраты', 'Проклятие несъёмности'] },
+  'Нагрудник': { icon: 'icons/diamond_chestplate.png', enchants: ['Защита', 'Огнеупорность', 'Взрывоустойчивость', 'Защита от снарядов', 'Шипы', 'Прочность', 'Починка', 'Проклятие утраты', 'Проклятие несъёмности'] },
+  'Штаны':     { icon: 'icons/diamond_leggings.png',   enchants: ['Защита', 'Огнеупорность', 'Взрывоустойчивость', 'Защита от снарядов', 'Шипы', 'Прочность', 'Починка', 'Проклятие утраты', 'Проклятие несъёмности'] },
+  'Ботинки':   { icon: 'icons/diamond_boots.png',      enchants: ['Защита', 'Огнеупорность', 'Взрывоустойчивость', 'Защита от снарядов', 'Невесомость', 'Подводная ходьба', 'Ледоход', 'Скорость души', 'Быстрый подкрад', 'Шипы', 'Прочность', 'Починка', 'Проклятие утраты', 'Проклятие несъёмности'] },
+  'Лук':       { icon: 'icons/bow.png',                enchants: ['Сила', 'Откидывание', 'Воспламенение', 'Бесконечность', 'Прочность', 'Починка', 'Проклятие утраты'] },
+  'Арбалет':   { icon: 'icons/crossbow.png',           enchants: ['Быстрая перезарядка', 'Тройной выстрел', 'Пронзающий выстрел', 'Прочность', 'Починка', 'Проклятие утраты'] },
+  'Трезубец':  { icon: 'icons/trident.png',            enchants: ['Верность', 'Пронзание', 'Тягун', 'Громоотвод', 'Прочность', 'Починка', 'Проклятие утраты'] },
+  'Удочка':    { icon: 'icons/fishing_rod.png',        enchants: ['Удача рыбака', 'Приманка', 'Прочность', 'Починка', 'Проклятие утраты'] },
+  'Булава':    { icon: 'icons/mace.png',               enchants: ['Плотность', 'Пробой', 'Порыв ветра', 'Небесная кара', 'Бич членистоногих', 'Заговор огня', 'Прочность', 'Починка', 'Проклятие утраты'] },
+  'Ножницы':   { icon: 'icons/shears.png',             enchants: ['Эффективность', 'Шёлковое касание', 'Прочность', 'Починка', 'Проклятие утраты'] },
+  'Кисточка':  { icon: 'icons/brush.png',              enchants: ['Прочность', 'Починка'] },
+  'Элитры':    { icon: 'icons/elytra.png',             enchants: ['Прочность', 'Починка', 'Проклятие утраты', 'Проклятие несъёмности'] },
+  'Щит':       { icon: 'icons/shield.png',             enchants: ['Прочность', 'Починка', 'Проклятие утраты'] },
+  'Огниво':    { icon: 'icons/flint_and_steel.png',    enchants: ['Прочность', 'Починка', 'Проклятие утраты'] },
+  'Копьё':     { icon: 'icons/diamond_spear.png',      enchants: ['Острота', 'Небесная кара', 'Бич членистоногих', 'Выпад', 'Прочность', 'Починка', 'Проклятие утраты'] },
 };
 
 // ============================================================
-//  ИКОНКИ ПРЕДМЕТОВ
+//  ПРОИЗВОДНЫЕ ДАННЫЕ (строятся автоматически)
 // ============================================================
-const ITEM_ICONS = {
-  'Топор': 'icons/diamond_axe.png',
-  'Меч': 'icons/diamond_sword.png',
-  'Кирка': 'icons/diamond_pickaxe.png',
-  'Лопата': 'icons/diamond_shovel.png',
-  'Кисточка': 'icons/brush.png',
-  'Лук': 'icons/bow.png',
-  'Арбалет': 'icons/crossbow.png',
-  'Ботинки': 'icons/diamond_boots.png',
-  'Штаны': 'icons/diamond_leggings.png',
-  'Нагрудник': 'icons/diamond_chestplate.png',
-  'Шлем': 'icons/diamond_helmet.png',
-  'Мотыга': 'icons/diamond_hoe.png',
-  'Копьё': 'icons/diamond_spear.png',
-  'Элитры': 'icons/elytra.png',
-  'Удочка': 'icons/fishing_rod.png',
-  'Булава': 'icons/mace.png',
-  'Щит': 'icons/shield.png',
-  'Трезубец': 'icons/trident.png',
-  'Огниво': 'icons/flint_and_steel.png',
-  'Ножницы': 'icons/shears.png',
-};
-
-// ============================================================
-//  ГРУППЫ НЕСОВМЕСТИМОСТИ
-// ============================================================
-const INCOMPATIBLE_GROUPS = {
-  'protection': ['Защита', 'Огнеупорность', 'Взрывоустойчивость', 'Защита от снарядов'],
-  'damage':     ['Острота', 'Небесная кара', 'Бич членистоногих'],
-  'mining':     ['Шёлковое касание', 'Удача'],
-  'trident':    ['Тягун', 'Верность', 'Громоотвод'],
-  'boots':      ['Подводная ходьба', 'Ледоход'],
-  'crossbow':   ['Тройной выстрел', 'Пронзающий выстрел'],
-};
-
 const ENCHANT_TO_GROUP = {};
-for (const [group, list] of Object.entries(INCOMPATIBLE_GROUPS)){
-  for (const name of list) ENCHANT_TO_GROUP[name] = group;
+const INCOMPATIBLE_GROUPS = {};
+for (const [name, data] of Object.entries(ENCHANTS)) {
+  if (data.group) {
+    ENCHANT_TO_GROUP[name] = data.group;
+    if (!INCOMPATIBLE_GROUPS[data.group]) INCOMPATIBLE_GROUPS[data.group] = [];
+    INCOMPATIBLE_GROUPS[data.group].push(name);
+  }
+}
+
+// ============================================================
+//  СИСТЕМА УВЕДОМЛЕНИЙ (TOAST)
+// ============================================================
+const TOAST_ICONS = {
+  info:    'ℹ️',
+  success: '✅',
+  warning: '⚠️',
+  error:   '⛔',
+};
+
+let lastToastMessage = '';
+let lastToastTime = 0;
+
+/**
+ * Показать всплывающее уведомление.
+ * @param {string} message   — текст
+ * @param {'info'|'success'|'warning'|'error'} type — тип
+ * @param {number} duration  — сколько мс показывать (0 = не закрывать автоматически)
+ */
+function notify(message, type = 'info', duration = 4500) {
+  const now = Date.now();
+  if (message === lastToastMessage && now - lastToastTime < 800) return;
+  lastToastMessage = message;
+  lastToastTime = now;
+
+  const container = document.getElementById('toastContainer');
+  if (!container) return;
+
+  const toast = document.createElement('div');
+  toast.className = `toast toast-${type}`;
+
+  const icon = document.createElement('span');
+  icon.className = 'toast-icon';
+  icon.textContent = TOAST_ICONS[type] || TOAST_ICONS.info;
+
+  const msg = document.createElement('span');
+  msg.className = 'toast-message';
+  msg.textContent = message;
+
+  const closeBtn = document.createElement('button');
+  closeBtn.className = 'toast-close';
+  closeBtn.type = 'button';
+  closeBtn.setAttribute('aria-label', 'Закрыть');
+  closeBtn.textContent = '×';
+
+  toast.append(icon, msg, closeBtn);
+  container.appendChild(toast);
+
+  requestAnimationFrame(() => toast.classList.add('show'));
+
+  let removed = false;
+  const close = () => {
+    if (removed) return;
+    removed = true;
+    toast.classList.remove('show');
+    toast.classList.add('hide');
+    setTimeout(() => toast.remove(), 300);
+  };
+
+  closeBtn.addEventListener('click', close);
+  if (duration > 0) setTimeout(close, duration);
 }
 
 // ============================================================
@@ -150,14 +171,18 @@ let extraOptions = { repair: false, rename: false, targetN: 0 };
 // ============================================================
 function penalty(n){ return Math.pow(2, n) - 1; }
 
+function getEnchantData(name){
+  return ENCHANTS[name] || null;
+}
+
 function getMultiplier(name, isBook){
-  const data = ENCHANT_DATA[name];
+  const data = getEnchantData(name);
   if (data) return isBook ? data.multBook : data.multItem;
   return isBook ? 1 : 2;
 }
 
 function getMaxLevel(name){
-  const data = ENCHANT_DATA[name];
+  const data = getEnchantData(name);
   return data ? data.maxLevel : 99;
 }
 
@@ -314,10 +339,10 @@ function calculateSteps(enchantList){
 function renderItemGrid(){
   const grid = document.getElementById('itemGrid');
   grid.innerHTML = '';
-  Object.keys(ITEM_ENCHANTS).forEach(item => {
+  Object.keys(ITEMS).forEach(item => {
     const btn = document.createElement('button');
 
-    const iconPath = ITEM_ICONS[item];
+    const iconPath = ITEMS[item].icon;
     if (iconPath){
       const img = document.createElement('img');
       img.src = iconPath;
@@ -351,7 +376,7 @@ function renderEnchantGrid(){
   const grid = document.getElementById('enchantGrid');
   grid.innerHTML = '';
   if (!selectedItem) return;
-  const enchants = ITEM_ENCHANTS[selectedItem] || [];
+  const enchants = ITEMS[selectedItem].enchants || [];
 
   enchants.forEach(name => {
     const btn = document.createElement('button');
@@ -383,7 +408,12 @@ function addBookFromGrid(name){
   const existing = selectedBooks.find(b => b.name === name);
   if (existing){
     const maxLvl = getEffectiveMax(existing);
-    if (existing.level < maxLvl) existing.level++;
+    if (existing.level < maxLvl){
+      existing.level++;
+    } else {
+      notify(`«${name}» уже на максимальном уровне (${maxLvl})`, 'warning');
+      return;
+    }
   } else {
     selectedBooks.push({
       name, level: 1, multiplier: null, isBook: true,
@@ -398,11 +428,28 @@ function addBookFromGrid(name){
 }
 
 // ============================================================
+//  СБРОС ФОРМЫ КАСТОМНОГО ЧАРА
+// ============================================================
+function resetCustomForm(){
+  document.getElementById('customName').value = '';
+  document.getElementById('customLevel').value = '1';
+  document.getElementById('customMult').value = '';
+  document.getElementById('customMax').value = '';
+  document.getElementById('customGroup').value = '';
+  document.getElementById('customIsBook').checked = true;
+}
+
+// ============================================================
 //  ДОБАВЛЕНИЕ КАСТОМНОГО ЧАРА
 // ============================================================
 function addCustomEnchant(){
-  const name = document.getElementById('customName').value.trim();
-  if (!name){ alert('Введите название чара'); return; }
+  const nameInput = document.getElementById('customName');
+  const name = nameInput.value.trim();
+  if (!name){
+    notify('Введите название чара', 'warning');
+    nameInput.focus();
+    return;
+  }
 
   const level    = Math.max(1, +document.getElementById('customLevel').value || 1);
   const multVal  = document.getElementById('customMult').value;
@@ -410,14 +457,19 @@ function addCustomEnchant(){
   const groupVal = document.getElementById('customGroup').value.trim();
 
   if (isIncompatibleWithSelected(name, groupVal)){
-    alert(`Чар «${name}» несовместим с уже выбранными чарами из той же группы.`);
+    notify(`Чар «${name}» несовместим с уже выбранными чарами из той же группы.`, 'error');
     return;
   }
 
   const existing = selectedBooks.find(b => b.name === name);
   if (existing){
     const maxLvl = getEffectiveMax(existing);
-    if (existing.level < maxLvl) existing.level++;
+    if (existing.level < maxLvl){
+      existing.level++;
+    } else {
+      notify(`«${name}» уже на максимальном уровне (${maxLvl})`, 'warning');
+      return;
+    }
   } else {
     selectedBooks.push({
       name, level,
@@ -429,17 +481,14 @@ function addCustomEnchant(){
     });
   }
 
-  document.getElementById('customName').value = '';
-  document.getElementById('customLevel').value = '1';
-  document.getElementById('customMult').value = '';
-  document.getElementById('customMax').value = '';
-  document.getElementById('customGroup').value = '';
-  document.getElementById('customIsBook').checked = true;
+  resetCustomForm();
 
   renderSelectedList();
   renderEnchantGrid();
   updateConflictWarning();
   document.getElementById('selectedPanel').style.display = 'block';
+
+  notify(`Чар «${name}» добавлен`, 'success', 3000);
 }
 
 // ============================================================
@@ -581,8 +630,13 @@ function checkRowConflict(idx, inputEl){
 // ============================================================
 function switchMode(mode){
   if (mode !== currentMode){
+    // Сброс состояния при смене режима
     selectedBooks = [];
+    selectedItem = null;
+    resetCustomForm();
     document.getElementById('selectedPanel').style.display = 'none';
+    document.getElementById('enchantPanel').style.display = 'none';
+    document.getElementById('enchantHint').style.display = 'none';
     document.getElementById('results').style.display = 'none';
   }
   currentMode = mode;
@@ -594,7 +648,6 @@ function switchMode(mode){
   if (mode === 'expert'){
     extraPanel.style.display = 'block';
   } else {
-    // В режиме новичка скрываем шаг 5 и сбрасываем его настройки
     extraPanel.style.display = 'none';
     extraOptions.repair = false;
     extraOptions.rename = false;
@@ -604,6 +657,7 @@ function switchMode(mode){
     document.getElementById('targetN').value = '0';
   }
 
+  renderItemGrid();
   renderSelectedList();
   renderEnchantGrid();
   updateConflictWarning();
@@ -689,6 +743,12 @@ function renderResults(steps){
 
   document.getElementById('results').style.display = 'block';
   document.getElementById('results').scrollIntoView({ behavior:'smooth' });
+
+  if (anyTooExpensive){
+    notify('Расчёт готов, но часть операций превышает 39 уровней', 'warning');
+  } else {
+    notify(`Расчёт готов: ${finalCost} уровней за финальное наложение`, 'success', 3500);
+  }
 }
 
 // ============================================================
@@ -704,7 +764,6 @@ document.getElementById('customAdd').addEventListener('click', addCustomEnchant)
   });
 });
 
-// Кнопки-переключатели
 const repairBtn = document.getElementById('repairBtn');
 const renameBtn = document.getElementById('renameBtn');
 
@@ -724,7 +783,10 @@ document.getElementById('targetN').addEventListener('input', e => {
 
 document.getElementById('calcBtn').addEventListener('click', () => {
   const valid = selectedBooks.filter(b => b.name.trim() && b.level > 0);
-  if (!valid.length){ alert('Добавьте хотя бы одно зачарование'); return; }
+  if (!valid.length){
+    notify('Добавьте хотя бы одно зачарование', 'warning');
+    return;
+  }
   renderResults(calculateSteps(valid));
 });
 

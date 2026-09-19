@@ -292,7 +292,7 @@ body {
    ============================================================ */
 .custom-form {
   display: grid;
-  grid-template-columns: 2fr 60px 80px 80px 100px 90px 130px;
+  grid-template-columns: 2fr 60px 80px 80px 100px 135px 130px;
   gap: 8px;
   align-items: center;
 }
@@ -311,14 +311,6 @@ body {
   outline: none;
   border-color: var(--teal);
   box-shadow: 0 0 0 3px rgba(79, 179, 160, 0.12);
-}
-.custom-form label {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 12px;
-  color: var(--text-dim);
-  cursor: pointer;
 }
 .custom-form button {
   background: var(--accent);
@@ -342,6 +334,74 @@ body {
 }
 
 /* ============================================================
+   ПЕРЕКЛЮЧАТЕЛЬ «КНИГА / ПРЕДМЕТ»
+   ============================================================ */
+.book-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 8px;
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  border-radius: 10px;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s;
+  min-height: 40px;
+  min-width: 0;
+  overflow: hidden;
+}
+.book-toggle:hover {
+  border-color: var(--teal);
+}
+.book-toggle input[type="checkbox"] {
+  display: none;
+}
+
+/* Свитч */
+.book-toggle .switch {
+  position: relative;
+  width: 34px;
+  height: 18px;
+  background: var(--text-muted);
+  border-radius: 9px;
+  flex-shrink: 0;
+  transition: background 0.25s;
+}
+.book-toggle .switch::before {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 14px;
+  height: 14px;
+  background: #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 1px 3px rgba(20, 40, 80, 0.25);
+  transition: transform 0.25s;
+}
+.book-toggle input:checked + .switch {
+  background: var(--teal);
+}
+.book-toggle input:checked + .switch::before {
+  transform: translateX(16px);
+}
+
+/* Текст */
+.book-toggle .toggle-text {
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+  flex-shrink: 0;
+  display: none;
+}
+.book-toggle .toggle-on  { color: var(--teal); }
+.book-toggle .toggle-off { color: var(--accent); }
+.book-toggle input:checked ~ .toggle-on  { display: inline; }
+.book-toggle input:not(:checked) ~ .toggle-off { display: inline; }
+
+/* ============================================================
    ТАБЛИЦА ОПЫТНОГО РЕЖИМА
    ============================================================ */
 .enchant-row {
@@ -361,7 +421,6 @@ body {
   width: 100%;
   font-family: inherit;
 }
-
 .enchant-row input:focus {
   outline: none;
   border-color: var(--teal);
@@ -446,7 +505,7 @@ body {
    ============================================================ */
 .options-panel {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 12px;
   margin-bottom: 15px;
 }
@@ -460,18 +519,27 @@ body {
   border: 1px solid var(--input-border);
   font-size: 13px;
   transition: border-color 0.2s;
+  min-width: 0;
 }
 .option-item:hover { border-color: var(--teal); }
+.option-item label {
+  cursor: pointer;
+  color: var(--text);
+  flex: 1;
+  min-width: 0;
+  line-height: 1.3;
+}
 .option-item input[type="number"] {
   width: 70px;
+  flex-shrink: 0;
   background: var(--panel-solid);
   border: 1px solid var(--input-border);
   color: var(--text);
   padding: 7px 9px;
   border-radius: 8px;
   font-size: 13px;
+  text-align: center;
 }
-.option-item label { cursor: pointer; color: var(--text); }
 
 /* Кнопки-переключатели (эффект нажатия, как у предметов) */
 .toggle-btn {
@@ -659,6 +727,69 @@ button.primary:active { transform: translateY(0); }
 .summary .penalty-line b { color: var(--accent); font-size: 1.15em; }
 
 /* ============================================================
+   УВЕДОМЛЕНИЯ (TOAST)
+   ============================================================ */
+.toast-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 380px;
+  pointer-events: none;
+}
+
+.toast {
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-left: 4px solid var(--teal);
+  border-radius: 12px;
+  padding: 14px 16px;
+  box-shadow: 0 8px 24px rgba(20, 40, 80, 0.15);
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  pointer-events: auto;
+  opacity: 0;
+  transform: translateX(24px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.toast.show { opacity: 1; transform: translateX(0); }
+.toast.hide { opacity: 0; transform: translateX(24px); }
+
+.toast-icon {
+  font-size: 18px;
+  line-height: 1;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.toast-message {
+  flex: 1;
+  color: var(--text);
+  font-size: 13.5px;
+  line-height: 1.5;
+}
+.toast-close {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+  padding: 0 4px;
+  transition: color 0.2s;
+  flex-shrink: 0;
+}
+.toast-close:hover { color: var(--text); }
+
+.toast-info    { border-left-color: var(--teal); }
+.toast-success { border-left-color: var(--ok); }
+.toast-warning { border-left-color: var(--accent); }
+.toast-error   { border-left-color: var(--danger); }
+
+/* ============================================================
    АДАПТИВ
    ============================================================ */
 @media (max-width: 800px) {
@@ -680,4 +811,14 @@ button.primary:active { transform: translateY(0); }
   .book-row { grid-template-columns: 1fr 60px 40px 36px; }
   .mode-switch { width: 100%; }
   .mode-switch button { flex: 1; }
+  .book-toggle { grid-column: 1 / -1; gap: 10px; }
+}
+
+@media (max-width: 480px) {
+  .toast-container {
+    top: 12px;
+    right: 12px;
+    left: 12px;
+    max-width: none;
+  }
 }

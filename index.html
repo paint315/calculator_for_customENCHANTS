@@ -56,12 +56,17 @@
     <div class="section-label">Шаг 3</div>
     <h2>Добавить свой чар</h2>
     <div class="custom-form">
-      <input id="customName" type="text" placeholder="Название">
-      <input id="customLevel" type="number" placeholder="Ур." value="1" min="1">
-      <input id="customMult" type="number" placeholder="Множ." min="1">
-      <input id="customMax" type="number" placeholder="Макс." min="1">
-      <input id="customGroup" type="text" placeholder="Группа">
-      <label><input id="customIsBook" type="checkbox" checked> Книга</label>
+      <input id="customName" type="text" placeholder="Название" aria-label="Название чара">
+      <input id="customLevel" type="number" placeholder="Ур." value="1" min="1" aria-label="Уровень чара">
+      <input id="customMult" type="number" placeholder="Множ." min="1" aria-label="Множитель чара">
+      <input id="customMax" type="number" placeholder="Макс." min="1" aria-label="Максимальный уровень">
+      <input id="customGroup" type="text" placeholder="Группа" aria-label="Группа несовместимости">
+      <label class="book-toggle" for="customIsBook" aria-label="Источник: книга или предмет">
+        <input type="checkbox" id="customIsBook" checked>
+        <span class="switch"></span>
+        <span class="toggle-text toggle-on">📖 Книга</span>
+        <span class="toggle-text toggle-off">⚔️ Предмет</span>
+      </label>
       <button id="customAdd">+ Добавить</button>
       <div class="custom-hint">
         💡 «Множ.» и «Макс.» можно оставить пустыми — будут взяты автоматически.
@@ -91,7 +96,7 @@
         ✏️ Переименование (+1 ур.)
       </button>
       <div class="option-item">
-        <label for="targetN" style="white-space:nowrap">🛠️ Прошлых использований (n):</label>
+        <label for="targetN" style="white-space:nowrap">🛠️ Прошлых зачарований:</label>
         <input type="number" id="targetN" value="0" min="0" max="30"
                title="Сколько раз предмет уже использовался в наковальне. Штраф считается как 2ⁿ − 1.">
       </div>
@@ -126,6 +131,8 @@
     </details>
   </section>
 </div>
+
+<div id="toastContainer" class="toast-container"></div>
 
 <script src="scripts.js"></script>
 </body>
