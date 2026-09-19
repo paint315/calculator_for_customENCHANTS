@@ -89,6 +89,34 @@ const ITEM_ENCHANTS = {
 };
 
 // ============================================================
+//  ИКОНКИ ПРЕДМЕТОВ
+//  Путь указывается относительно index.html
+// ============================================================
+const ITEM_ICONS = {
+  'Топор': 'icons/diamond_axe.png',
+  'Меч': 'icons/diamond_sword.png',
+  'Кирка': 'icons/diamond_pickaxe.png',
+  'Лопата': 'icons/diamond_shovel.png',
+  'Кисточка': 'icons/brush.png',
+  'Лук': 'icons/bow.png',
+  'Арбалет': 'icons/crossbow.png',
+  'Ботинки': 'icons/diamond_boots.png',
+  'Штаны': 'icons/diamond_leggings.png',
+  'Нагрудник': 'icons/diamond_chestplate.png',
+  'Шлем': 'icons/diamond_helmet.png',
+  'Мотыга': 'icons/diamond_hoe.png',
+  'Копьё': 'icons/diamond_spear.png',
+  'Элитры': 'icons/elytra.png',
+  'Удочка': 'icons/fishing_rod.png',
+  'Булава': 'icons/mace.png',
+  'Щит': 'icons/shield.png',
+  'Трезубец': 'icons/trident.png',
+  'Огниво': 'icons/flint_and_steel.png',
+  'Ножницы': 'icons/shears.png',
+
+};
+
+// ============================================================
 //  ГРУППЫ НЕСОВМЕСТИМОСТИ
 // ============================================================
 const INCOMPATIBLE_GROUPS = {
@@ -284,7 +312,23 @@ function renderItemGrid(){
   grid.innerHTML = '';
   Object.keys(ITEM_ENCHANTS).forEach(item => {
     const btn = document.createElement('button');
-    btn.textContent = item;
+
+    const iconPath = ITEM_ICONS[item];
+    if (iconPath){
+      const img = document.createElement('img');
+      img.src = iconPath;
+      img.alt = item;
+      img.className = 'item-icon';
+      // На случай, если картинки нет — скрываем её
+      img.onerror = () => { img.style.display = 'none'; };
+      btn.appendChild(img);
+    }
+
+    const label = document.createElement('span');
+    label.className = 'item-label';
+    label.textContent = item;
+    btn.appendChild(label);
+
     if (selectedItem === item) btn.classList.add('selected');
     btn.addEventListener('click', () => {
       selectedItem = item;

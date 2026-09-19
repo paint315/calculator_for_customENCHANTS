@@ -591,3 +591,30 @@ button.primary:active { transform: translateY(0); }
   .mode-switch { width: 100%; }
   .mode-switch button { flex: 1; }
 }
+
+/* ============================================================
+   ИКОНКИ ПРЕДМЕТОВ
+   ============================================================ */
+.grid button {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.item-icon {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  flex-shrink: 0;
+  filter: drop-shadow(0 1px 2px rgba(20, 40, 80, 0.15));
+}
+
+.item-label {
+  flex: 1;
+  text-align: left;
+}
+
+/* Чтобы кнопки с иконками и без них выглядели одинаково по высоте */
+.grid button:not(:has(.item-icon)) {
+  padding-left: 16px;
+}
