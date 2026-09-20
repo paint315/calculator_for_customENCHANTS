@@ -485,6 +485,15 @@ function addCustomEnchant(){
   const maxVal   = document.getElementById('customMax').value;
   const groupVal = document.getElementById('customGroup').value.trim();
 
+  // Валидация: максимальный уровень не может быть меньше текущего
+  if (maxVal){
+    const maxNum = +maxVal;
+    if (!isNaN(maxNum) && maxNum < level){
+      notify(`Максимальный уровень (${maxNum}) не может быть меньше текущего (${level})`, 'error');
+      return;
+    }
+  }
+
   if (isIncompatibleWithSelected(name, groupVal)){
     notify(`Чар «${name}» несовместим с уже выбранными чарами из той же группы.`, 'error');
     return;
@@ -736,6 +745,7 @@ function switchMode(mode){
   renderSelectedList();
   renderEnchantGrid();
   updateConflictWarning();
+  updateCounters();
 }
 
 // ============================================================
