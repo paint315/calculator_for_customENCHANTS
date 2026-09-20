@@ -21,7 +21,7 @@ const ENCHANTS = {
   'Шипы':                  { multItem: 8, multBook: 4, maxLevel: 3 },
   'Подводное дыхание':     { multItem: 4, multBook: 2, maxLevel: 3 },
   'Подводная ходьба':      { multItem: 4, multBook: 2, maxLevel: 3, group: 'boots' },
-  'Родство с водой':       { multItem: 4, multBook: 2, maxLevel: 1 },
+  'Подводник':             { multItem: 4, multBook: 2, maxLevel: 1 },
   'Острота':               { multItem: 1, multBook: 1, maxLevel: 5, group: 'damage' },
   'Небесная кара':         { multItem: 2, multBook: 1, maxLevel: 5, group: 'damage' },
   'Бич членистоногих':     { multItem: 2, multBook: 1, maxLevel: 5, group: 'damage' },
@@ -36,7 +36,7 @@ const ENCHANTS = {
   'Откидывание':           { multItem: 4, multBook: 2, maxLevel: 2 },
   'Воспламенение':         { multItem: 4, multBook: 2, maxLevel: 1 },
   'Бесконечность':         { multItem: 8, multBook: 4, maxLevel: 1 },
-  'Удача рыбака':          { multItem: 4, multBook: 2, maxLevel: 3 },
+  'Везучий рыбак':         { multItem: 4, multBook: 2, maxLevel: 3 },
   'Приманка':              { multItem: 4, multBook: 2, maxLevel: 3 },
   'Ледоход':               { multItem: 4, multBook: 2, maxLevel: 2, group: 'boots' },
   'Починка':               { multItem: 4, multBook: 2, maxLevel: 1 },
@@ -45,21 +45,24 @@ const ENCHANTS = {
   'Пронзание':             { multItem: 4, multBook: 2, maxLevel: 5 },
   'Тягун':                 { multItem: 4, multBook: 2, maxLevel: 3, group: 'trident' },
   'Верность':              { multItem: 1, multBook: 1, maxLevel: 3, group: 'trident' },
-  'Громоотвод':            { multItem: 8, multBook: 4, maxLevel: 1, group: 'trident' },
+  'Громовержец':            { multItem: 8, multBook: 4, maxLevel: 1, group: 'trident' },
   'Тройной выстрел':       { multItem: 4, multBook: 2, maxLevel: 1, group: 'crossbow' },
   'Пронзающий выстрел':    { multItem: 1, multBook: 1, maxLevel: 4, group: 'crossbow' },
   'Быстрая перезарядка':   { multItem: 2, multBook: 1, maxLevel: 3 },
   'Скорость души':         { multItem: 8, multBook: 4, maxLevel: 3 },
-  'Быстрый подкрад':       { multItem: 8, multBook: 4, maxLevel: 3 },
+  'Проворство':            { multItem: 8, multBook: 4, maxLevel: 3 },
   'Порыв ветра':           { multItem: 4, multBook: 2, maxLevel: 3 },
   'Плотность':             { multItem: 2, multBook: 1, maxLevel: 5 },
-  'Пробой':                { multItem: 4, multBook: 2, maxLevel: 4 },
+  'Пробитие':                { multItem: 4, multBook: 2, maxLevel: 4 },
   'Выпад':                 { multItem: 2, multBook: 1, maxLevel: 3 },
   'Разящий клинок':        { multItem: 4, multBook: 2, maxLevel: 3 },
 };
 
 // ============================================================
 //  РЕЕСТР ПРЕДМЕТОВ
+//  Поля:
+//    icon     — (опционально) путь к иконке
+//    enchants — список доступных чар
 // ============================================================
 const ITEMS = {
   'Меч':       { icon: 'icons/diamond_sword.png',      enchants: ['Острота', 'Небесная кара', 'Бич членистоногих', 'Отдача', 'Заговор огня', 'Добыча', 'Разящий клинок', 'Прочность', 'Починка', 'Проклятие утраты'] },
@@ -67,21 +70,21 @@ const ITEMS = {
   'Топор':     { icon: 'icons/diamond_axe.png',        enchants: ['Эффективность', 'Удача', 'Шёлковое касание', 'Острота', 'Небесная кара', 'Бич членистоногих', 'Прочность', 'Починка', 'Проклятие утраты'] },
   'Лопата':    { icon: 'icons/diamond_shovel.png',     enchants: ['Эффективность', 'Удача', 'Шёлковое касание', 'Прочность', 'Починка', 'Проклятие утраты'] },
   'Мотыга':    { icon: 'icons/diamond_hoe.png',        enchants: ['Эффективность', 'Удача', 'Шёлковое касание', 'Прочность', 'Починка', 'Проклятие утраты'] },
-  'Шлем':      { icon: 'icons/diamond_helmet.png',     enchants: ['Защита', 'Огнеупорность', 'Взрывоустойчивость', 'Защита от снарядов', 'Подводное дыхание', 'Родство с водой', 'Шипы', 'Прочность', 'Починка', 'Проклятие утраты', 'Проклятие несъёмности'] },
+  'Шлем':      { icon: 'icons/diamond_helmet.png',     enchants: ['Защита', 'Огнеупорность', 'Взрывоустойчивость', 'Защита от снарядов', 'Подводное дыхание', 'Подводник', 'Шипы', 'Прочность', 'Починка', 'Проклятие утраты', 'Проклятие несъёмности'] },
   'Нагрудник': { icon: 'icons/diamond_chestplate.png', enchants: ['Защита', 'Огнеупорность', 'Взрывоустойчивость', 'Защита от снарядов', 'Шипы', 'Прочность', 'Починка', 'Проклятие утраты', 'Проклятие несъёмности'] },
-  'Штаны':     { icon: 'icons/diamond_leggings.png',   enchants: ['Защита', 'Огнеупорность', 'Взрывоустойчивость', 'Защита от снарядов', 'Шипы', 'Прочность', 'Починка', 'Проклятие утраты', 'Проклятие несъёмности'] },
-  'Ботинки':   { icon: 'icons/diamond_boots.png',      enchants: ['Защита', 'Огнеупорность', 'Взрывоустойчивость', 'Защита от снарядов', 'Невесомость', 'Подводная ходьба', 'Ледоход', 'Скорость души', 'Быстрый подкрад', 'Шипы', 'Прочность', 'Починка', 'Проклятие утраты', 'Проклятие несъёмности'] },
+  'Штаны':     { icon: 'icons/diamond_leggings.png',   enchants: ['Защита', 'Огнеупорность', 'Взрывоустойчивость', 'Защита от снарядов', 'Шипы', 'Проворство', 'Прочность', 'Починка', 'Проклятие утраты', 'Проклятие несъёмности'] },
+  'Ботинки':   { icon: 'icons/diamond_boots.png',      enchants: ['Защита', 'Огнеупорность', 'Взрывоустойчивость', 'Защита от снарядов', 'Невесомость', 'Подводная ходьба', 'Ледоход', 'Скорость души', 'Шипы', 'Прочность', 'Починка', 'Проклятие утраты', 'Проклятие несъёмности'] },
   'Лук':       { icon: 'icons/bow.png',                enchants: ['Сила', 'Откидывание', 'Воспламенение', 'Бесконечность', 'Прочность', 'Починка', 'Проклятие утраты'] },
   'Арбалет':   { icon: 'icons/crossbow.png',           enchants: ['Быстрая перезарядка', 'Тройной выстрел', 'Пронзающий выстрел', 'Прочность', 'Починка', 'Проклятие утраты'] },
-  'Трезубец':  { icon: 'icons/trident.png',            enchants: ['Верность', 'Пронзание', 'Тягун', 'Громоотвод', 'Прочность', 'Починка', 'Проклятие утраты'] },
-  'Удочка':    { icon: 'icons/fishing_rod.png',        enchants: ['Удача рыбака', 'Приманка', 'Прочность', 'Починка', 'Проклятие утраты'] },
-  'Булава':    { icon: 'icons/mace.png',               enchants: ['Плотность', 'Пробой', 'Порыв ветра', 'Небесная кара', 'Бич членистоногих', 'Заговор огня', 'Прочность', 'Починка', 'Проклятие утраты'] },
+  'Трезубец':  { icon: 'icons/trident.png',            enchants: ['Верность', 'Пронзание', 'Тягун', 'Громовержец', 'Прочность', 'Починка', 'Проклятие утраты'] },
+  'Удочка':    { icon: 'icons/fishing_rod.png',        enchants: ['Везучий рыбак', 'Приманка', 'Прочность', 'Починка', 'Проклятие утраты'] },
+  'Булава':    { icon: 'icons/mace.png',               enchants: ['Плотность', 'Пробитие', 'Порыв ветра', 'Небесная кара', 'Бич членистоногих', 'Заговор огня', 'Прочность', 'Починка', 'Проклятие утраты'] },
   'Ножницы':   { icon: 'icons/shears.png',             enchants: ['Эффективность', 'Шёлковое касание', 'Прочность', 'Починка', 'Проклятие утраты'] },
   'Кисточка':  { icon: 'icons/brush.png',              enchants: ['Прочность', 'Починка'] },
   'Элитры':    { icon: 'icons/elytra.png',             enchants: ['Прочность', 'Починка', 'Проклятие утраты', 'Проклятие несъёмности'] },
   'Щит':       { icon: 'icons/shield.png',             enchants: ['Прочность', 'Починка', 'Проклятие утраты'] },
   'Огниво':    { icon: 'icons/flint_and_steel.png',    enchants: ['Прочность', 'Починка', 'Проклятие утраты'] },
-  'Копьё':     { icon: 'icons/diamond_spear.png',      enchants: ['Острота', 'Небесная кара', 'Бич членистоногих', 'Выпад', 'Прочность', 'Починка', 'Проклятие утраты'] },
+  'Копьё':     { icon: 'icons/diamond_spear.png',      enchants: ['Острота', 'Небесная кара', 'Бич членистоногих', 'Заговор огня', 'Отдача', 'Добыча', 'Выпад', 'Прочность', 'Починка', 'Проклятие утраты'] },
 };
 
 // ============================================================
@@ -218,7 +221,6 @@ function isIncompatibleWithSelected(name, customGroup){
   });
 }
 
-// Склонение слова «чар»
 function pluralizeChants(n){
   const mod10 = n % 10;
   const mod100 = n % 100;
@@ -373,17 +375,14 @@ function renderItemGrid(){
 // ============================================================
 function selectItem(item){
   if (selectedItem === item){
-    // Клик по тому же предмету — ничего не делаем
     return;
   }
 
   const hadBooks = selectedBooks.length > 0;
 
-  // Сбрасываем ранее выбранные чары
   selectedBooks = [];
   selectedItem = item;
 
-  // Обновляем UI
   renderItemGrid();
   renderEnchantGrid();
   renderSelectedList();
@@ -486,7 +485,6 @@ function addCustomEnchant(){
   const maxVal   = document.getElementById('customMax').value;
   const groupVal = document.getElementById('customGroup').value.trim();
 
-  // Проверка несовместимости
   if (isIncompatibleWithSelected(name, groupVal)){
     notify(`Чар «${name}» несовместим с уже выбранными чарами из той же группы.`, 'error');
     return;
@@ -494,7 +492,6 @@ function addCustomEnchant(){
 
   const existing = selectedBooks.find(b => b.name === name);
 
-  // Проверка лимита кастомных чар (только для новых)
   if (!existing){
     const customCount = selectedBooks.filter(b => b.custom).length;
     if (customCount >= MAX_CUSTOM_ENCHANTS){
@@ -554,11 +551,9 @@ function clearAllBooks(){
 //  ОБНОВЛЕНИЕ СЧЁТЧИКОВ
 // ============================================================
 function updateCounters(){
-  // Счётчик книг
   const booksCounter = document.getElementById('booksCounter');
   if (booksCounter) booksCounter.textContent = selectedBooks.length;
 
-  // Счётчик кастомных чар
   const customCounter = document.getElementById('customCounter');
   if (customCounter){
     const customCount = selectedBooks.filter(b => b.custom).length;
@@ -721,7 +716,8 @@ function switchMode(mode){
   document.getElementById('modeExpert').classList.toggle('active', mode === 'expert');
   document.getElementById('customPanel').style.display = mode === 'expert' ? 'block' : 'none';
 
-  document.getElementById('selectedStepLabel').textContent = mode === 'novice' ? 'Шаг 3' : 'Шаг 4';
+  document.getElementById('selectedStepLabel').textContent =
+    mode === 'novice' ? 'Шаг 3' : 'Шаг 4';
 
   const extraPanel = document.getElementById('extraPanel');
   if (mode === 'expert'){
