@@ -1,4 +1,9 @@
 // ============================================================
+//  КОНСТАНТЫ
+// ============================================================
+const MAX_CUSTOM_ENCHANTS = 15;
+
+// ============================================================
 //  РЕЕСТР ЗАЧАРОВАНИЙ
 //  Каждый чар описывается один раз.
 //  Поля:
@@ -55,9 +60,6 @@ const ENCHANTS = {
 
 // ============================================================
 //  РЕЕСТР ПРЕДМЕТОВ
-//  Поля:
-//    icon     — (опционально) путь к иконке
-//    enchants — список доступных чар
 // ============================================================
 const ITEMS = {
   'Меч':       { icon: 'icons/diamond_sword.png',      enchants: ['Острота', 'Небесная кара', 'Бич членистоногих', 'Отдача', 'Заговор огня', 'Добыча', 'Разящий клинок', 'Прочность', 'Починка', 'Проклятие утраты'] },
@@ -108,12 +110,6 @@ const TOAST_ICONS = {
 let lastToastMessage = '';
 let lastToastTime = 0;
 
-/**
- * Показать всплывающее уведомление.
- * @param {string} message   — текст
- * @param {'info'|'success'|'warning'|'error'} type — тип
- * @param {number} duration  — сколько мс показывать (0 = не закрывать автоматически)
- */
 function notify(message, type = 'info', duration = 4500) {
   const now = Date.now();
   if (message === lastToastMessage && now - lastToastTime < 800) return;
@@ -220,6 +216,15 @@ function isIncompatibleWithSelected(name, customGroup){
     const bGroup = (b.group && b.group.trim()) || ENCHANT_TO_GROUP[b.name];
     return bGroup === g && b.name !== name;
   });
+}
+
+// Склонение слова «чар»
+function pluralizeChants(n){
+  const mod10 = n % 10;
+  const mod100 = n % 100;
+  if (mod10 === 1 && mod100 !== 11) return 'чар';
+  if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)) return 'чара';
+  return 'чаров';
 }
 
 // ============================================================
@@ -358,15 +363,40 @@ function renderItemGrid(){
     btn.appendChild(label);
 
     if (selectedItem === item) btn.classList.add('selected');
-    btn.addEventListener('click', () => {
-      selectedItem = item;
-      renderItemGrid();
-      renderEnchantGrid();
-      document.getElementById('enchantPanel').style.display = 'block';
-      document.getElementById('enchantHint').style.display = 'block';
-    });
+    btn.addEventListener('click', () => selectItem(item));
     grid.appendChild(btn);
   });
+}
+
+// ============================================================
+//  ВЫБОР ПРЕДМЕТА (со сбросом прежних чар)
+// ============================================================
+function selectItem(item){
+  if (selectedItem === item){
+    // Клик по тому же предмету — ничего не делаем
+    return;
+  }
+
+  const hadBooks = selectedBooks.length > 0;
+
+  // Сбрасываем ранее выбранные чары
+  selectedBooks = [];
+  selectedItem = item;
+
+  // Обновляем UI
+  renderItemGrid();
+  renderEnchantGrid();
+  renderSelectedList();
+  updateConflictWarning();
+
+  document.getElementById('enchantPanel').style.display = 'block';
+  document.getElementById('enchantHint').style.display = 'block';
+  document.getElementById('results').style.display = 'none';
+
+  if (hadBooks){
+    document.getElementById('selectedPanel').style.display = 'none';
+    notify(`Предмет изменён на «${item}». Прежние чары сброшены.`, 'info', 3000);
+  }
 }
 
 // ============================================================
@@ -456,12 +486,23 @@ function addCustomEnchant(){
   const maxVal   = document.getElementById('customMax').value;
   const groupVal = document.getElementById('customGroup').value.trim();
 
+  // Проверка несовместимости
   if (isIncompatibleWithSelected(name, groupVal)){
     notify(`Чар «${name}» несовместим с уже выбранными чарами из той же группы.`, 'error');
     return;
   }
 
   const existing = selectedBooks.find(b => b.name === name);
+
+  // Проверка лимита кастомных чар (только для новых)
+  if (!existing){
+    const customCount = selectedBooks.filter(b => b.custom).length;
+    if (customCount >= MAX_CUSTOM_ENCHANTS){
+      notify(`Достигнут лимит кастомных чар (${MAX_CUSTOM_ENCHANTS}). Удалите один из них, чтобы добавить новый.`, 'error', 5000);
+      return;
+    }
+  }
+
   if (existing){
     const maxLvl = getEffectiveMax(existing);
     if (existing.level < maxLvl){
@@ -492,6 +533,42 @@ function addCustomEnchant(){
 }
 
 // ============================================================
+//  ОЧИСТКА ВСЕХ ВЫБРАННЫХ ЧАР
+// ============================================================
+function clearAllBooks(){
+  if (!selectedBooks.length){
+    notify('Список уже пуст', 'info', 2000);
+    return;
+  }
+  const count = selectedBooks.length;
+  selectedBooks = [];
+  renderSelectedList();
+  renderEnchantGrid();
+  updateConflictWarning();
+  document.getElementById('selectedPanel').style.display = 'none';
+  document.getElementById('results').style.display = 'none';
+  notify(`Очищено ${count} ${pluralizeChants(count)}`, 'success', 2500);
+}
+
+// ============================================================
+//  ОБНОВЛЕНИЕ СЧЁТЧИКОВ
+// ============================================================
+function updateCounters(){
+  // Счётчик книг
+  const booksCounter = document.getElementById('booksCounter');
+  if (booksCounter) booksCounter.textContent = selectedBooks.length;
+
+  // Счётчик кастомных чар
+  const customCounter = document.getElementById('customCounter');
+  if (customCounter){
+    const customCount = selectedBooks.filter(b => b.custom).length;
+    customCounter.textContent = customCount;
+    const wrap = customCounter.closest('.custom-counter-wrap');
+    if (wrap) wrap.classList.toggle('limit-reached', customCount >= MAX_CUSTOM_ENCHANTS);
+  }
+}
+
+// ============================================================
 //  ПРОВЕРКА КОНФЛИКТОВ
 // ============================================================
 function updateConflictWarning(){
@@ -513,6 +590,7 @@ function updateConflictWarning(){
 function renderSelectedList(){
   const list = document.getElementById('selectedList');
   list.innerHTML = '';
+  updateCounters();
 
   if (!selectedBooks.length){
     list.innerHTML = '<p style="color:var(--text-muted);text-align:center;padding:15px">Пока ничего не выбрано.</p>';
@@ -630,7 +708,6 @@ function checkRowConflict(idx, inputEl){
 // ============================================================
 function switchMode(mode){
   if (mode !== currentMode){
-    // Сброс состояния при смене режима
     selectedBooks = [];
     selectedItem = null;
     resetCustomForm();
@@ -643,6 +720,8 @@ function switchMode(mode){
   document.getElementById('modeNovice').classList.toggle('active', mode === 'novice');
   document.getElementById('modeExpert').classList.toggle('active', mode === 'expert');
   document.getElementById('customPanel').style.display = mode === 'expert' ? 'block' : 'none';
+
+  document.getElementById('selectedStepLabel').textContent = mode === 'novice' ? 'Шаг 3' : 'Шаг 4';
 
   const extraPanel = document.getElementById('extraPanel');
   if (mode === 'expert'){
@@ -672,12 +751,18 @@ function renderResults(steps){
 
   steps.forEach((step, i) => {
     const div = document.createElement('div');
-    div.className = 'step';
+    const overLimit = step.cost > 39;
+    div.className = 'step' + (overLimit ? ' too-expensive' : '');
+    div.id = `result-step-${i + 1}`;
+
     const title = step.isFinal
       ? `Шаг ${i + 1} — Наложение на предмет`
       : `Шаг ${i + 1} — Слияние`;
+    const badge = overLimit
+      ? '<span class="step-badge">⚠️ Слишком дорого!</span>'
+      : '';
 
-    let html = `<h3>${title}</h3>`;
+    let html = `<h3>${title}${badge}</h3>`;
     html += `<div class="row">🎯 Цель: <b>${itemLabel(step.target)}</b> ` +
             `<span style="color:var(--text-muted)">(n=${step.target.n}, штраф=${step.targetPen})</span></div>`;
     html += `<div class="row">📖 Жертва: <b>${itemLabel(step.sacrifice)}</b> ` +
@@ -716,6 +801,10 @@ function renderResults(steps){
   const totalCost       = steps.reduce((s, st) => s + st.cost, 0);
   const anyTooExpensive = steps.some(st => st.cost > 39);
 
+  const overLimitSteps = steps
+    .map((st, i) => ({ idx: i + 1, cost: st.cost, isFinal: st.isFinal }))
+    .filter(st => st.cost > 39);
+
   const finalItem    = finalStep.result;
   const finalN       = finalItem.n;
   const finalPenalty = penalty(finalN);
@@ -727,6 +816,24 @@ function renderResults(steps){
     : `Финальная стоимость: ${finalCost} уровней`;
   container.appendChild(totalDiv);
 
+  let overlimitHTML = '';
+  if (anyTooExpensive){
+    const chips = overLimitSteps.map(st => {
+      const label = st.isFinal ? `Шаг ${st.idx} (наложение)` : `Шаг ${st.idx}`;
+      return `<a class="step-chip" href="#result-step-${st.idx}" data-goto="${st.idx}">
+        ${label} <span class="step-cost">${st.cost} ур.</span>
+      </a>`;
+    }).join('');
+
+    overlimitHTML = `
+      <div class="overlimit-warning">
+        <div class="overlimit-title">⛔ Превышен лимит 39 уровней</div>
+        <div>Шаги, которые невозможно выполнить в режиме выживания:</div>
+        <div class="overlimit-steps">${chips}</div>
+      </div>
+    `;
+  }
+
   const summary = document.createElement('div');
   summary.className = 'summary';
   summary.innerHTML =
@@ -735,6 +842,7 @@ function renderResults(steps){
     (anyTooExpensive
       ? `<span style="color:var(--danger)">⚠️ Некоторые шаги превышают 39 уровней — в выживании невозможно!</span>`
       : `<span style="color:var(--ok)">✓ Все шаги в пределах 39 уровней.</span>`) +
+    overlimitHTML +
     `<div class="penalty-line">
        🛠️ Итоговый штраф предмета: n = <b>${finalN}</b> →
        штраф при следующем использовании = <b>${finalPenalty}</b>
@@ -743,6 +851,20 @@ function renderResults(steps){
 
   document.getElementById('results').style.display = 'block';
   document.getElementById('results').scrollIntoView({ behavior:'smooth' });
+
+  container.querySelectorAll('.step-chip[data-goto]').forEach(chip => {
+    chip.addEventListener('click', e => {
+      e.preventDefault();
+      const idx = chip.dataset.goto;
+      const target = document.getElementById(`result-step-${idx}`);
+      if (target){
+        target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        target.style.transition = 'box-shadow 0.3s';
+        target.style.boxShadow = '0 0 0 3px rgba(214, 69, 69, 0.4)';
+        setTimeout(() => { target.style.boxShadow = ''; }, 1200);
+      }
+    });
+  });
 
   if (anyTooExpensive){
     notify('Расчёт готов, но часть операций превышает 39 уровней', 'warning');
@@ -757,6 +879,7 @@ function renderResults(steps){
 document.getElementById('modeNovice').addEventListener('click', () => switchMode('novice'));
 document.getElementById('modeExpert').addEventListener('click', () => switchMode('expert'));
 document.getElementById('customAdd').addEventListener('click', addCustomEnchant);
+document.getElementById('clearBooksBtn').addEventListener('click', clearAllBooks);
 
 ['customName','customLevel','customMult','customMax','customGroup'].forEach(id => {
   document.getElementById(id).addEventListener('keydown', e => {

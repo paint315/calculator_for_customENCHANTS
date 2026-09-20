@@ -70,14 +70,24 @@
       <button id="customAdd">+ Добавить</button>
       <div class="custom-hint">
         💡 «Множ.» и «Макс.» можно оставить пустыми — будут взяты автоматически.
+        <span class="custom-counter-wrap">
+          Кастомных чар: <b id="customCounter">0</b> / 15
+        </span>
       </div>
     </div>
   </section>
 
   <!-- ================= ВЫБРАННЫЕ КНИГИ ================= -->
   <section class="panel" id="selectedPanel" style="display:none">
-    <div class="section-label">Шаг 4</div>
-    <h2>Выбранные книги</h2>
+    <div class="panel-header">
+      <div>
+        <div class="section-label" id="selectedStepLabel">Шаг 4</div>
+        <h2>Выбранные книги <span id="booksCounter" class="books-counter">0</span></h2>
+      </div>
+      <button type="button" id="clearBooksBtn" class="clear-btn" title="Очистить все выбранные чары">
+        🗑️ Очистить
+      </button>
+    </div>
     <div id="selectedList"></div>
     <p id="conflictWarning" class="conflict-warning" style="display:none">
       ⚠️ Обнаружены конфликтующие чары — при слиянии один из них будет отброшен (+1 к стоимости).
@@ -132,6 +142,7 @@
   </section>
 </div>
 
+<!-- Контейнер для toast-уведомлений -->
 <div id="toastContainer" class="toast-container"></div>
 
 <script src="scripts.js"></script>
