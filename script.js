@@ -815,6 +815,9 @@ function switchMode(mode){
 // ============================================================
 //  ОТРИСОВКА РЕЗУЛЬТАТОВ
 // ============================================================
+// ============================================================
+//  ОТРИСОВКА РЕЗУЛЬТАТОВ
+// ============================================================
 function renderResults(steps){
   const container = document.getElementById('resultContent');
   container.innerHTML = '';
@@ -824,82 +827,58 @@ function renderResults(steps){
     return;
   }
 
-  steps.forEach((step, i) => {
-    const div = document.createElement('div');
-    const overLimit = step.cost > LEVEL_LIMIT;
-    div.className = 'step' + (overLimit ? ' too-expensive' : '');
-    div.id = `result-step-${i + 1}`;
-    const title = step.isFinal
-      ? `Шаг ${i + 1} — Наложение на предмет`
-      : `Шаг ${i + 1} — Слияние`;
-    const badge = overLimit ? '<span class="step-badge">⚠️ Слишком дорого!</span>' : '';
-    let html = `<h3>${title}${badge}</h3>`;
-    html += `<div class="row">🎯 Цель: <b>${itemLabel(step.target)}</b> ` +
-            `<span style="color:var(--text-muted)">(n=${step.target.n}, штраф=${step.targetPen})</span></div>`;
-    html += `<div class="row">📖 Жертва: <b>${itemLabel(step.sacrifice)}</b> ` +
-            `<span style="color:var(--text-muted)">(n=${step.sacrifice.n}, штраф=${step.sacPen})</span></div>`;
-    html += `<div class="formula">`;
-    html += `Стоимость чар жертвы: <span style="color:var(--teal)">${step.transferSum}</span>`;
-    if (step.transferDetails.length){
-      html += `<br><span style="font-size:11px;color:var(--text-muted)">`;
-      html += step.transferDetails.map(d =>
-        `${escapeHtml(d.name)} → ур.${d.level} = ${d.cost}`
-      ).join('<br>');
-      html += `</span>`;
-    }
-    html += `<br>Штраф цели: <span style="color:var(--danger)">${step.targetPen}</span>`;
-    html += ` + штраф жертвы: <span style="color:var(--danger)">${step.sacPen}</span>`;
-    if (step.incompatCost > 0)
-      html += ` + несовместимость: <span style="color:var(--accent)">${step.incompatCost}</span>`;
-    if (step.extraCost > 0)
-      html += ` + ${step.extraDetails.join(' + ')}: <span style="color:var(--accent)">${step.extraCost}</span>`;
-    html += `<br>ИТОГО: <b>${step.cost}</b></div>`;
-    if (step.discarded.length){
-      html += `<div class="discarded">⚠️ Отброшено: ` +
-              `${step.discarded.map(e => escapeHtml(e.name)).join(', ')}</div>`;
-    }
-    html += `<div class="result-row">✅ Результат: <b>${itemLabel(step.result)}</b> ` +
-            `<span style="color:var(--text-muted)">(n=${step.result.n})</span></div>`;
-    div.innerHTML = html;
-    container.appendChild(div);
-  });
-
-  const finalStep = steps[steps.length - 1];
-  const finalCost = finalStep.cost;
-  const totalCost = steps.reduce((s, st) => s + st.cost, 0);
   const anyTooExpensive = steps.some(st => st.cost > LEVEL_LIMIT);
-
+  const totalCost = steps.reduce((s, st) => s + st.cost, 0);
+  const finalStep = steps[steps.length - 1];
   const finalItem = finalStep.result;
   const finalN = finalItem.n;
   const finalPenalty = penalty(finalN);
 
-  const totalDiv = document.createElement('div');
-  totalDiv.className = 'total ' + (anyTooExpensive ? 'too-expensive' : 'ok');
-  totalDiv.textContent = anyTooExpensive
-    ? `Финальная стоимость: ${finalCost} ур. — Слишком дорого!`
-    : `Финальная стоимость: ${finalCost} уровней`;
-  container.appendChild(totalDiv);
-
-  let overlimitHTML = '';
+  // --- Предупреждение о превышении лимита (в самом верху) ---
   if (anyTooExpensive){
     const overLimitSteps = steps
       .map((st, i) => ({ idx: i + 1, cost: st.cost, isFinal: st.isFinal }))
       .filter(st => st.cost > LEVEL_LIMIT);
+
     const chips = overLimitSteps.map(st => {
       const label = st.isFinal ? `Шаг ${st.idx} (наложение)` : `Шаг ${st.idx}`;
       return `<a class="step-chip" href="#result-step-${st.idx}" data-goto="${st.idx}">
         ${label} <span class="step-cost">${st.cost} ур.</span>
       </a>`;
     }).join('');
-    overlimitHTML = `
-      <div class="overlimit-warning">
-        <div class="overlimit-title">⛔ Превышен лимит 39 уровней</div>
-        <div>Шаги, которые невозможно выполнить в режиме выживания:</div>
-        <div class="overlimit-steps">${chips}</div>
-      </div>
+
+    const warning = document.createElement('div');
+    warning.className = 'result-warning';
+    warning.innerHTML = `
+      <div class="result-warning-title">⛔ Превышен лимит 39 уровней</div>
+      <div class="result-warning-text">Шаги, которые невозможно выполнить в режиме выживания:</div>
+      <div class="result-warning-steps">${chips}</div>
     `;
+    container.appendChild(warning);
   }
 
+  // --- Шаги: только цель, жертва и результат ---
+  steps.forEach((step, i) => {
+    const div = document.createElement('div');
+    const overLimit = step.cost > LEVEL_LIMIT;
+    div.className = 'step' + (overLimit ? ' too-expensive' : '');
+    div.id = `result-step-${i + 1}`;
+
+    const title = step.isFinal
+      ? `Шаг ${i + 1} — Наложение на предмет`
+      : `Шаг ${i + 1} — Слияние`;
+    const badge = overLimit ? '<span class="step-badge">⚠️ Слишком дорого!</span>' : '';
+
+    let html = `<h3>${title}${badge}</h3>`;
+    html += `<div class="row">🎯 Цель: <b>${itemLabel(step.target)}</b></div>`;
+    html += `<div class="row">📖 Жертва: <b>${itemLabel(step.sacrifice)}</b></div>`;
+    html += `<div class="result-row">✅ Результат: <b>${itemLabel(step.result)}</b></div>`;
+
+    div.innerHTML = html;
+    container.appendChild(div);
+  });
+
+  // --- Сводка внизу ---
   const summary = document.createElement('div');
   summary.className = 'summary';
   summary.innerHTML =
@@ -908,7 +887,6 @@ function renderResults(steps){
     (anyTooExpensive
       ? `<span style="color:var(--danger)">⚠️ Некоторые шаги превышают 39 уровней — в выживании невозможно!</span>`
       : `<span style="color:var(--ok)">✓ Все шаги в пределах 39 уровней. Решение оптимально по расходу опыта.</span>`) +
-    overlimitHTML +
     `<div class="penalty-line">
        🛠️ Итоговый штраф предмета: n = <b>${finalN}</b> →
        штраф при следующем использовании = <b>${finalPenalty}</b>
