@@ -111,11 +111,7 @@ body {
   margin-bottom: 28px;
   line-height: 1.6;
 }
-.hero-stats {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
+.hero-stats { display: flex; flex-wrap: wrap; gap: 10px; }
 .stat-pill {
   padding: 6px 14px;
   border: 1px solid var(--pill-border);
@@ -150,7 +146,6 @@ body {
   background: var(--accent);
   border-radius: 2px;
 }
-
 .panel {
   background: var(--panel);
   border: 1px solid var(--panel-border);
@@ -176,7 +171,6 @@ body {
   border-radius: 2px;
 }
 
-/* Шапка панели с кнопкой */
 .panel-header {
   display: flex;
   justify-content: space-between;
@@ -184,15 +178,9 @@ body {
   gap: 12px;
   margin-bottom: 18px;
 }
-.panel-header > div {
-  flex: 1;
-  min-width: 0;
-}
-.panel-header h2 {
-  margin-bottom: 0;
-}
+.panel-header > div { flex: 1; min-width: 0; }
+.panel-header h2 { margin-bottom: 0; }
 
-/* Счётчик книг рядом с заголовком */
 .books-counter {
   display: inline-flex;
   align-items: center;
@@ -208,7 +196,6 @@ body {
   vertical-align: middle;
 }
 
-/* Кнопка очистки */
 .clear-btn {
   background: var(--input-bg);
   color: var(--danger);
@@ -230,14 +217,14 @@ body {
   border-color: var(--danger);
   transform: translateY(-1px);
 }
+
 .hint-text {
   color: var(--text-muted);
   font-size: 12px;
   margin-top: 14px;
 }
-.accordion-content .hint-text {
-  margin-top: 6px;
-}
+.accordion-content .hint-text { margin-top: 6px; }
+
 .conflict-warning {
   color: var(--danger);
   font-size: 12px;
@@ -337,11 +324,7 @@ body {
   flex-shrink: 0;
   filter: drop-shadow(0 1px 2px rgba(20, 40, 80, 0.15));
 }
-
-.item-label {
-  flex: 1;
-  text-align: left;
-}
+.item-label { flex: 1; text-align: left; }
 
 /* ============================================================
    ФОРМА КАСТОМНОГО ЧАРА
@@ -389,7 +372,6 @@ body {
   font-style: italic;
 }
 
-/* Счётчик кастомных чар */
 .custom-counter-wrap {
   display: inline-block;
   margin-left: 8px;
@@ -426,12 +408,8 @@ body {
   min-width: 0;
   overflow: hidden;
 }
-.book-toggle:hover {
-  border-color: var(--teal);
-}
-.book-toggle input[type="checkbox"] {
-  display: none;
-}
+.book-toggle:hover { border-color: var(--teal); }
+.book-toggle input[type="checkbox"] { display: none; }
 .book-toggle .switch {
   position: relative;
   width: 34px;
@@ -453,12 +431,8 @@ body {
   box-shadow: 0 1px 3px rgba(20, 40, 80, 0.25);
   transition: transform 0.25s;
 }
-.book-toggle input:checked + .switch {
-  background: var(--teal);
-}
-.book-toggle input:checked + .switch::before {
-  transform: translateX(16px);
-}
+.book-toggle input:checked + .switch { background: var(--teal); }
+.book-toggle input:checked + .switch::before { transform: translateX(16px); }
 .book-toggle .toggle-text {
   font-size: 11px;
   font-weight: 600;
@@ -558,7 +532,6 @@ body {
   font-size: 13px;
   width: 100%;
 }
-.book-row input.invalid { border-color: var(--danger); }
 .book-row button {
   background: var(--danger);
   border: none;
@@ -668,9 +641,7 @@ body {
   gap: 10px;
   transition: background 0.2s;
 }
-.accordion summary:hover {
-  background: var(--panel-hover);
-}
+.accordion summary:hover { background: var(--panel-hover); }
 .accordion summary::-webkit-details-marker { display: none; }
 .accordion summary::before {
   content: "▶";
@@ -679,9 +650,7 @@ body {
   transition: transform 0.2s;
   display: inline-block;
 }
-.accordion[open] summary::before {
-  transform: rotate(90deg);
-}
+.accordion[open] summary::before { transform: rotate(90deg); }
 .accordion p {
   padding: 0 18px 16px 38px;
   color: var(--text-dim);
@@ -757,7 +726,6 @@ button.primary:active { transform: translateY(0); }
 }
 .discarded { color: var(--danger); font-size: 13px; margin-top: 8px; }
 
-/* --- Шаг, превышающий лимит 39 уровней --- */
 .step.too-expensive {
   border-left-color: var(--danger);
   border-color: rgba(214, 69, 69, 0.35);
@@ -771,12 +739,8 @@ button.primary:active { transform: translateY(0); }
   gap: 10px;
   flex-wrap: wrap;
 }
-.step.too-expensive .formula {
-  border-color: rgba(214, 69, 69, 0.3);
-}
-.step.too-expensive .result-row {
-  color: var(--danger);
-}
+.step.too-expensive .formula { border-color: rgba(214, 69, 69, 0.3); }
+.step.too-expensive .result-row { color: var(--danger); }
 
 .step-badge {
   display: inline-flex;
@@ -833,7 +797,6 @@ button.primary:active { transform: translateY(0); }
 }
 .summary .penalty-line b { color: var(--accent); font-size: 1.15em; }
 
-/* --- Блок предупреждения о превышении лимита --- */
 .summary .overlimit-warning {
   display: flex;
   flex-direction: column;
@@ -900,7 +863,6 @@ button.primary:active { transform: translateY(0); }
   max-width: 380px;
   pointer-events: none;
 }
-
 .toast {
   background: var(--panel);
   border: 1px solid var(--panel-border);
@@ -918,7 +880,6 @@ button.primary:active { transform: translateY(0); }
 }
 .toast.show { opacity: 1; transform: translateX(0); }
 .toast.hide { opacity: 0; transform: translateX(24px); }
-
 .toast-icon {
   font-size: 18px;
   line-height: 1;
@@ -950,42 +911,6 @@ button.primary:active { transform: translateY(0); }
 .toast-error   { border-left-color: var(--danger); }
 
 /* ============================================================
-   АДАПТИВ
-   ============================================================ */
-@media (max-width: 800px) {
-  body { padding: 16px 16px 40px; }
-  .hero { padding: 28px 24px; border-radius: 20px; }
-  .hero h1 { font-size: 2em; }
-  .enchant-row {
-    grid-template-columns: 1fr 1fr;
-    background: var(--input-bg);
-    padding: 12px;
-    border-radius: 10px;
-    margin-bottom: 12px;
-  }
-  .header-row { display: none; }
-  .options-panel { grid-template-columns: 1fr; }
-  .grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
-  .custom-form { grid-template-columns: 1fr 1fr; }
-  .custom-form button { grid-column: 1 / -1; }
-  .book-row { grid-template-columns: 1fr 60px 40px 36px; }
-  .mode-switch { width: 100%; }
-  .mode-switch button { flex: 1; }
-  .book-toggle { grid-column: 1 / -1; gap: 10px; }
-  .panel-header { flex-direction: column; align-items: stretch; }
-  .clear-btn { align-self: flex-start; }
-}
-
-@media (max-width: 480px) {
-  .toast-container {
-    top: 12px;
-    right: 12px;
-    left: 12px;
-    max-width: none;
-  }
-}
-
-/* ============================================================
    СПРАВКА: КОНТЕНТ АККОРДЕОНА
    ============================================================ */
 .accordion-content {
@@ -1008,9 +933,7 @@ button.primary:active { transform: translateY(0); }
   padding-bottom: 6px;
   border-bottom: 1px dashed var(--input-border);
 }
-.accordion-content h4:first-child {
-  margin-top: 4px;
-}
+.accordion-content h4:first-child { margin-top: 4px; }
 
 .help-list {
   margin: 6px 0 10px 20px;
@@ -1021,9 +944,7 @@ button.primary:active { transform: translateY(0); }
   margin-bottom: 5px;
   padding-left: 4px;
 }
-.help-list li b {
-  color: var(--text);
-}
+.help-list li b { color: var(--text); }
 
 .help-note {
   display: block;
@@ -1062,9 +983,7 @@ button.primary:active { transform: translateY(0); }
   border-collapse: collapse;
   font-size: 12.5px;
 }
-.help-table thead {
-  background: var(--input-bg);
-}
+.help-table thead { background: var(--input-bg); }
 .help-table th {
   padding: 10px 12px;
   text-align: left;
@@ -1081,12 +1000,8 @@ button.primary:active { transform: translateY(0); }
   color: var(--text-dim);
   vertical-align: top;
 }
-.help-table tbody tr:last-child td {
-  border-bottom: none;
-}
-.help-table tbody tr:hover {
-  background: var(--panel-hover);
-}
+.help-table tbody tr:last-child td { border-bottom: none; }
+.help-table tbody tr:hover { background: var(--panel-hover); }
 .help-table code {
   font-family: 'Consolas', 'Courier New', monospace;
   background: rgba(79, 179, 160, 0.1);
@@ -1099,4 +1014,40 @@ button.primary:active { transform: translateY(0); }
 .help-row-danger td {
   color: var(--danger);
   font-weight: 600;
+}
+
+/* ============================================================
+   АДАПТИВ
+   ============================================================ */
+@media (max-width: 800px) {
+  body { padding: 16px 16px 40px; }
+  .hero { padding: 28px 24px; border-radius: 20px; }
+  .hero h1 { font-size: 2em; }
+  .enchant-row {
+    grid-template-columns: 1fr 1fr;
+    background: var(--input-bg);
+    padding: 12px;
+    border-radius: 10px;
+    margin-bottom: 12px;
+  }
+  .header-row { display: none; }
+  .options-panel { grid-template-columns: 1fr; }
+  .grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
+  .custom-form { grid-template-columns: 1fr 1fr; }
+  .custom-form button { grid-column: 1 / -1; }
+  .book-row { grid-template-columns: 1fr 60px 40px 36px; }
+  .mode-switch { width: 100%; }
+  .mode-switch button { flex: 1; }
+  .book-toggle { grid-column: 1 / -1; gap: 10px; }
+  .panel-header { flex-direction: column; align-items: stretch; }
+  .clear-btn { align-self: flex-start; }
+}
+
+@media (max-width: 480px) {
+  .toast-container {
+    top: 12px;
+    right: 12px;
+    left: 12px;
+    max-width: none;
+  }
 }
