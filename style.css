@@ -391,7 +391,7 @@ body {
 .custom-counter-wrap b { font-weight: 800; }
 
 /* ============================================================
-   ПЕРЕКЛЮЧАТЕЛЬ «КНИГА / ПРЕДМЕТ»
+   ПЕРЕКЛЮЧАТЕЛЬ «КНИГА / ПРЕДМЕТ» (в форме шага 3)
    ============================================================ */
 .book-toggle {
   display: flex;
@@ -447,14 +447,75 @@ body {
 .book-toggle input:not(:checked) ~ .toggle-off { display: inline; }
 
 /* ============================================================
+   КОМПАКТНЫЙ ПЕРЕКЛЮЧАТЕЛЬ В ТАБЛИЦЕ (КНИГА / ПРЕДМЕТ)
+   ============================================================ */
+.enchant-row .mini-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  cursor: pointer;
+  user-select: none;
+}
+.enchant-row .mini-toggle input[type="checkbox"] {
+  display: none;
+}
+.enchant-row .mini-toggle .mini-switch {
+  position: relative;
+  width: 30px;
+  height: 16px;
+  background: var(--text-muted);
+  border-radius: 8px;
+  flex-shrink: 0;
+  transition: background 0.25s;
+}
+.enchant-row .mini-toggle .mini-switch::before {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 12px;
+  height: 12px;
+  background: #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 1px 2px rgba(20, 40, 80, 0.25);
+  transition: transform 0.25s;
+}
+.enchant-row .mini-toggle input:checked + .mini-switch {
+  background: var(--teal);
+}
+.enchant-row .mini-toggle input:checked + .mini-switch::before {
+  transform: translateX(14px);
+}
+.enchant-row .mini-toggle .mini-text-on,
+.enchant-row .mini-toggle .mini-text-off {
+  display: none;
+  font-size: 13px;
+  line-height: 1;
+}
+.enchant-row .mini-toggle input:checked ~ .mini-text-on  { display: inline; }
+.enchant-row .mini-toggle input:not(:checked) ~ .mini-text-off { display: inline; }
+
+/* ============================================================
    ТАБЛИЦА ОПЫТНОГО РЕЖИМА
    ============================================================ */
 .enchant-row {
   display: grid;
-  grid-template-columns: 2fr 55px 70px 80px 60px 85px 36px;
+  grid-template-columns: 2fr 55px 55px 75px 80px 55px 85px 36px;
   gap: 6px;
   margin-bottom: 8px;
   align-items: center;
+}
+.header-row > div {
+  text-align: center;
+  padding: 0 4px;
+}
+.header-row > div:first-child {
+  text-align: left;
+  padding-left: 12px;
+}
+.header-row > div:last-child {
+  text-align: center;
 }
 .enchant-row input {
   background: var(--input-bg);

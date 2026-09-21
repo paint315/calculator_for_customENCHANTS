@@ -341,9 +341,12 @@ function solveOptimal(books, targetN){
 
   const { combined, nameIdx, multBookByE } = precomputeCombined(books);
 
-  // f[S] — Парето-список (n, cost) для сборки одной книги из S
+  // f[S] — Парето-список (n, cost) для сборки одной книги из S.
+  // n — штраф получившейся книги.
   const f = new Array(1 << N);
-  for (let i = 0; i < N; i++) f[1 << i] = [{ n: 0, cost: 0, back: null }];
+  for (let i = 0; i < N; i++){
+    f[1 << i] = [{ n: books[i].n || 0, cost: 0, back: null }];
+  }
 
   for (let S = 1; S < (1 << N); S++){
     if (f[S]) continue;
@@ -379,9 +382,10 @@ function solveOptimal(books, targetN){
     f[S] = paretoPruneF(candidates);
   }
 
-  // h[S] — Парето-список (k, cost) для применения всех книг из S к предмету
+  // h[S] — Парето-список (n, cost) для применения всех источников из S к предмету.
+  // n — штраф предмета после применения всех источников из S.
   const h = new Array(1 << N);
-  h[0] = [{ k: 0, cost: 0, back: null }];
+  h[0] = [{ n: targetN, cost: 0, back: null }];
 
   for (let S = 1; S < (1 << N); S++){
     const candidates = [];
@@ -393,11 +397,12 @@ function solveOptimal(books, targetN){
         const st = f[T][iT];
         for (let iH = 0; iH < h[Sprime].length; iH++){
           const sp = h[Sprime][iH];
-          const targetPen = penalty(targetN + sp.k);
+          const targetPen = penalty(sp.n);
           const sacPen = penalty(st.n);
+          const newN = Math.max(sp.n, st.n) + 1;
           const applyCost = enchCost + targetPen + sacPen;
           candidates.push({
-            k: sp.k + 1,
+            n: newN,
             cost: sp.cost + st.cost + applyCost,
             back: { T, iT, iH },
           });
@@ -449,7 +454,7 @@ function solveOptimal(books, targetN){
   for (let i = 0; i < N; i++){
     itemsBySubset[1 << i] = {
       enchants: [{ ...books[i] }],
-      n: 0,
+      n: books[i].n || 0,
       isBook: books[i].isBook,
     };
   }
@@ -576,7 +581,9 @@ function addBookFromGrid(name){
   } else {
     selectedBooks.push({
       name, level: 1, multiplier: null, isBook: true,
-      group: ENCHANT_TO_GROUP[name] || '', maxLevel: null, custom: false,
+      group: ENCHANT_TO_GROUP[name] || '',
+      maxLevel: null, custom: false,
+      n: 0,
     });
   }
   renderSelectedList(); renderEnchantGrid(); updateConflictWarning();
@@ -631,6 +638,7 @@ function addCustomEnchant(){
       group: groupVal || ENCHANT_TO_GROUP[name] || '',
       maxLevel: maxVal ? +maxVal : null,
       custom: true,
+      n: 0,
     });
   }
   resetCustomForm();
@@ -723,7 +731,7 @@ function renderSelectedList(){
   } else {
     const header = document.createElement('div');
     header.className = 'enchant-row header-row';
-    header.innerHTML = `<div>Название</div><div>Ур.</div><div>Множ.</div>
+    header.innerHTML = `<div>Название</div><div>Ур.</div><div>N</div><div>Множ.</div>
       <div>Источник</div><div>Макс.</div><div>Группа</div><div></div>`;
     list.appendChild(header);
     selectedBooks.forEach((book, i) => {
@@ -734,8 +742,14 @@ function renderSelectedList(){
       div.innerHTML = `
         <input type="text" value="${escapeHtml(book.name)}" data-idx="${i}" data-field="name">
         <input type="number" value="${book.level}" min="1" data-idx="${i}" data-field="level">
+        <input type="number" value="${book.n != null ? book.n : 0}" min="0" data-idx="${i}" data-field="n" title="Штраф (число прошлых зачарований этого источника)">
         <input type="number" value="${book.multiplier != null ? book.multiplier : ''}" placeholder="авто" min="1" data-idx="${i}" data-field="multiplier">
-        <label><input type="checkbox" ${book.isBook ? 'checked' : ''} data-idx="${i}" data-field="isBook"> Книга</label>
+        <label class="mini-toggle" title="Книга / Предмет">
+          <input type="checkbox" ${book.isBook ? 'checked' : ''} data-idx="${i}" data-field="isBook">
+          <span class="mini-switch"></span>
+          <span class="mini-text-on">📖</span>
+          <span class="mini-text-off">⚔️</span>
+        </label>
         <input type="number" value="${maxDisplay}" min="1" data-idx="${i}" data-field="maxLevel">
         <input type="text" value="${escapeHtml(book.group || '')}" data-idx="${i}" data-field="group">
         <button class="danger" data-idx="${i}" data-action="remove">✕</button>
@@ -747,6 +761,7 @@ function renderSelectedList(){
         const idx = +e.target.dataset.idx;
         const field = e.target.dataset.field;
         if (field === 'isBook') selectedBooks[idx][field] = e.target.checked;
+        else if (field === 'n') selectedBooks[idx][field] = Math.max(0, +e.target.value || 0);
         else if (field === 'level' || field === 'multiplier' || field === 'maxLevel')
           selectedBooks[idx][field] = e.target.value === '' ? null : (+e.target.value || 0);
         else selectedBooks[idx][field] = e.target.value;
