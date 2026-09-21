@@ -731,7 +731,7 @@ function renderSelectedList(){
   } else {
     const header = document.createElement('div');
     header.className = 'enchant-row header-row';
-    header.innerHTML = `<div>Название</div><div>Ур.</div><div>N</div><div>Множ.</div>
+    header.innerHTML = `<div>Название</div><div>Ур.</div><div>Прошлых</div><div>Множ.</div>
       <div>Источник</div><div>Макс.</div><div>Группа</div><div></div>`;
     list.appendChild(header);
     selectedBooks.forEach((book, i) => {
@@ -742,7 +742,7 @@ function renderSelectedList(){
       div.innerHTML = `
         <input type="text" value="${escapeHtml(book.name)}" data-idx="${i}" data-field="name">
         <input type="number" value="${book.level}" min="1" data-idx="${i}" data-field="level">
-        <input type="number" value="${book.n != null ? book.n : 0}" min="0" data-idx="${i}" data-field="n" title="Штраф (число прошлых зачарований этого источника)">
+        <input type="number" value="${book.n != null ? book.n : 0}" min="0" data-idx="${i}" data-field="n" title="Число прошлых использований этого источника на наковальне. Штраф = 2ⁿ − 1.">
         <input type="number" value="${book.multiplier != null ? book.multiplier : ''}" placeholder="авто" min="1" data-idx="${i}" data-field="multiplier">
         <label class="mini-toggle" title="Книга / Предмет">
           <input type="checkbox" ${book.isBook ? 'checked' : ''} data-idx="${i}" data-field="isBook">
@@ -827,9 +827,6 @@ function switchMode(mode){
   updateConflictWarning(); updateCounters();
 }
 
-// ============================================================
-//  ОТРИСОВКА РЕЗУЛЬТАТОВ
-// ============================================================
 // ============================================================
 //  ОТРИСОВКА РЕЗУЛЬТАТОВ
 // ============================================================
